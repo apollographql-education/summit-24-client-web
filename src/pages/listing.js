@@ -1,9 +1,11 @@
+import Layout from '../layouts/Layout';
 import React from 'react';
+import {Heading} from '@chakra-ui/react';
 
 export default function Listing() {
   return (
-    <div>
-      <h1>Listing</h1>
-    </div>
+    <Layout>
+      <Heading as="h1">A Listing</Heading>
+    </Layout>
   );
 }
