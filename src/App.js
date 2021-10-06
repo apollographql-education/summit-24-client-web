@@ -6,6 +6,7 @@ import {
   Login,
   PastTrips,
   Profile,
+  Search,
   Trips
 } from './pages';
 
@@ -14,13 +15,16 @@ export default function App() {
   return (
     <Router>
       <Switch>
+        <Route path="/search">
+          <Search />
+        </Route>
         <Route path="/login">
           <Login />
         </Route>
         <Route path="/listings">
           <Listings />
         </Route>
-        <Route path="/listing:id">
+        <Route path="/listing/:id">
           <Listing />
         </Route>
         <Route path="/trips">
@@ -32,7 +36,8 @@ export default function App() {
         <Route path="/profile">
           <Profile />
         </Route>
-        <Route path="/">
+
+        <Route exact path="/">
           <Home />
         </Route>
       </Switch>

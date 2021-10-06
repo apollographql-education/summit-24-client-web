@@ -6,7 +6,7 @@ export default function Hero({children}) {
   return (
     <div>
       <Box
-        backgroundImage="url('https://source.unsplash.com/Knwea-mLGAg/2000x600')"
+        backgroundImage="url('https://source.unsplash.com/rdtkE1fHi6c/2000x600')"
         backgroundPosition="center"
         backgroundRepeat="no-repeat"
         minHeight="500px"

@@ -2,7 +2,7 @@ import Logo from '../assets/logo2.svg';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {Avatar, Box, Button, Flex, HStack, Image, Text} from '@chakra-ui/react';
-import {Link} from 'react-router-dom';
+import {Link, NavLink} from 'react-router-dom';
 export default function Nav({isLight}) {
   const txtColor = isLight ? '#fff' : '#000';
   return (
@@ -22,10 +22,15 @@ export default function Nav({isLight}) {
           </HStack>
         </Box>
         <HStack spacing="2">
-          <Button as={Link} to="/trips" variant="ghost" textColor={txtColor}>
+          <Button as={NavLink} to="/trips" variant="ghost" textColor={txtColor}>
             My trips
           </Button>
-          <Button as={Link} to="/listings" variant="ghost" textColor={txtColor}>
+          <Button
+            as={NavLink}
+            to="/listings"
+            variant="ghost"
+            textColor={txtColor}
+          >
             My listings
           </Button>
           <Box as={Link} to="/profile">
