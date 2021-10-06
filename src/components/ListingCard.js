@@ -3,6 +3,7 @@ import React from 'react';
 import Stars from './Stars';
 import {Box, Flex, Heading, Image, Text} from '@chakra-ui/react';
 import {IoBed} from 'react-icons/io5';
+import {Link} from 'react-router-dom';
 
 export default function ListingCard({
   title,
@@ -19,7 +20,8 @@ export default function ListingCard({
         background: 'gray.100',
         cursor: 'pointer'
       }}
-      onClick={() => {}}
+      as={Link}
+      to={`/listing/${title}`}
     >
       <Image src={thumbnail} alt={title} />
       <Flex direction="column" p="3" justify="space-between" minH="120px">

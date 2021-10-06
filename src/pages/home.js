@@ -3,9 +3,6 @@ import DatePicker from 'react-datepicker';
 import Hero from '../components/Hero';
 import Layout from '../layouts/Layout';
 import ListingCard from '../components/ListingCard';
-import {Link} from 'react-router-dom';
-import {format} from 'date-fns';
-
 import Nav from '../components/Nav';
 import React, {useState} from 'react';
 import {
@@ -19,6 +16,8 @@ import {
   Stack,
   Text
 } from '@chakra-ui/react';
+import {Link} from 'react-router-dom';
+import {format} from 'date-fns';
 
 export default function Home() {
   const [startDate, setStartDate] = useState(new Date());
