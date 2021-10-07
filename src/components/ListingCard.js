@@ -23,7 +23,13 @@ export default function ListingCard({
       as={Link}
       to={`/listing/${title}`}
     >
-      <Image src={thumbnail} alt={title} />
+      <Image
+        src={thumbnail}
+        alt={title}
+        boxSize="100%"
+        maxH="200px"
+        objectFit="cover"
+      />
       <Flex direction="column" p="3" justify="space-between" minH="120px">
         <Heading as="h2" size="md">
           {title}
@@ -35,7 +41,7 @@ export default function ListingCard({
             </Text>
             <IoBed size={22} />
           </Flex>
-          <Stars size={20} rating={overallRating} />
+          {overallRating && <Stars size={20} rating={overallRating} />}
         </Flex>
       </Flex>
     </Box>
@@ -46,5 +52,5 @@ ListingCard.propTypes = {
   title: PropTypes.string.isRequired,
   thumbnail: PropTypes.string,
   numOfBeds: PropTypes.number.isRequired,
-  overallRating: PropTypes.number.isRequired
+  overallRating: PropTypes.number
 };

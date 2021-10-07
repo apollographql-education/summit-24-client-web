@@ -3,7 +3,7 @@ import React from 'react';
 import {HStack} from '@chakra-ui/react';
 import {IoStar, IoStarHalf, IoStarOutline} from 'react-icons/io5';
 
-export default function ListingCard({rating, size = 16}) {
+export default function Stars({rating = 0, size = 16}) {
   const getStars = rating => {
     const stars = [];
     for (let i = 0; i < Math.floor(rating); i++) {
@@ -21,7 +21,7 @@ export default function ListingCard({rating, size = 16}) {
   return <HStack spacing="1">{getStars(rating)}</HStack>;
 }
 
-ListingCard.propTypes = {
-  rating: PropTypes.number.isRequired,
+Stars.propTypes = {
+  rating: PropTypes.number,
   size: PropTypes.number
 };

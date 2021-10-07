@@ -18,7 +18,18 @@ import {
 } from '@chakra-ui/react';
 import {Link} from 'react-router-dom';
 import {format} from 'date-fns';
+import {gql, useQuery} from '@apollo/client';
 
+export const FEATURED_LISTINGS = gql`
+  query getFeaturedListings {
+    featuredListings {
+      title
+      thumbnail
+      numOfBeds
+      overallRating
+    }
+  }
+`;
 export default function Home() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -26,6 +37,8 @@ export default function Home() {
 
   const INPUT_PROPS = {size: 'lg', width: '300px'};
 
+  const {loading, error, data} = useQuery(FEATURED_LISTINGS);
+  console.log(loading, error, data);
   const featuredMockCardProps = [
     {
       title: 'Campsite on Tycho crater',
@@ -123,9 +136,14 @@ export default function Home() {
             Explore Space
           </Heading>
           <SimpleGrid columns={[2, null, 3]} spacing={4}>
-            {featuredMockCardProps.map(cardProps => (
-              <ListingCard key={cardProps.title} {...cardProps} />
-            ))}
+            {data &&
+              data.featuredListings.map(listing => (
+                <ListingCard key={listing.title} {...listing} />
+              ))}
+            {!data &&
+              featuredMockCardProps.map(cardProps => (
+                <ListingCard key={cardProps.title} {...cardProps} />
+              ))}
           </SimpleGrid>
         </Container>
       </Layout>
