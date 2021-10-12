@@ -7,8 +7,9 @@ import {IoBed} from 'react-icons/io5';
 import {Link} from 'react-router-dom';
 
 export default function ListingCell({
+  id,
   title,
-  thumbnail,
+  photoThumbnail,
   description,
   numOfBeds,
   costPerNight,
@@ -26,12 +27,12 @@ export default function ListingCell({
         cursor: 'pointer'
       }}
       as={Link}
-      to={`/listing/${title}`}
+      to={`/listing/${id}`}
       mb="2"
     >
       <Flex direction="row" justify="space-between" minH="120px" maxH="200px">
         <Image
-          src={thumbnail}
+          src={photoThumbnail}
           alt={title}
           objectFit="cover"
           width="250px"
@@ -87,9 +88,10 @@ export default function ListingCell({
 }
 
 ListingCell.propTypes = {
+  id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
-  thumbnail: PropTypes.string,
+  photoThumbnail: PropTypes.string,
   costPerNight: PropTypes.number,
   numOfBeds: PropTypes.number.isRequired,
   overallRating: PropTypes.number,

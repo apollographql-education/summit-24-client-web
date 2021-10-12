@@ -20,8 +20,9 @@ import {useLocation} from 'react-router-dom';
 export const SEARCH_LISTINGS = gql`
   query searchListings($searchListingsInput: SearchListingsInput!) {
     searchListings(criteria: $searchListingsInput) {
+      id
       title
-      thumbnail
+      photoThumbnail
       numOfBeds
       description
       overallRating

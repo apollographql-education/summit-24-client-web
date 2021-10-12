@@ -1,5 +1,5 @@
 import Logo from '../assets/logo2.svg';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Button,
   Center,
@@ -13,9 +13,25 @@ import {
 } from '@chakra-ui/react';
 import {Link} from 'react-router-dom';
 
+import {gql} from '@apollo/client';
+
+export const FEATURED_LISTINGS = gql`
+  mutation getFeaturedListings {
+    me {
+      title
+      photoThumbnail
+      numOfBeds
+      overallRating
+    }
+  }
+`;
+
 export default function Login() {
+  const [value, setValue] = useState('');
+  const handleChange = event => setValue(event.target.value);
+
   function login() {
-    console.log('Clicked');
+    localStorage.setItem('token', value);
   }
 
   return (
@@ -38,8 +54,15 @@ export default function Login() {
           Login
         </Heading>
         <Text mb="8px">Email:</Text>
-        <Input placeholder="enter your email address in here!" size="lg" />
-        <Button onClick={login}>Login</Button>
+        <Input
+          onChange={handleChange}
+          value={value}
+          placeholder="enter your userId here!"
+          size="lg"
+        />
+        <Button as={Link} to="profile" onClick={login}>
+          Login
+        </Button>
       </Stack>
     </Container>
   );

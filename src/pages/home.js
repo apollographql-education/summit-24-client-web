@@ -23,8 +23,9 @@ import {gql, useQuery} from '@apollo/client';
 export const FEATURED_LISTINGS = gql`
   query getFeaturedListings {
     featuredListings {
+      id
       title
-      thumbnail
+      photoThumbnail
       numOfBeds
       overallRating
     }
@@ -38,28 +39,8 @@ export default function Home() {
   const INPUT_PROPS = {size: 'lg', width: '300px'};
 
   const {loading, error, data} = useQuery(FEATURED_LISTINGS);
-  console.log(loading, error, data);
-  const featuredMockCardProps = [
-    {
-      title: 'Campsite on Tycho crater',
-      thumbnail: 'https://source.unsplash.com/pd4lo70LdbI/400x200',
-      overallRating: 2.4,
-      numOfBeds: 2
-    },
-    {
-      title: 'Sleeping pod in the ISS',
-      thumbnail: 'https://source.unsplash.com/CpHNKNRwXps/400x200',
-      overallRating: 4.5,
-      numOfBeds: 1
-    },
-    {
-      title: 'Cosy cabin near mount Olympus',
-      thumbnail: 'https://source.unsplash.com/OtXJhYjbKeg/400x200',
-      overallRating: 4,
-      numOfBeds: 3
-    }
-  ];
-
+  if (loading) return 'Loading...';
+  if (error) return `uhoh error! ${error.message}`;
   return (
     <div>
       <Hero>
@@ -139,10 +120,6 @@ export default function Home() {
             {data &&
               data.featuredListings.map(listing => (
                 <ListingCard key={listing.title} {...listing} />
-              ))}
-            {!data &&
-              featuredMockCardProps.map(cardProps => (
-                <ListingCard key={cardProps.title} {...cardProps} />
               ))}
           </SimpleGrid>
         </Container>

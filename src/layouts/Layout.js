@@ -3,16 +3,21 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {Container} from '@chakra-ui/react';
 
-export default function Layout({noNav, children}) {
+export default function Layout({
+  noNav,
+  children,
+  containerSize = 'container.xl'
+}) {
   return (
     <>
       {!noNav && <Nav />}
-      <Container maxW="container.xl">{children}</Container>
+      <Container maxW={containerSize}>{children}</Container>
     </>
   );
 }
 
 Layout.propTypes = {
   children: PropTypes.node,
-  noNav: PropTypes.bool
+  noNav: PropTypes.bool,
+  containerSize: PropTypes.string
 };

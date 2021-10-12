@@ -6,8 +6,9 @@ import {IoBed} from 'react-icons/io5';
 import {Link} from 'react-router-dom';
 
 export default function ListingCard({
+  id,
   title,
-  thumbnail,
+  photoThumbnail,
   numOfBeds,
   overallRating
 }) {
@@ -21,10 +22,10 @@ export default function ListingCard({
         cursor: 'pointer'
       }}
       as={Link}
-      to={`/listing/${title}`}
+      to={`/listing/${id}`}
     >
       <Image
-        src={thumbnail}
+        src={photoThumbnail}
         alt={title}
         boxSize="100%"
         maxH="200px"
@@ -49,8 +50,9 @@ export default function ListingCard({
 }
 
 ListingCard.propTypes = {
+  id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  thumbnail: PropTypes.string,
+  photoThumbnail: PropTypes.string,
   numOfBeds: PropTypes.number.isRequired,
   overallRating: PropTypes.number
 };

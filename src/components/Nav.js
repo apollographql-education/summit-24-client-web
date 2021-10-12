@@ -3,8 +3,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {Avatar, Box, Button, Flex, HStack, Image, Text} from '@chakra-ui/react';
 import {Link, NavLink} from 'react-router-dom';
+import {useUser} from '../utils';
+
 export default function Nav({isLight}) {
   const txtColor = isLight ? '#fff' : '#000';
+  const {user} = useUser();
+
   return (
     <Box px="2">
       <Flex direction="row" justify="space-between" align="center" p={4}>
@@ -22,25 +26,46 @@ export default function Nav({isLight}) {
           </HStack>
         </Box>
         <HStack spacing="2">
-          <Button as={NavLink} to="/trips" variant="ghost" textColor={txtColor}>
-            My trips
-          </Button>
-          <Button
-            as={NavLink}
-            to="/listings"
-            variant="ghost"
-            textColor={txtColor}
-          >
-            My listings
-          </Button>
-          <Box as={Link} to="/profile">
-            <Avatar
-              name="profile"
-              borderColor="white"
-              borderWidth="1px"
-              src="https://pbs.twimg.com/profile_images/1284178061257302016/RKIDqyJz_400x400.jpg"
-            />
-          </Box>
+          {user && user.__typename === 'Guest' && (
+            <Button
+              as={NavLink}
+              to="/trips"
+              variant="ghost"
+              textColor={txtColor}
+            >
+              My trips
+            </Button>
+          )}
+          {user && user.__typename === 'Host' && (
+            <Button
+              as={NavLink}
+              to="/listings"
+              variant="ghost"
+              textColor={txtColor}
+            >
+              My listings
+            </Button>
+          )}
+          {user && (
+            <Box as={Link} to="/profile">
+              <Avatar
+                name="profile"
+                borderColor="white"
+                borderWidth="1px"
+                src={user.profilePicture}
+              />
+            </Box>
+          )}
+          {!user && (
+            <Button
+              as={NavLink}
+              to="/login"
+              variant="ghost"
+              textColor={txtColor}
+            >
+              Login
+            </Button>
+          )}
         </HStack>
       </Flex>
     </Box>
