@@ -10,6 +10,9 @@ export const GET_USER = gql`
       ... on Host {
         profileDescription
       }
+      ... on Guest {
+        funds
+      }
     }
   }
 `;

@@ -7,7 +7,8 @@ import {
   PastTrips,
   Profile,
   Search,
-  Trips
+  Trips,
+  Wallet
 } from './pages';
 
 import {Route, BrowserRouter as Router, Switch} from 'react-router-dom';
@@ -36,7 +37,9 @@ export default function App() {
         <Route path="/profile">
           <Profile />
         </Route>
-
+        <Route path="/wallet">
+          <Wallet />
+        </Route>
         <Route exact path="/">
           <Home />
         </Route>

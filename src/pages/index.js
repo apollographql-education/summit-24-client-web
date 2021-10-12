@@ -6,3 +6,4 @@ export {default as Search} from './search';
 export {default as Trips} from './trips';
 export {default as Login} from './login';
 export {default as Profile} from './profile';
+export {default as Wallet} from './wallet';

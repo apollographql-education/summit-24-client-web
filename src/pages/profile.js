@@ -10,7 +10,7 @@ import {
   Text,
   Textarea
 } from '@chakra-ui/react';
-import {IoCheckmark, IoExit} from 'react-icons/io5';
+import {IoCheckmark, IoExit, IoWallet} from 'react-icons/io5';
 import {Link} from 'react-router-dom';
 import {gql, useMutation} from '@apollo/client';
 import {useUser} from '../utils';
@@ -93,18 +93,19 @@ export default function Profile() {
               Profile Type: {user.__typename}
             </Text>
           </Box>
-          <Box>
-            <Text mb="1" fontWeight="bold">
-              Profile Description:
-            </Text>
-            {user.__typename === 'Host' && (
+
+          {user.__typename === 'Host' && (
+            <Box>
+              <Text mb="1" fontWeight="bold">
+                Profile Description:
+              </Text>
               <Textarea
                 ref={txtProfileDescRef}
                 placeholder="Profile description"
                 defaultValue={user.profileDescription}
               />
-            )}
-          </Box>
+            </Box>
+          )}
           <Stack direction="row" spacing="2">
             <Button
               rightIcon={<IoCheckmark />}
@@ -135,6 +136,16 @@ export default function Profile() {
               Logout
             </Button>
           </Stack>
+          {user.__typename === 'Guest' && (
+            <Box>
+              <Text mb="1" fontWeight="bold">
+                Add funds:
+              </Text>
+              <Button as={Link} to="wallet" rightIcon={<IoWallet />}>
+                my wallet
+              </Button>
+            </Box>
+          )}
         </Stack>
       )}
     </Layout>
