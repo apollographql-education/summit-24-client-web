@@ -77,6 +77,8 @@ export default function Login() {
           size="lg"
         />
         <Button
+          as={Link}
+          to="/"
           onClick={e => {
             value ? login() : e.preventDefault();
           }}
