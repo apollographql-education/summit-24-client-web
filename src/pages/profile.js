@@ -1,5 +1,5 @@
 import Layout from '../layouts/Layout';
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {
   Box,
   Button,
@@ -38,21 +38,19 @@ export default function Profile() {
   const inputNameRef = useRef();
   const inputProfilePicRef = useRef();
   const txtProfileDescRef = useRef();
-  const [updateProfileData, {data, loading, error}] =
-    useMutation(UPDATE_PROFILE);
-
-  useEffect(() => {
-    if (data && data.updateProfile.success) {
+  const [updateProfileData, {loading, error}] = useMutation(UPDATE_PROFILE, {
+    onCompleted: data => {
       setUser({...data.updateProfile.user});
       const {name, profileDescription, profilePicture} =
         data.updateProfile.user;
 
       inputNameRef.current.value = name;
       inputProfilePicRef.current.value = profilePicture;
-      txtProfileDescRef.current.value = profileDescription;
+      if (user.__typename === 'Host') {
+        txtProfileDescRef.current.value = profileDescription;
+      }
     }
-  }, [data, setUser]);
-
+  });
   if (loading) return 'Submitting...';
   if (error) return `Submission error! ${error.message}`;
 
@@ -109,17 +107,21 @@ export default function Profile() {
           <Stack direction="row" spacing="2">
             <Button
               rightIcon={<IoCheckmark />}
-              onClick={() =>
-                updateProfileData({
+              onClick={() => {
+                const updateProfileInput = {
+                  name: inputNameRef.current.value,
+                  profilePicture: inputProfilePicRef.current.value
+                };
+                if (user.__typename === 'Host') {
+                  updateProfileInput.profileDescription =
+                    txtProfileDescRef?.current.value;
+                }
+                return updateProfileData({
                   variables: {
-                    updateProfileInput: {
-                      name: inputNameRef.current.value,
-                      profilePicture: inputProfilePicRef.current.value,
-                      profileDescription: txtProfileDescRef.current.value
-                    }
+                    updateProfileInput
                   }
-                })
-              }
+                });
+              }}
               colorScheme="green"
             >
               Update Profile

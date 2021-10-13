@@ -18,12 +18,16 @@ export const GET_USER = gql`
 `;
 
 export function useUser() {
-  const {data, loading, error} = useQuery(GET_USER, {fetchPolicy: 'no-cache'});
   const [user, setUser] = useState();
 
-  if (data && !user) {
-    setUser(data.me);
-  }
+  const {loading, error} = useQuery(GET_USER, {
+    fetchPolicy: 'no-cache',
+    onCompleted: ({me}) => {
+      setUser({...me});
+    }
+  });
+
+  console.log(user);
 
   return {
     user,

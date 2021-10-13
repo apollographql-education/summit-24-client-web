@@ -12,14 +12,18 @@ export const ADD_FUNDS = gql`
       success
       message
       amount
-      userId
     }
   }
 `;
 
 export default function Wallet() {
-  const {user} = useUser();
-  const [addFundsToWallet] = useMutation(ADD_FUNDS);
+  const {user, setUser} = useUser();
+  const [addFundsToWallet] = useMutation(ADD_FUNDS, {
+    onCompleted: data => {
+      setUser({...user, funds: data.addFundsToWallet.amount});
+    }
+  });
+
   return (
     <Layout>
       <Stack direction="row" spacing="4" align="center">

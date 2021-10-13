@@ -36,7 +36,7 @@ export default function Login() {
 
   return (
     <Container maxW="container.md">
-      <Center as={Link} to="/" center width="100%" my="4">
+      <Center as={Link} to="/" width="100%" my="4">
         <HStack spacing="2">
           <Image
             boxSize="50px"
@@ -77,8 +77,6 @@ export default function Login() {
           size="lg"
         />
         <Button
-          as={Link}
-          to="profile"
           onClick={e => {
             value ? login() : e.preventDefault();
           }}

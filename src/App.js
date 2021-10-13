@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import {
   Home,
@@ -10,9 +11,18 @@ import {
   Trips,
   Wallet
 } from './pages';
+import {useUser} from './utils';
 
-import {Route, BrowserRouter as Router, Switch} from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  BrowserRouter as Router,
+  Switch
+} from 'react-router-dom';
+
 export default function App() {
+  const {user} = useUser();
+
   return (
     <Router>
       <Switch>
@@ -34,10 +44,10 @@ export default function App() {
         <Route path="/past-trips">
           <PastTrips />
         </Route>
-        <Route path="/profile">
+        <Route user={user} path="/profile">
           <Profile />
         </Route>
-        <Route path="/wallet">
+        <Route user={user} path="/wallet">
           <Wallet />
         </Route>
         <Route exact path="/">
@@ -47,3 +57,28 @@ export default function App() {
     </Router>
   );
 }
+
+function PrivateRoute({children, user, ...rest}) {
+  console.log(user);
+  return (
+    <Route
+      {...rest}
+      render={({location}) =>
+        user ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/login',
+              state: {from: location}
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+PrivateRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+  user: PropTypes.object
+};
