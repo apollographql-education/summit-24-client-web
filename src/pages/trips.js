@@ -2,8 +2,36 @@ import CurrentTrips from '../components/Trips';
 import Layout from '../layouts/Layout';
 import React from 'react';
 import {Center, Spinner} from '@chakra-ui/react';
-import {GUEST_TRIPS} from '../utils';
-import {useQuery} from '@apollo/client';
+import {gql, useQuery} from '@apollo/client';
+
+export const GUEST_TRIPS = gql`
+  query getGuestTrips {
+    upcomingGuestBookings {
+      checkInDate
+      checkOutDate
+      status
+      listing {
+        title
+        photoThumbnail
+      }
+      locationReview {
+        id
+        text
+        rating
+      }
+      hostReview {
+        id
+        text
+        rating
+      }
+      guestReview {
+        id
+        text
+        rating
+      }
+    }
+  }
+`;
 
 export default function Trips() {
   const {loading, error, data} = useQuery(GUEST_TRIPS);
@@ -19,13 +47,13 @@ export default function Trips() {
     return <div>uhoh error! {error.message}</div>;
   }
 
-  const currentTrips = data.guestBookings.filter(
-    trip => trip.status !== 'COMPLETED'
-  );
+  // const currentTrips = data.guestBookings.filter(
+  //   trip => trip.status !== 'COMPLETED'
+  // );
 
   return (
     <Layout>
-      <CurrentTrips trips={currentTrips} />
+      <CurrentTrips trips={data.upcomingGuestBookings} />
     </Layout>
   );
 }

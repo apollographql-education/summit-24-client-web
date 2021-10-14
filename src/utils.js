@@ -34,17 +34,3 @@ export function useUser() {
     error
   };
 }
-
-export const GUEST_TRIPS = gql`
-  query getGuestBookings {
-    guestBookings {
-      checkInDate
-      checkOutDate
-      status
-      listing {
-        title
-        photoThumbnail
-      }
-    }
-  }
-`;
