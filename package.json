@@ -10,10 +10,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "@trevorblades/eslint-config": "^7.2.1",
     "date-fns": "^2.25.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
     "framer-motion": "^4.1.17",
     "graphql": "^15.6.1",
     "react": "^17.0.2",
@@ -30,12 +27,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -47,5 +38,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@trevorblades/eslint-config": "^7.2.1",
+    "eslint": "^7.11.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1"
   }
 }
