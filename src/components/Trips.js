@@ -1,7 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import TripReviews from './TripReviews';
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
+  Button,
   Flex,
   Heading,
   Image,
@@ -12,8 +19,9 @@ import {
 } from '@chakra-ui/react';
 import {Link as RouterLink, useLocation} from 'react-router-dom';
 
-export default function Trips({trips}) {
+export default function Trips({trips, isPast = false}) {
   const {pathname} = useLocation();
+
   return (
     <>
       <Heading as="h1" mb="4">
@@ -44,56 +52,97 @@ export default function Trips({trips}) {
         </Link>
       </Box>
 
-      <VStack spacing="4">
-        {trips.map((trip, i) => (
-          <Flex
-            key={`${trip.listing.title}-${i}`}
-            boxSizing="border-box"
-            borderWidth="1px"
-            borderRadius="lg"
-            overflow="hidden"
-            width="100%"
-            h="100px"
-            mb="2"
-            _hover={{
-              background: 'gray.100',
-              cursor: 'pointer'
-            }}
-          >
-            <Image
-              src={trip.listing.photoThumbnail}
-              alt={trip.listing.title}
-              w="100px"
-            />
-            <Flex w="full" p="3">
-              <Flex w="full" direction="column">
-                <Heading as="h2" size="md" fontWeight="semibold">
-                  {trip.listing.title}
-                </Heading>
-                <Text fontSize="lg" mt="auto">
-                  {trip.checkInDate} - {trip.checkOutDate}
-                </Text>
-              </Flex>
-              {trip.status === 'CURRENT' ? (
-                <Tag
-                  h="18px"
-                  w="300px"
-                  rounded="xl"
-                  bgColor="#425C0A"
-                  color="white"
-                  justifyContent="center"
-                >
-                  You&apos;re staying here right now!
-                </Tag>
-              ) : null}
-            </Flex>
-          </Flex>
-        ))}
-      </VStack>
+      <Accordion allowToggle allowMultiple>
+        <VStack spacing="4">
+          {trips.map((trip, i) => {
+            const hasReviews = trip.locationReview && trip.hostReview;
+            return (
+              <AccordionItem
+                key={`${trip.listing.title}-${i}`}
+                w="full"
+                borderWidth="1px"
+                borderColor="gray.200"
+                overflow="hidden"
+              >
+                {({isExpanded}) => (
+                  <>
+                    <AccordionButton p="0">
+                      <Flex
+                        boxSizing="border-box"
+                        w="full"
+                        h="100px"
+                        _hover={{
+                          background: 'gray.100',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <Image
+                          src={trip.listing.photoThumbnail}
+                          alt={trip.listing.title}
+                          w="100px"
+                        />
+                        <Flex w="full" p="3">
+                          <Flex
+                            w="full"
+                            direction="column"
+                            alignItems="flex-start"
+                          >
+                            <Heading as="h2" size="md" fontWeight="semibold">
+                              {trip.listing.title}
+                            </Heading>
+                            <Text fontSize="lg" mt="auto">
+                              {trip.checkInDate} - {trip.checkOutDate}
+                            </Text>
+                          </Flex>
+                          {trip.status === 'CURRENT' ? (
+                            <Tag
+                              h="18px"
+                              w="300px"
+                              rounded="xl"
+                              bgColor="#425C0A"
+                              color="white"
+                              justifyContent="center"
+                            >
+                              You&apos;re staying here right now!
+                            </Tag>
+                          ) : null}
+                          {hasReviews ? (
+                            <AccordionIcon alignSelf="center" boxSize="1.5em" />
+                          ) : (
+                            isPast && (
+                              <Button variant="ghost">
+                                {isExpanded ? 'Cancel' : 'Leave a Review'}
+                              </Button>
+                            )
+                          )}
+                        </Flex>
+                      </Flex>
+                    </AccordionButton>
+
+                    {isPast ? (
+                      <AccordionPanel py="4">
+                        <TripReviews
+                          ratingKey={`${trip.listing.title}`}
+                          location={trip.listing.title}
+                          locationReview={trip.locationReview}
+                          hostReview={trip.hostReview}
+                          guestReview={trip.guestReview}
+                          isPastTrip={isPast}
+                        />
+                      </AccordionPanel>
+                    ) : null}
+                  </>
+                )}
+              </AccordionItem>
+            );
+          })}
+        </VStack>
+      </Accordion>
     </>
   );
 }
 
 Trips.propTypes = {
-  trips: PropTypes.array.isRequired
+  trips: PropTypes.array.isRequired,
+  isPast: PropTypes.bool
 };
