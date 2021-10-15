@@ -61,17 +61,12 @@ export default function TripReviews({
   guestReview,
   isPastTrip = false
 }) {
-  console.log('bookingId: ', bookingId);
-
   const [reviewsInput, setReviewsInput] = useState({});
   const hasReviews = locationReview && hostReview;
   const [submitReviews] = useMutation(SUBMIT_REVIEW, {
     variables: {
       bookingId,
       ...reviewsInput
-    },
-    onCompleted: data => {
-      console.log(data);
     }
   });
 
