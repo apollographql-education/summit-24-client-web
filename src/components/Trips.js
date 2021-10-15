@@ -59,6 +59,7 @@ export default function Trips({trips, isPast = false}) {
             return (
               <AccordionItem
                 key={`${trip.listing.title}-${i}`}
+                isDisabled={!isPast}
                 w="full"
                 borderWidth="1px"
                 borderColor="gray.200"
@@ -66,7 +67,10 @@ export default function Trips({trips, isPast = false}) {
               >
                 {({isExpanded}) => (
                   <>
-                    <AccordionButton p="0">
+                    <AccordionButton
+                      p="0"
+                      _disabled={{opacity: 1, cursor: 'unset'}}
+                    >
                       <Flex
                         boxSizing="border-box"
                         w="full"
@@ -122,6 +126,7 @@ export default function Trips({trips, isPast = false}) {
                     {isPast ? (
                       <AccordionPanel py="4">
                         <TripReviews
+                          bookingId={trip.id}
                           ratingKey={`${trip.listing.title}`}
                           location={trip.listing.title}
                           locationReview={trip.locationReview}
