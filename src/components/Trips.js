@@ -3,6 +3,7 @@ import React from 'react';
 import TripReviews from './TripReviews';
 import {
   Box,
+  Button,
   Collapse,
   Flex,
   Heading,
@@ -68,7 +69,11 @@ function Trip({trip, isPast}) {
               boxSize="1.5em"
             />
           ) : (
-            isPast && <Text>{isOpen ? 'Cancel' : 'Leave a Review'}</Text>
+            isPast && (
+              <Button as="p" variant="ghost">
+                {isOpen ? 'Cancel' : 'Leave a Review'}
+              </Button>
+            )
           )}
         </Flex>
       </Flex>
