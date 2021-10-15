@@ -71,7 +71,7 @@ export default function TripReviews({
   });
 
   return (
-    <VStack w="full" alignItems="flex-start" spacing="4">
+    <VStack w="full" alignItems="flex-start" spacing="4" p="4">
       {locationReview ? (
         <Review ratingKey={ratingKey} review={locationReview}>
           Your review about the location
