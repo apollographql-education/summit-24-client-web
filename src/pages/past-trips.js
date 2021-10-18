@@ -4,7 +4,7 @@ import Trips from '../components/Trips';
 import {Center, Spinner} from '@chakra-ui/react';
 import {gql, useQuery} from '@apollo/client';
 
-export const GUEST_TRIPS = gql`
+export const PAST_GUEST_TRIPS = gql`
   query getPastTrips {
     pastGuestBookings {
       id
@@ -35,7 +35,7 @@ export const GUEST_TRIPS = gql`
 `;
 
 export default function PastTrips() {
-  const {loading, error, data} = useQuery(GUEST_TRIPS);
+  const {loading, error, data} = useQuery(PAST_GUEST_TRIPS);
 
   if (loading) {
     return (

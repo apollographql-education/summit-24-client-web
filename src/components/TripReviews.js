@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 import ReviewInput, {ReviewRating} from './TripReviewInput';
 import {Box, Button, Flex, Text, VStack} from '@chakra-ui/react';
+import {PAST_GUEST_TRIPS} from '../pages/past-trips';
 import {gql, useMutation} from '@apollo/client';
 
 function Review({review, children}) {
@@ -63,11 +64,15 @@ export default function TripReviews({
 }) {
   const [reviewsInput, setReviewsInput] = useState({});
   const hasReviews = locationReview && hostReview;
+
+  // NOTE: for the scope of this project, we've opted for the simpler refetch approach
+  // another, more optimized option is to update the cache directly -- https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
   const [submitReviews] = useMutation(SUBMIT_REVIEW, {
     variables: {
       bookingId,
       ...reviewsInput
-    }
+    },
+    refetchQueries: [{query: PAST_GUEST_TRIPS}]
   });
 
   return (
@@ -99,7 +104,6 @@ export default function TripReviews({
         What the host said about you
       </Review>
 
-      {/* TODO: send mutation request on click */}
       {!hasReviews && isPastTrip ? (
         <Button onClick={submitReviews}>Submit Review</Button>
       ) : null}
