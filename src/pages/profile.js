@@ -38,19 +38,22 @@ export default function Profile() {
   const inputNameRef = useRef();
   const inputProfilePicRef = useRef();
   const txtProfileDescRef = useRef();
-  const [updateProfileData, {loading, error}] = useMutation(UPDATE_PROFILE, {
-    onCompleted: data => {
-      setUser({...data.updateProfile.user});
-      const {name, profileDescription, profilePicture} =
-        data.updateProfile.user;
+  const [updateProfileData, {loading, error, client}] = useMutation(
+    UPDATE_PROFILE,
+    {
+      onCompleted: data => {
+        setUser({...data.updateProfile.user});
+        const {name, profileDescription, profilePicture} =
+          data.updateProfile.user;
 
-      inputNameRef.current.value = name;
-      inputProfilePicRef.current.value = profilePicture;
-      if (user.__typename === 'Host') {
-        txtProfileDescRef.current.value = profileDescription;
+        inputNameRef.current.value = name;
+        inputProfilePicRef.current.value = profilePicture;
+        if (user.__typename === 'Host') {
+          txtProfileDescRef.current.value = profileDescription;
+        }
       }
     }
-  });
+  );
   if (loading) return 'Submitting...';
   if (error) return `Submission error! ${error.message}`;
 
@@ -132,6 +135,7 @@ export default function Profile() {
               onClick={() => {
                 localStorage.removeItem('token');
                 setUser({user: null});
+                client.clearStore();
               }}
               rightIcon={<IoExit />}
             >
