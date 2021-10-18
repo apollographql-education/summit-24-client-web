@@ -105,7 +105,19 @@ export default function TripReviews({
       </Review>
 
       {!hasReviews && isPastTrip ? (
-        <Button onClick={submitReviews}>Submit Review</Button>
+        <Button
+          onClick={submitReviews}
+          disabled={
+            !(
+              reviewsInput?.locationReview?.rating &&
+              reviewsInput?.locationReview?.text &&
+              reviewsInput?.hostReview?.rating &&
+              reviewsInput?.hostReview?.text
+            )
+          }
+        >
+          Submit Review
+        </Button>
       ) : null}
     </VStack>
   );
