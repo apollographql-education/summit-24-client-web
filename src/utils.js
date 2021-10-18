@@ -27,8 +27,6 @@ export function useUser() {
     }
   });
 
-  console.log(user);
-
   return {
     user,
     setUser,
