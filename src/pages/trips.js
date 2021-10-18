@@ -47,10 +47,6 @@ export default function Trips() {
     return <div>uhoh error! {error.message}</div>;
   }
 
-  // const currentTrips = data.guestBookings.filter(
-  //   trip => trip.status !== 'COMPLETED'
-  // );
-
   return (
     <Layout>
       <CurrentTrips trips={data.upcomingGuestBookings} />

@@ -29,7 +29,10 @@ function Trip({trip, isPast}) {
         w="full"
         h="100px"
         _hover={{
-          background: 'gray.100'
+          background: isPast && 'gray.100'
+        }}
+        _disabled={{
+          cursor: 'default'
         }}
         onClick={toggleOpen}
         disabled={!isPast}
