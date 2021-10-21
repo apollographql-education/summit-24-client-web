@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
+  EditListing,
   Home,
   Listing,
   Listings,
@@ -35,8 +36,11 @@ export default function App() {
         <Route path="/listings">
           <Listings />
         </Route>
-        <Route path="/listing/:id">
+        <Route exact path="/listing/:id">
           <Listing />
+        </Route>
+        <Route path="/listing/:id/edit">
+          <EditListing />
         </Route>
         <Route path="/trips">
           <Trips />
@@ -59,7 +63,6 @@ export default function App() {
 }
 
 function PrivateRoute({children, user, ...rest}) {
-  console.log(user);
   return (
     <Route
       {...rest}

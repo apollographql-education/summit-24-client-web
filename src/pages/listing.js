@@ -16,8 +16,8 @@ import {
   UnorderedList
 } from '@chakra-ui/react';
 import {IoBed, IoCreate} from 'react-icons/io5';
+import {Link, useParams} from 'react-router-dom';
 import {gql, useQuery} from '@apollo/client';
-import {useParams} from 'react-router-dom';
 import {useUser} from '../utils';
 
 export const LISTING = gql`
@@ -84,14 +84,21 @@ export default function Listings() {
           />
           <Flex direction="row">
             <Stack flex="1" direction="column" spacing="6">
-              <Heading as="h1" size="lg">
-                {title}
-              </Heading>
-              {host && user && host.id === user.id && (
-                <Button rightIcon={<IoCreate size={20} />}>
-                  Edit your listing
-                </Button>
-              )}
+              <Flex>
+                <Heading as="h1" size="lg">
+                  {title}
+                </Heading>
+                {host && user && host.id === user.id && (
+                  <Button
+                    as={Link}
+                    to={`./${id}/edit`}
+                    rightIcon={<IoCreate size={20} />}
+                    ml="4"
+                  >
+                    Edit your listing
+                  </Button>
+                )}
+              </Flex>
               <Stars size={20} rating={overallRating} />
               <Flex direction="row" justify="space-between">
                 <Text fontSize="lg" fontWeight="regular" mr="1">
