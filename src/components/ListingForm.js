@@ -25,6 +25,7 @@ import {
   Textarea
 } from '@chakra-ui/react';
 import {gql, useMutation, useQuery} from '@apollo/client';
+import {useHistory} from 'react-router-dom';
 
 export const SUBMIT_LISTING = gql`
   mutation UpdateListingMutation(
@@ -94,6 +95,7 @@ ListingForm.propTypes = {
 };
 
 function ListingFormBody({listingData, amenities, listingId}) {
+  const history = useHistory();
   const listingAmenities = listingData.amenities.map(amenity => amenity.id);
   const allAmenities = amenities.reduce((acc, curr) => {
     if (!acc[curr.category]) {
@@ -290,6 +292,7 @@ function ListingFormBody({listingData, amenities, listingId}) {
           onClick={e => {
             e.preventDefault();
             submitListing();
+            history.push(`/listing/${listingId}`);
           }}
           colorScheme="blue"
         >
