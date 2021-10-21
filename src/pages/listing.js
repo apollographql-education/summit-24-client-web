@@ -91,7 +91,7 @@ export default function Listings() {
                 {host && user && host.id === user.id && (
                   <Button
                     as={Link}
-                    to={'./edit'}
+                    to={`./${id}/edit`}
                     rightIcon={<IoCreate size={20} />}
                   >
                     Edit your listing
