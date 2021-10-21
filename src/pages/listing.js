@@ -93,6 +93,7 @@ export default function Listings() {
                     as={Link}
                     to={`./${id}/edit`}
                     rightIcon={<IoCreate size={20} />}
+                    ml="4"
                   >
                     Edit your listing
                   </Button>
