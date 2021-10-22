@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 import intersection from 'lodash/intersection';
 import isEqual from 'lodash/isEqual';
+import startCase from 'lodash/startCase';
 import union from 'lodash/union';
 import {
   Button,
@@ -98,41 +99,27 @@ function ListingFormBody({listingData, amenities, listingId}) {
   const history = useHistory();
   const listingAmenities = listingData.amenities.map(amenity => amenity.id);
   const allAmenities = amenities.reduce((acc, curr) => {
-    if (!acc[curr.category]) {
-      acc[curr.category] = [curr];
-    } else {
-      acc[curr.category].push(curr);
-    }
-
-    return acc;
+    return {
+      ...acc,
+      [curr.category]: acc[curr.category]
+        ? [...acc[curr.category], curr]
+        : [curr]
+    };
   }, {});
 
   const [formValues, setFormValues] = useState({
-    ...listingData,
     amenities: listingAmenities
   });
 
-  const [submitListing] = useMutation(SUBMIT_LISTING, {
-    variables: {
-      listingId,
-      listing: formValues
+  const [submitListing, {loading}] = useMutation(mutation, {
+    onCompleted: () => {
+      history.push(`/listing/${listingId}`);
     }
   });
 
-  const handleNumInputChange = (newVal, name) => {
-    setFormValues({...formValues, [name]: Number(newVal)});
-  };
-
-  const handleChange = e => {
-    const value =
-      e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-
-    setFormValues({...formValues, [e.target.name]: value});
-  };
-
   const handleAmenitiesChange = (e, allAmenitiesInCategory) => {
     if (e.target.type === 'checkbox') {
-      if (e.target.name.includes('select-all')) {
+      if (e.target.id.includes('select-all')) {
         setFormValues(prevState => {
           return {
             ...prevState,
@@ -143,12 +130,12 @@ function ListingFormBody({listingData, amenities, listingId}) {
         if (e.target.checked) {
           setFormValues({
             ...formValues,
-            amenities: [...formValues.amenities, e.target.name]
+            amenities: [...formValues.amenities, e.target.id]
           });
         } else {
           setFormValues(prevState => {
             let updatedAmenities = [...prevState.amenities];
-            const indexToRemove = prevState.amenities.indexOf(e.target.name);
+            const indexToRemove = prevState.amenities.indexOf(e.target.id);
 
             if (indexToRemove > -1) {
               updatedAmenities = prevState.amenities
@@ -168,28 +155,51 @@ function ListingFormBody({listingData, amenities, listingId}) {
     }
   };
   return (
-    <Stack as="form" spacing="8" mb="4">
+    <Stack
+      as="form"
+      onSubmit={e => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const uncontrolledInputs = Object.fromEntries(formData);
+        uncontrolledInputs.costPerNight = Number(
+          uncontrolledInputs.costPerNight
+        );
+        uncontrolledInputs.numOfBeds = Number(uncontrolledInputs.numOfBeds);
+
+        submitListing({
+          variables: {
+            listingId,
+            listing: {...uncontrolledInputs, ...formValues}
+          }
+        });
+      }}
+      spacing="8"
+      mb="4"
+    >
       <FormControl as="fieldset">
         <FormLabel as="legend" textTransform="uppercase">
           General Information
         </FormLabel>
 
-        <FormLabel htmlFor="title">Title</FormLabel>
-        <Input
-          type="text"
-          name="title"
-          placeholder="Location name"
-          value={formValues.title}
-          onChange={handleChange}
-        />
+        <FormControl>
+          <FormLabel>Title</FormLabel>
+          <Input
+            type="text"
+            name="title"
+            placeholder="Location name"
+            defaultValue={listingData.title}
+          />
+        </FormControl>
 
-        <FormLabel htmlFor="description">Description</FormLabel>
-        <Textarea
-          name="description"
-          placeholder="Describe your location"
-          value={formValues.description}
-          onChange={handleChange}
-        />
+        <FormControl>
+          <FormLabel>Description</FormLabel>
+          <Textarea
+            name="description"
+            placeholder="Describe your location"
+            defaultValue={listingData.description}
+          />
+        </FormControl>
       </FormControl>
 
       <FormControl as="fieldset">
@@ -198,13 +208,12 @@ function ListingFormBody({listingData, amenities, listingId}) {
             Location Details
           </FormLabel>
           <HStack spacing="8">
-            <Stack>
-              <FormLabel htmlFor="locationType">Type</FormLabel>
+            <FormControl as={Stack}>
+              <FormLabel>Type</FormLabel>
               <Select
                 name="locationType"
                 placeholder="Select option"
-                value={formValues.locationType}
-                onChange={handleChange}
+                defaultValue={listingData.locationType}
               >
                 <option value="APARTMENT">Apartment</option>
                 <option value="CAMPSITE">Campsite</option>
@@ -212,15 +221,14 @@ function ListingFormBody({listingData, amenities, listingId}) {
                 <option value="ROOM">Room</option>
                 <option value="SPACESHIP">Spaceship</option>
               </Select>
-            </Stack>
-            <Stack maxW="146px">
-              <FormLabel htmlFor="numOfBeds">Bedrooms</FormLabel>
+            </FormControl>
+
+            <FormControl as={Stack} maxW="146px">
+              <FormLabel>Bedrooms</FormLabel>
               <NumberInput
                 name="numOfBeds"
-                defaultValue={2}
                 min={1}
-                value={formValues.numOfBeds}
-                onChange={newVal => handleNumInputChange(newVal, 'numOfBeds')}
+                defaultValue={listingData.numOfBeds}
               >
                 <NumberInputField />
                 <NumberInputStepper>
@@ -228,11 +236,11 @@ function ListingFormBody({listingData, amenities, listingId}) {
                   <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
-            </Stack>
+            </FormControl>
           </HStack>
 
-          <Stack maxW="146px">
-            <FormLabel htmlFor="costPerNight">Cost per night</FormLabel>
+          <FormControl as={Stack} maxW="146px">
+            <FormLabel>Cost per night</FormLabel>
             <InputGroup>
               <InputLeftAddon bg="transparent" paddingRight="0">
                 $
@@ -240,10 +248,7 @@ function ListingFormBody({listingData, amenities, listingId}) {
               <NumberInput
                 name="costPerNight"
                 min={1}
-                value={formValues.costPerNight}
-                onChange={newVal =>
-                  handleNumInputChange(newVal, 'costPerNight')
-                }
+                defaultValue={listingData.costPerNight}
               >
                 <NumberInputField
                   borderLeftWidth="0"
@@ -252,18 +257,17 @@ function ListingFormBody({listingData, amenities, listingId}) {
                 />
               </NumberInput>
             </InputGroup>
-          </Stack>
+          </FormControl>
 
-          <Stack>
-            <FormLabel htmlFor="photoThumbnail">Image</FormLabel>
+          <FormControl>
+            <FormLabel>Image</FormLabel>
             <Input
               name="photoThumbnail"
               type="text"
               placeholder="Image URL"
-              value={formValues.photoThumbnail}
-              onChange={handleChange}
+              defaultValue={listingData.photoThumbnail}
             />
-          </Stack>
+          </FormControl>
         </Stack>
       </FormControl>
 
@@ -278,7 +282,6 @@ function ListingFormBody({listingData, amenities, listingId}) {
               key={key}
               category={key}
               amenities={val}
-              allAmenities={allAmenities}
               onChange={handleAmenitiesChange}
               formValues={formValues.amenities}
             />
@@ -287,15 +290,7 @@ function ListingFormBody({listingData, amenities, listingId}) {
       </FormControl>
 
       <Flex w="full" justifyContent="flex-end">
-        <Button
-          type="submit"
-          onClick={e => {
-            e.preventDefault();
-            submitListing();
-            history.push(`/listing/${listingId}`);
-          }}
-          colorScheme="blue"
-        >
+        <Button type="submit" isLoading={loading} colorScheme="blue">
           Publish listing
         </Button>
       </Flex>
@@ -306,34 +301,21 @@ function ListingFormBody({listingData, amenities, listingId}) {
 ListingFormBody.propTypes = {
   listingData: PropTypes.object,
   amenities: PropTypes.array,
-  listingId: PropTypes.string.isRequired
+  listingId: PropTypes.string
 };
 
-function AmenitiesSelection({
-  formValues,
-  category,
-  amenities,
-  allAmenities,
-  onChange
-}) {
+function AmenitiesSelection({formValues, category, amenities, onChange}) {
   // example value for `category` -- 'ACCOMMODATION_DETAILS'
-  const title = category
-    .replace(/_/g, ' ')
-    .toLowerCase()
-    .split(' ') // capitalize first letter of each word
-    .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-    .join(' ');
+  const title = startCase(category.toLowerCase());
 
-  const allAmenitiesInCategory = allAmenities[category].map(
-    amenity => amenity.id
-  );
+  const allAmenitiesInCategory = amenities.map(amenity => amenity.id);
   const overlappingAmenities = intersection(allAmenitiesInCategory, formValues);
   return (
     <Stack>
       <HStack mb="2">
         <FormLabel mb="0">{title}</FormLabel>
         <Checkbox
-          name={`${category}-select-all`}
+          id={`${category}-select-all`}
           isChecked={isEqual(overlappingAmenities, allAmenitiesInCategory)}
           onChange={e => onChange(e, allAmenitiesInCategory)}
         >
@@ -348,7 +330,7 @@ function AmenitiesSelection({
               <Checkbox
                 key={id}
                 isChecked={isChecked}
-                name={id}
+                id={id}
                 onChange={e => onChange(e, allAmenitiesInCategory)}
               >
                 {name}
@@ -365,6 +347,5 @@ AmenitiesSelection.propTypes = {
   category: PropTypes.string,
   amenities: PropTypes.array,
   formValues: PropTypes.array,
-  onChange: PropTypes.func.isRequired,
-  allAmenities: PropTypes.object
+  onChange: PropTypes.func.isRequired
 };
