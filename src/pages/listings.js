@@ -1,8 +1,9 @@
 import Layout from '../layouts/Layout';
 import ListingCell from '../components/ListingCell';
 import React from 'react';
-import {Button, Heading, VStack} from '@chakra-ui/react';
+import {Button, Flex, Heading, VStack} from '@chakra-ui/react';
 import {IoAddCircle} from 'react-icons/io5';
+import {Link} from 'react-router-dom';
 import {gql, useQuery} from '@apollo/client';
 
 export const HOST_LISTINGS = gql`
@@ -28,7 +29,17 @@ export default function Listings() {
       <Heading as="h1" mb="4">
         My Listings
       </Heading>
-      <Button rightIcon={<IoAddCircle />}>Add Listing</Button>
+      <Flex w="full" justifyContent="flex-end">
+        <Button
+          as={Link}
+          to="listings/create"
+          rightIcon={<IoAddCircle />}
+          mb="4"
+          colorScheme="blue"
+        >
+          Add Listing
+        </Button>
+      </Flex>
       {data && (
         <VStack spacing="4">
           {data.hostListings.map((listingData, index) => (
