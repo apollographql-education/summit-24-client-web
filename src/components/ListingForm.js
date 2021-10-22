@@ -69,7 +69,7 @@ export default function ListingForm({
 ListingForm.propTypes = {
   listingData: PropTypes.object,
   listingId: PropTypes.string,
-  mutation: PropTypes.object
+  mutation: PropTypes.object.isRequired
 };
 
 function ListingFormBody({listingData, amenities, listingId, mutation}) {
@@ -278,6 +278,7 @@ function ListingFormBody({listingData, amenities, listingId, mutation}) {
 ListingFormBody.propTypes = {
   listingData: PropTypes.object,
   amenities: PropTypes.array,
+  mutation: PropTypes.object.isRequired,
   listingId: PropTypes.string
 };
 
