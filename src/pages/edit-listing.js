@@ -5,6 +5,32 @@ import {Center, Spinner} from '@chakra-ui/react';
 import {gql, useQuery} from '@apollo/client';
 import {useParams} from 'react-router-dom';
 
+export const EDIT_LISTING = gql`
+  mutation UpdateListingMutation(
+    $listingId: ID!
+    $listing: UpdateListingInput!
+  ) {
+    updateListing(listingId: $listingId, listing: $listing) {
+      success
+      message
+      listing {
+        id
+        title
+        description
+        photoThumbnail
+        numOfBeds
+        costPerNight
+        locationType
+        amenities {
+          id
+          category
+          name
+        }
+      }
+    }
+  }
+`;
+
 export const LISTING = gql`
   query getListing($id: ID!) {
     listing(id: $id) {
@@ -62,7 +88,11 @@ export default function EditListing() {
 
   return (
     <Layout>
-      <ListingForm listingData={listingData} listingId={data?.listing.id} />
+      <ListingForm
+        listingData={listingData}
+        listingId={data?.listing.id}
+        mutation={EDIT_LISTING}
+      />
     </Layout>
   );
 }

@@ -28,32 +28,6 @@ import {
 import {gql, useMutation, useQuery} from '@apollo/client';
 import {useHistory} from 'react-router-dom';
 
-export const SUBMIT_LISTING = gql`
-  mutation UpdateListingMutation(
-    $listingId: ID!
-    $listing: UpdateListingInput!
-  ) {
-    updateListing(listingId: $listingId, listing: $listing) {
-      success
-      message
-      listing {
-        id
-        title
-        description
-        photoThumbnail
-        numOfBeds
-        costPerNight
-        locationType
-        amenities {
-          id
-          category
-          name
-        }
-      }
-    }
-  }
-`;
-
 export const AMENITIES = gql`
   query getAllAmenities {
     listingAmenities {
@@ -65,6 +39,7 @@ export const AMENITIES = gql`
 `;
 
 export default function ListingForm({
+  mutation,
   listingId,
   listingData = {
     title: '',
@@ -85,6 +60,7 @@ export default function ListingForm({
     <ListingFormBody
       listingId={listingId}
       listingData={listingData}
+      mutation={mutation}
       amenities={data?.listingAmenities}
     />
   );
@@ -92,10 +68,11 @@ export default function ListingForm({
 
 ListingForm.propTypes = {
   listingData: PropTypes.object,
-  listingId: PropTypes.string.isRequired
+  listingId: PropTypes.string,
+  mutation: PropTypes.object
 };
 
-function ListingFormBody({listingData, amenities, listingId}) {
+function ListingFormBody({listingData, amenities, listingId, mutation}) {
   const history = useHistory();
   const listingAmenities = listingData.amenities.map(amenity => amenity.id);
   const allAmenities = amenities.reduce((acc, curr) => {
