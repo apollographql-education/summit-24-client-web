@@ -8,3 +8,4 @@ export {default as Login} from './login';
 export {default as Profile} from './profile';
 export {default as Wallet} from './wallet';
 export {default as EditListing} from './edit-listing';
+export {default as CreateListing} from './add-listing';

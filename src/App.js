@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
+  CreateListing,
   EditListing,
   Home,
   Listing,
@@ -33,8 +34,11 @@ export default function App() {
         <Route path="/login">
           <Login />
         </Route>
-        <Route path="/listings">
+        <Route exact path="/listings">
           <Listings />
+        </Route>
+        <Route path="/listings/create">
+          <CreateListing />
         </Route>
         <Route exact path="/listing/:id">
           <Listing />
