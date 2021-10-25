@@ -90,7 +90,11 @@ function ListingFormBody({listingData, amenities, listingId, mutation}) {
 
   const [submitListing, {loading}] = useMutation(mutation, {
     onCompleted: () => {
-      history.push(`/listing/${listingId}`);
+      if (listingId) {
+        history.push(`/listing/${listingId}`);
+      } else {
+        history.push('/listings');
+      }
     }
   });
 
