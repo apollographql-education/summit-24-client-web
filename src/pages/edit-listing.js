@@ -1,9 +1,10 @@
 import Layout from '../layouts/Layout';
 import ListingForm from '../components/ListingForm';
 import React from 'react';
-import {Center, Spinner} from '@chakra-ui/react';
+import {Button, Center, Spinner} from '@chakra-ui/react';
+import {IoArrowBackOutline} from 'react-icons/io5';
+import {Link, useParams} from 'react-router-dom';
 import {gql, useQuery} from '@apollo/client';
-import {useParams} from 'react-router-dom';
 
 export const EDIT_LISTING = gql`
   mutation UpdateListingMutation(
@@ -88,6 +89,9 @@ export default function EditListing() {
 
   return (
     <Layout>
+      <Button as={Link} to="./" leftIcon={<IoArrowBackOutline />} mb="4">
+        Back
+      </Button>
       <ListingForm
         listingData={listingData}
         listingId={data?.listing.id}
