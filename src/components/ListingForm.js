@@ -26,10 +26,9 @@ import {
   Textarea
 } from '@chakra-ui/react';
 import {gql, useMutation, useQuery} from '@apollo/client';
-import {useHistory} from 'react-router-dom';
 
 export const AMENITIES = gql`
-  query getAllAmenities {
+  query GetAllAmenities {
     listingAmenities {
       id
       category
@@ -151,28 +150,28 @@ function ListingFormBody({
       mb="4"
     >
       <FormControl as="fieldset">
-        <FormLabel as="legend" textTransform="uppercase">
-          General Information
-        </FormLabel>
-
-        <FormControl>
-          <FormLabel>Title</FormLabel>
-          <Input
-            type="text"
-            name="title"
-            placeholder="Location name"
-            defaultValue={listingData.title}
-          />
-        </FormControl>
-
-        <FormControl>
-          <FormLabel>Description</FormLabel>
-          <Textarea
-            name="description"
-            placeholder="Describe your location"
-            defaultValue={listingData.description}
-          />
-        </FormControl>
+        <Stack spacing="4">
+          <FormLabel as="legend" textTransform="uppercase">
+            General Information
+          </FormLabel>
+          <FormControl isRequired>
+            <FormLabel>Title</FormLabel>
+            <Input
+              type="text"
+              name="title"
+              placeholder="Location name"
+              defaultValue={listingData.title}
+            />
+          </FormControl>
+          <FormControl isRequired>
+            <FormLabel>Description</FormLabel>
+            <Textarea
+              name="description"
+              placeholder="Describe your location"
+              defaultValue={listingData.description}
+            />
+          </FormControl>
+        </Stack>
       </FormControl>
 
       <FormControl as="fieldset">
@@ -181,7 +180,7 @@ function ListingFormBody({
             Location Details
           </FormLabel>
           <HStack spacing="8">
-            <FormControl as={Stack}>
+            <FormControl as={Stack} isRequired>
               <FormLabel>Type</FormLabel>
               <Select
                 name="locationType"
@@ -212,7 +211,7 @@ function ListingFormBody({
             </FormControl>
           </HStack>
 
-          <FormControl as={Stack} maxW="146px">
+          <FormControl as={Stack} maxW="146px" isRequired>
             <FormLabel>Cost per night</FormLabel>
             <InputGroup>
               <InputLeftAddon bg="transparent" paddingRight="0">
@@ -232,7 +231,7 @@ function ListingFormBody({
             </InputGroup>
           </FormControl>
 
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Image</FormLabel>
             <Input
               name="photoThumbnail"
