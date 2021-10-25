@@ -32,7 +32,7 @@ export default function Listings() {
       <Flex w="full" justifyContent="flex-end">
         <Button
           as={Link}
-          to="listings/create"
+          to="./create"
           rightIcon={<IoAddCircle />}
           mb="4"
           colorScheme="blue"
