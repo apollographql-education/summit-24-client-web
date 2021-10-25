@@ -40,16 +40,9 @@ export const AMENITIES = gql`
 
 export default function ListingForm({
   mutation,
+  mutationOptions,
   listingId,
-  listingData = {
-    title: '',
-    description: '',
-    numOfBeds: 1,
-    locationType: '',
-    photoThumbnail: '',
-    amenities: [],
-    costPerNight: 100
-  }
+  listingData
 }) {
   const {loading, error, data} = useQuery(AMENITIES);
 
@@ -61,19 +54,26 @@ export default function ListingForm({
       listingId={listingId}
       listingData={listingData}
       mutation={mutation}
-      amenities={data?.listingAmenities}
+      amenities={data.listingAmenities}
+      mutationOptions={mutationOptions}
     />
   );
 }
 
 ListingForm.propTypes = {
-  listingData: PropTypes.object,
+  listingData: PropTypes.object.isRequired,
   listingId: PropTypes.string,
-  mutation: PropTypes.object.isRequired
+  mutation: PropTypes.object.isRequired,
+  mutationOptions: PropTypes.object.isRequired
 };
 
-function ListingFormBody({listingData, amenities, listingId, mutation}) {
-  const history = useHistory();
+function ListingFormBody({
+  listingData,
+  amenities,
+  listingId,
+  mutation,
+  mutationOptions
+}) {
   const listingAmenities = listingData.amenities.map(amenity => amenity.id);
   const allAmenities = amenities.reduce((acc, curr) => {
     return {
@@ -88,15 +88,7 @@ function ListingFormBody({listingData, amenities, listingId, mutation}) {
     amenities: listingAmenities
   });
 
-  const [submitListing, {loading}] = useMutation(mutation, {
-    onCompleted: () => {
-      if (listingId) {
-        history.push(`/listing/${listingId}`);
-      } else {
-        history.push('/listings');
-      }
-    }
-  });
+  const [submitListing, {loading}] = useMutation(mutation, mutationOptions);
 
   const handleAmenitiesChange = (e, allAmenitiesInCategory) => {
     if (e.target.type === 'checkbox') {
@@ -280,10 +272,11 @@ function ListingFormBody({listingData, amenities, listingId, mutation}) {
 }
 
 ListingFormBody.propTypes = {
-  listingData: PropTypes.object,
+  listingData: PropTypes.object.isRequired,
   amenities: PropTypes.array,
   mutation: PropTypes.object.isRequired,
-  listingId: PropTypes.string
+  listingId: PropTypes.string,
+  mutationOptions: PropTypes.object.isRequired
 };
 
 function AmenitiesSelection({formValues, category, amenities, onChange}) {

@@ -43,6 +43,7 @@ export const LISTING = gql`
 `;
 
 export default function EditListing() {
+  const history = useHistory();
   const {id} = useParams();
 
   const {loading, error, data} = useQuery(LISTING, {variables: {id}});
@@ -59,6 +60,7 @@ export default function EditListing() {
   }
 
   const {
+    id: listingId,
     title,
     description,
     numOfBeds,
@@ -66,7 +68,7 @@ export default function EditListing() {
     photoThumbnail,
     amenities,
     costPerNight
-  } = data?.listing;
+  } = data.listing;
 
   const listingData = {
     title,
@@ -85,8 +87,13 @@ export default function EditListing() {
       </Button>
       <ListingForm
         listingData={listingData}
-        listingId={data?.listing.id}
+        listingId={listingId}
         mutation={EDIT_LISTING}
+        mutationOptions={{
+          onCompleted: () => {
+            history.push(`/listing/${listingId}`);
+          }
+        }}
       />
     </Layout>
   );
