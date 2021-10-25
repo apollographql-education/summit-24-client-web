@@ -26,36 +26,9 @@ import {
   Textarea
 } from '@chakra-ui/react';
 import {gql, useMutation, useQuery} from '@apollo/client';
-import {useHistory} from 'react-router-dom';
-
-export const SUBMIT_LISTING = gql`
-  mutation UpdateListingMutation(
-    $listingId: ID!
-    $listing: UpdateListingInput!
-  ) {
-    updateListing(listingId: $listingId, listing: $listing) {
-      success
-      message
-      listing {
-        id
-        title
-        description
-        photoThumbnail
-        numOfBeds
-        costPerNight
-        locationType
-        amenities {
-          id
-          category
-          name
-        }
-      }
-    }
-  }
-`;
 
 export const AMENITIES = gql`
-  query getAllAmenities {
+  query GetAllAmenities {
     listingAmenities {
       id
       category
@@ -65,16 +38,10 @@ export const AMENITIES = gql`
 `;
 
 export default function ListingForm({
+  mutation,
+  mutationOptions,
   listingId,
-  listingData = {
-    title: '',
-    description: '',
-    numOfBeds: 1,
-    locationType: '',
-    photoThumbnail: '',
-    amenities: [],
-    costPerNight: 100
-  }
+  listingData
 }) {
   const {loading, error, data} = useQuery(AMENITIES);
 
@@ -85,18 +52,27 @@ export default function ListingForm({
     <ListingFormBody
       listingId={listingId}
       listingData={listingData}
-      amenities={data?.listingAmenities}
+      mutation={mutation}
+      amenities={data.listingAmenities}
+      mutationOptions={mutationOptions}
     />
   );
 }
 
 ListingForm.propTypes = {
-  listingData: PropTypes.object,
-  listingId: PropTypes.string.isRequired
+  listingData: PropTypes.object.isRequired,
+  listingId: PropTypes.string,
+  mutation: PropTypes.object.isRequired,
+  mutationOptions: PropTypes.object.isRequired
 };
 
-function ListingFormBody({listingData, amenities, listingId}) {
-  const history = useHistory();
+function ListingFormBody({
+  listingData,
+  amenities,
+  listingId,
+  mutation,
+  mutationOptions
+}) {
   const listingAmenities = listingData.amenities.map(amenity => amenity.id);
   const allAmenities = amenities.reduce((acc, curr) => {
     return {
@@ -111,11 +87,7 @@ function ListingFormBody({listingData, amenities, listingId}) {
     amenities: listingAmenities
   });
 
-  const [submitListing, {loading}] = useMutation(mutation, {
-    onCompleted: () => {
-      history.push(`/listing/${listingId}`);
-    }
-  });
+  const [submitListing, {loading}] = useMutation(mutation, mutationOptions);
 
   const handleAmenitiesChange = (e, allAmenitiesInCategory) => {
     if (e.target.type === 'checkbox') {
@@ -178,28 +150,28 @@ function ListingFormBody({listingData, amenities, listingId}) {
       mb="4"
     >
       <FormControl as="fieldset">
-        <FormLabel as="legend" textTransform="uppercase">
-          General Information
-        </FormLabel>
-
-        <FormControl>
-          <FormLabel>Title</FormLabel>
-          <Input
-            type="text"
-            name="title"
-            placeholder="Location name"
-            defaultValue={listingData.title}
-          />
-        </FormControl>
-
-        <FormControl>
-          <FormLabel>Description</FormLabel>
-          <Textarea
-            name="description"
-            placeholder="Describe your location"
-            defaultValue={listingData.description}
-          />
-        </FormControl>
+        <Stack spacing="4">
+          <FormLabel as="legend" textTransform="uppercase">
+            General Information
+          </FormLabel>
+          <FormControl isRequired>
+            <FormLabel>Title</FormLabel>
+            <Input
+              type="text"
+              name="title"
+              placeholder="Location name"
+              defaultValue={listingData.title}
+            />
+          </FormControl>
+          <FormControl isRequired>
+            <FormLabel>Description</FormLabel>
+            <Textarea
+              name="description"
+              placeholder="Describe your location"
+              defaultValue={listingData.description}
+            />
+          </FormControl>
+        </Stack>
       </FormControl>
 
       <FormControl as="fieldset">
@@ -208,7 +180,7 @@ function ListingFormBody({listingData, amenities, listingId}) {
             Location Details
           </FormLabel>
           <HStack spacing="8">
-            <FormControl as={Stack}>
+            <FormControl as={Stack} isRequired>
               <FormLabel>Type</FormLabel>
               <Select
                 name="locationType"
@@ -239,7 +211,7 @@ function ListingFormBody({listingData, amenities, listingId}) {
             </FormControl>
           </HStack>
 
-          <FormControl as={Stack} maxW="146px">
+          <FormControl as={Stack} maxW="146px" isRequired>
             <FormLabel>Cost per night</FormLabel>
             <InputGroup>
               <InputLeftAddon bg="transparent" paddingRight="0">
@@ -259,7 +231,7 @@ function ListingFormBody({listingData, amenities, listingId}) {
             </InputGroup>
           </FormControl>
 
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Image</FormLabel>
             <Input
               name="photoThumbnail"
@@ -299,9 +271,11 @@ function ListingFormBody({listingData, amenities, listingId}) {
 }
 
 ListingFormBody.propTypes = {
-  listingData: PropTypes.object,
+  listingData: PropTypes.object.isRequired,
   amenities: PropTypes.array,
-  listingId: PropTypes.string
+  mutation: PropTypes.object.isRequired,
+  listingId: PropTypes.string,
+  mutationOptions: PropTypes.object.isRequired
 };
 
 function AmenitiesSelection({formValues, category, amenities, onChange}) {

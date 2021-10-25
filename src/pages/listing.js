@@ -91,7 +91,7 @@ export default function Listings() {
                 {host && user && host.id === user.id && (
                   <Button
                     as={Link}
-                    to={`./${id}/edit`}
+                    to={`/listing/${id}/edit`}
                     rightIcon={<IoCreate size={20} />}
                     ml="4"
                   >
