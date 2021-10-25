@@ -34,3 +34,25 @@ export function useUser() {
     error
   };
 }
+
+export const LISTING_FRAGMENT = gql`
+  fragment ListingFragment on Listing {
+    id
+    title
+    photoThumbnail
+    numOfBeds
+    description
+    overallRating
+    costPerNight
+    locationType
+  }
+`;
+
+export const HOST_LISTINGS = gql`
+  query GetHostListings {
+    hostListings {
+      ...ListingFragment
+    }
+  }
+  ${LISTING_FRAGMENT}
+`;

@@ -2,24 +2,11 @@ import Layout from '../layouts/Layout';
 import ListingCell from '../components/ListingCell';
 import React from 'react';
 import {Button, Flex, Heading, VStack} from '@chakra-ui/react';
+import {HOST_LISTINGS} from '../utils';
 import {IoAddCircle} from 'react-icons/io5';
 import {Link} from 'react-router-dom';
-import {gql, useQuery} from '@apollo/client';
+import {useQuery} from '@apollo/client';
 
-export const HOST_LISTINGS = gql`
-  query getHostListings {
-    hostListings {
-      id
-      title
-      photoThumbnail
-      numOfBeds
-      description
-      overallRating
-      costPerNight
-      locationType
-    }
-  }
-`;
 export default function Listings() {
   const {loading, error, data} = useQuery(HOST_LISTINGS);
   if (loading) return 'Loading...';

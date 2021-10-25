@@ -3,7 +3,8 @@ import ListingForm from '../components/ListingForm';
 import React from 'react';
 import {Button, Center, Spinner} from '@chakra-ui/react';
 import {IoArrowBackOutline} from 'react-icons/io5';
-import {Link, useParams} from 'react-router-dom';
+import {LISTING_FRAGMENT} from '../utils';
+import {Link, useHistory, useParams} from 'react-router-dom';
 import {gql, useQuery} from '@apollo/client';
 
 export const EDIT_LISTING = gql`
@@ -15,13 +16,7 @@ export const EDIT_LISTING = gql`
       success
       message
       listing {
-        id
-        title
-        description
-        photoThumbnail
-        numOfBeds
-        costPerNight
-        locationType
+        ...ListingFragment
         amenities {
           id
           category
@@ -30,18 +25,13 @@ export const EDIT_LISTING = gql`
       }
     }
   }
+  ${LISTING_FRAGMENT}
 `;
 
 export const LISTING = gql`
-  query getListing($id: ID!) {
+  query GetListing($id: ID!) {
     listing(id: $id) {
-      id
-      title
-      description
-      photoThumbnail
-      numOfBeds
-      costPerNight
-      locationType
+      ...ListingFragment
       amenities {
         id
         name
@@ -49,6 +39,7 @@ export const LISTING = gql`
       }
     }
   }
+  ${LISTING_FRAGMENT}
 `;
 
 export default function EditListing() {

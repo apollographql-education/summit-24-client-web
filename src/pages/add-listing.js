@@ -2,6 +2,7 @@ import Layout from '../layouts/Layout';
 import ListingForm from '../components/ListingForm';
 import React from 'react';
 import {Button} from '@chakra-ui/react';
+import {HOST_LISTINGS, LISTING_FRAGMENT} from '../utils';
 import {IoArrowBackOutline} from 'react-icons/io5';
 import {Link} from 'react-router-dom';
 import {gql} from '@apollo/client';
@@ -12,13 +13,7 @@ export const CREATE_LISTING = gql`
       success
       message
       listing {
-        id
-        title
-        description
-        photoThumbnail
-        numOfBeds
-        costPerNight
-        locationType
+        ...ListingFragment
         amenities {
           id
           category
