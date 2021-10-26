@@ -1,4 +1,4 @@
-import DatePicker from 'react-datepicker';
+import BedroomInput from '../components/BedroomInput';
 import Hero from '../components/Hero';
 import Layout from '../layouts/Layout';
 import ListingCard from '../components/ListingCard';
@@ -95,16 +95,11 @@ export default function Home() {
                 />
               </Stack>
             </Flex>
-            <Select
-              placeholder="number of beds"
+            <BedroomInput
               {...INPUT_PROPS}
-              onChange={e => setNumOfBeds(e.target.value)}
-              value={numOfBeds}
-            >
-              <option value={1}>1 bed</option>
-              <option value={2}>2 beds</option>
-              <option value={3}>3 beds</option>
-            </Select>
+              numOfBeds={numOfBeds}
+              setNumOfBeds={setNumOfBeds}
+            />
             <Button
               as={Link}
               to={`/search/?startDate=${format(
