@@ -6,12 +6,14 @@ import Nav from '../components/Nav';
 import React, {useState} from 'react';
 import {
   Button,
+  Center,
   Container,
   Flex,
   Heading,
   Input,
   Select,
   SimpleGrid,
+  Spinner,
   Stack,
   Text
 } from '@chakra-ui/react';
@@ -22,7 +24,7 @@ import {gql, useQuery} from '@apollo/client';
 import 'react-datepicker/dist/react-datepicker.css';
 
 export const FEATURED_LISTINGS = gql`
-  query getFeaturedListings {
+  query GetFeaturedListings {
     featuredListings {
       id
       title
@@ -32,6 +34,7 @@ export const FEATURED_LISTINGS = gql`
     }
   }
 `;
+
 export default function Home() {
   const today = new Date();
   const [startDate, setStartDate] = useState(today);
@@ -58,8 +61,18 @@ export default function Home() {
   };
 
   const {loading, error, data} = useQuery(FEATURED_LISTINGS);
-  if (loading) return 'Loading...';
-  if (error) return `uhoh error! ${error.message}`;
+
+  if (loading) {
+    return (
+      <Center minH="100vh">
+        <Spinner size="lg" />
+      </Center>
+    );
+  }
+  if (error) {
+    return <div>uhoh error! {error.message}</div>;
+  }
+
   return (
     <div>
       <Hero>
