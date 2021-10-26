@@ -1,5 +1,6 @@
 import Layout from '../layouts/Layout';
 import ListingForm from '../components/ListingForm';
+import QueryResult from '../components/QueryResult';
 import React from 'react';
 import {Button, Center, Spinner} from '@chakra-ui/react';
 import {IoArrowBackOutline} from 'react-icons/io5';
@@ -48,53 +49,51 @@ export default function EditListing() {
 
   const {loading, error, data} = useQuery(LISTING, {variables: {id}});
 
-  if (loading) {
-    return (
-      <Center minH="100vh">
-        <Spinner size="lg" />
-      </Center>
-    );
-  }
-  if (error) {
-    return <div>uhoh error! {error.message}</div>;
-  }
+  let listingData = {};
+  let listingId = '';
 
-  const {
-    id: listingId,
-    title,
-    description,
-    numOfBeds,
-    locationType,
-    photoThumbnail,
-    amenities,
-    costPerNight
-  } = data.listing;
+  if (data) {
+    const {
+      id: listingID,
+      title,
+      description,
+      numOfBeds,
+      locationType,
+      photoThumbnail,
+      amenities,
+      costPerNight
+    } = data.listing;
 
-  const listingData = {
-    title,
-    description,
-    numOfBeds,
-    locationType,
-    photoThumbnail,
-    amenities,
-    costPerNight
-  };
+    listingData = {
+      title,
+      description,
+      numOfBeds,
+      locationType,
+      photoThumbnail,
+      amenities,
+      costPerNight
+    };
+
+    listingId = listingID;
+  }
 
   return (
     <Layout>
       <Button as={Link} to="./" leftIcon={<IoArrowBackOutline />} mb="4">
         Back
       </Button>
-      <ListingForm
-        listingData={listingData}
-        listingId={listingId}
-        mutation={EDIT_LISTING}
-        mutationOptions={{
-          onCompleted: () => {
-            history.push(`/listing/${listingId}`);
-          }
-        }}
-      />
+      <QueryResult loading={loading} error={error} data={data}>
+        <ListingForm
+          listingData={listingData}
+          listingId={listingId}
+          mutation={EDIT_LISTING}
+          mutationOptions={{
+            onCompleted: () => {
+              history.push(`/listing/${listingId}`);
+            }
+          }}
+        />
+      </QueryResult>
     </Layout>
   );
 }
