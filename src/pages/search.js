@@ -1,18 +1,17 @@
 import BedroomInput from '../components/BedroomInput';
 import Layout from '../layouts/Layout';
 import ListingCell from '../components/ListingCell';
+import QueryResult from '../components/QueryResult';
 import React, {useState} from 'react';
 import {
   Box,
   Button,
-  Center,
   Divider,
   Flex,
   HStack,
   Heading,
   Input,
   Select,
-  Spinner,
   Text,
   VStack
 } from '@chakra-ui/react';
@@ -74,87 +73,77 @@ export default function Search() {
     }
   });
 
-  if (loading) {
-    return (
-      <Center minH="100vh">
-        <Spinner size="lg" />
-      </Center>
-    );
-  }
-  if (error) {
-    return <div>uhoh error! {error.message}</div>;
-  }
+  let sortedListings = [];
 
-  const sortedListings = [...data.searchListings].sort((a, b) => {
-    if (sortBy === 'overallRating') {
-      return a[sortBy] < b[sortBy] ? 1 : -1;
-    } else {
-      return a[sortBy] < b[sortBy] ? -1 : 1;
-    }
-  });
+  if (data) {
+    sortedListings = [...data.searchListings].sort((a, b) => {
+      if (sortBy === 'overallRating') {
+        return a[sortBy] < b[sortBy] ? 1 : -1;
+      } else {
+        return a[sortBy] < b[sortBy] ? -1 : 1;
+      }
+    });
+  }
 
   return (
     <Layout>
-      <Heading as="h1" mb="6">
-        Search Listings
-      </Heading>
-      <Box>
-        <Text fontSize="xl" fontWeight="bold">
-          Dates
-        </Text>
-        <HStack spacing="6" minWidth="100%" mb="4">
-          <Flex direction="row" align="center">
-            <Input {...DATEPICKER_PROPS} selected={checkInDate} />
-            <Text mx="3"> - </Text>
-            <Input
-              {...DATEPICKER_PROPS}
-              selected={checkOutDate}
-              minDate={today < checkInDate ? checkInDate : today}
-              onChange={date => setEndDate(date)}
-            />
-          </Flex>
-          <Select
-            width="150px"
-            {...INPUT_PROPS}
-            onChange={e => setNumOfBeds(Number(e.target.value))}
-            value={numOfBeds}
-          >
-            <option disabled="disabled">Number of bedrooms</option>
-            <option value={1}>1+</option>
-            <option value={2}>2+</option>
-            <option value={3}>3+</option>
-          </Select>
-          <Button colorScheme="pink" width="150px" {...INPUT_PROPS}>
-            Search
-          </Button>
-        </HStack>
-        <Divider mb="4" borderWidth="1px" />
-      </Box>
-      {data && (
-        <Flex direction="column">
-          <Flex alignSelf="flex-end" align="center" mb="4">
-            <Text fontWeight="bold" fontSize="xl" mx="2">
-              Sort by -
-            </Text>
-            <Select
+      <QueryResult loading={loading} error={error} data={data}>
+        <Heading as="h1" mb="6">
+          Search Listings
+        </Heading>
+        <Box>
+          <Text fontSize="xl" fontWeight="bold">
+            Dates
+          </Text>
+          <HStack spacing="6" minWidth="100%" mb="4">
+            <Flex direction="row" align="center">
+              <Input {...DATEPICKER_PROPS} selected={checkInDate} />
+              <Text mx="3"> - </Text>
+              <Input
+                {...DATEPICKER_PROPS}
+                selected={checkOutDate}
+                minDate={today < checkInDate ? checkInDate : today}
+                onChange={date => setEndDate(date)}
+              />
+            </Flex>
+            <BedroomInput
               width="150px"
               {...INPUT_PROPS}
-              onChange={e => setSortBy(e.target.value)}
-              value={sortBy}
-            >
-              <option disabled="disabled">Sort by</option>
-              <option value="costPerNight">Price</option>
-              <option value="overallRating">Rating</option>
-              <option value="numOfBeds">Number of bedrooms</option>
-            </Select>
+              numOfBeds={numOfBeds}
+              setNumOfBeds={setNumOfBeds}
+            />
+            <Button colorScheme="pink" width="150px" {...INPUT_PROPS}>
+              Search
+            </Button>
+          </HStack>
+          <Divider mb="4" borderWidth="1px" />
+        </Box>
+        {data && (
+          <Flex direction="column">
+            <Flex alignSelf="flex-end" align="center" mb="4">
+              <Text fontWeight="bold" fontSize="xl" mx="2">
+                Sort by -
+              </Text>
+              <Select
+                width="150px"
+                {...INPUT_PROPS}
+                onChange={e => setSortBy(e.target.value)}
+                value={sortBy}
+              >
+                <option disabled="disabled">Sort by</option>
+                <option value="costPerNight">Price</option>
+                <option value="overallRating">Rating</option>
+                <option value="numOfBeds">Number of bedrooms</option>
+              </Select>
+            </Flex>
+            <VStack spacing="4">
+              {sortedListings.map(listingData => (
+                <ListingCell key={listingData.title} {...listingData} />
+              ))}
+            </VStack>
           </Flex>
-          <VStack spacing="4">
-            {sortedListings.map(listingData => (
-              <ListingCell key={listingData.title} {...listingData} />
-            ))}
-          </VStack>
-        </Flex>
-      )}
+        )}
+      </QueryResult>
     </Layout>
   );
 }
