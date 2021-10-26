@@ -3,17 +3,15 @@ import Hero from '../components/Hero';
 import Layout from '../layouts/Layout';
 import ListingCard from '../components/ListingCard';
 import Nav from '../components/Nav';
+import QueryResult from '../components/QueryResult';
 import React, {useState} from 'react';
 import {
   Button,
-  Center,
   Container,
   Flex,
   Heading,
   Input,
-  Select,
   SimpleGrid,
-  Spinner,
   Stack,
   Text
 } from '@chakra-ui/react';
@@ -54,19 +52,8 @@ export default function Home() {
 
   const {loading, error, data} = useQuery(FEATURED_LISTINGS);
 
-  if (loading) {
-    return (
-      <Center minH="100vh">
-        <Spinner size="lg" />
-      </Center>
-    );
-  }
-  if (error) {
-    return <div>uhoh error! {error.message}</div>;
-  }
-
   return (
-    <div>
+    <QueryResult loading={loading} error={error} data={data}>
       <Hero>
         <Nav isLight />
         <Container maxW="container.md" textColor="white">
@@ -130,6 +117,6 @@ export default function Home() {
           </SimpleGrid>
         </Container>
       </Layout>
-    </div>
+    </QueryResult>
   );
 }
