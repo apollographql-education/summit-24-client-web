@@ -3,7 +3,7 @@ import {useState} from 'react';
 
 import {gql, useQuery} from '@apollo/client';
 export const GET_USER = gql`
-  query getMyProfile {
+  query GetMyProfile {
     me {
       id
       name
