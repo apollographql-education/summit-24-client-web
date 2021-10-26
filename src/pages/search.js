@@ -1,4 +1,4 @@
-import DatePicker from 'react-datepicker';
+import BedroomInput from '../components/BedroomInput';
 import Layout from '../layouts/Layout';
 import ListingCell from '../components/ListingCell';
 import React, {useState} from 'react';
@@ -16,6 +16,7 @@ import {
   Text,
   VStack
 } from '@chakra-ui/react';
+import {getDatePickerProps} from '../utils';
 import {gql, useQuery} from '@apollo/client';
 import {useLocation} from 'react-router-dom';
 
@@ -52,24 +53,14 @@ export default function Search() {
   const [sortBy, setSortBy] = useState('costPerNight');
 
   const INPUT_PROPS = {size: 'lg'};
-  const DATEPICKER_PROPS = {
-    ...INPUT_PROPS,
-    type: 'date',
-    variant: 'flushed',
-    as: DatePicker,
-    dateFormat: 'MMM d, yyyy',
-    minDate: today,
+  const DATEPICKER_PROPS = getDatePickerProps({
+    today,
     startDate: checkInDate,
     endDate: checkOutDate,
-    onChange: date => {
-      setStartDate(date);
-
-      // match end date with start date if start date was changed to be farther in the future than the current end date
-      if (checkOutDate < date) {
-        setEndDate(date);
-      }
-    }
-  };
+    setStartDate,
+    setEndDate,
+    props: INPUT_PROPS
+  });
 
   const {loading, error, data} = useQuery(SEARCH_LISTINGS, {
     variables: {

@@ -19,6 +19,7 @@ import {
 } from '@chakra-ui/react';
 import {Link} from 'react-router-dom';
 import {format} from 'date-fns';
+import {getDatePickerProps} from '../utils';
 import {gql, useQuery} from '@apollo/client';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -42,23 +43,14 @@ export default function Home() {
   const [numOfBeds, setNumOfBeds] = useState(1);
 
   const INPUT_PROPS = {size: 'lg', width: '300px'};
-  const DATEPICKER_PROPS = {
-    ...INPUT_PROPS,
-    type: 'date',
-    as: DatePicker,
-    dateFormat: 'MM-dd-yyyy',
-    minDate: today,
+  const DATEPICKER_PROPS = getDatePickerProps({
+    today,
     startDate,
     endDate,
-    onChange: date => {
-      setStartDate(date);
-
-      // match end date with start date if start date was changed to be farther in the future than the current end date
-      if (endDate < date) {
-        setEndDate(date);
-      }
-    }
-  };
+    setStartDate,
+    setEndDate,
+    props: INPUT_PROPS
+  });
 
   const {loading, error, data} = useQuery(FEATURED_LISTINGS);
 

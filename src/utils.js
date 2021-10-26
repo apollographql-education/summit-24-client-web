@@ -1,3 +1,4 @@
+import DatePicker from 'react-datepicker';
 import {useState} from 'react';
 
 import {gql, useQuery} from '@apollo/client';
@@ -56,3 +57,30 @@ export const HOST_LISTINGS = gql`
   }
   ${LISTING_FRAGMENT}
 `;
+
+export const getDatePickerProps = ({
+  today,
+  startDate,
+  endDate,
+  setStartDate,
+  setEndDate,
+  ...props
+}) => {
+  return {
+    type: 'date',
+    as: DatePicker,
+    dateFormat: 'MM-dd-yyyy',
+    minDate: today,
+    startDate,
+    endDate,
+    onChange: date => {
+      setStartDate(date);
+
+      // match end date with start date if start date was changed to be farther in the future than the current end date
+      if (endDate < date) {
+        setEndDate(date);
+      }
+    },
+    ...props
+  };
+};
