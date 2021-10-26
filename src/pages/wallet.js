@@ -6,7 +6,7 @@ import {gql, useMutation} from '@apollo/client';
 import {useUser} from '../utils';
 
 export const ADD_FUNDS = gql`
-  mutation addFunds($amount: Float!) {
+  mutation AddFunds($amount: Float!) {
     addFundsToWallet(amount: $amount) {
       code
       success
