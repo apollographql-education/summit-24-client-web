@@ -1,4 +1,5 @@
 import Layout from '../layouts/Layout';
+import QueryResult from '../components/QueryResult';
 import React from 'react';
 import Trips from '../components/Trips';
 import {Center, Spinner} from '@chakra-ui/react';
@@ -50,7 +51,9 @@ export default function PastTrips() {
 
   return (
     <Layout>
-      <Trips trips={data.pastGuestBookings} isPast />
+      <QueryResult loading={loading} error={error} data={data}>
+        {({pastGuestBookings}) => <Trips trips={pastGuestBookings} isPast />}
+      </QueryResult>
     </Layout>
   );
 }

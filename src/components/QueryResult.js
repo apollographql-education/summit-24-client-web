@@ -16,7 +16,7 @@ export default function QueryResult({loading, error, data, children}) {
   }
 
   if (data) {
-    return children;
+    return children(data);
   }
 
   return <Center>Nothing to show</Center>;

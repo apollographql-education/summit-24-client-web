@@ -73,76 +73,74 @@ export default function Search() {
     }
   });
 
-  let sortedListings = [];
-
-  if (data) {
-    sortedListings = [...data.searchListings].sort((a, b) => {
-      if (sortBy === 'overallRating') {
-        return a[sortBy] < b[sortBy] ? 1 : -1;
-      } else {
-        return a[sortBy] < b[sortBy] ? -1 : 1;
-      }
-    });
-  }
-
   return (
     <Layout>
-      <QueryResult loading={loading} error={error} data={data}>
-        <Heading as="h1" mb="6">
-          Search Listings
-        </Heading>
-        <Box>
-          <Text fontSize="xl" fontWeight="bold">
-            Dates
-          </Text>
-          <HStack spacing="6" minWidth="100%" mb="4">
-            <Flex direction="row" align="center">
-              <Input {...DATEPICKER_PROPS} selected={checkInDate} />
-              <Text mx="3"> - </Text>
-              <Input
-                {...DATEPICKER_PROPS}
-                selected={checkOutDate}
-                minDate={today < checkInDate ? checkInDate : today}
-                onChange={date => setEndDate(date)}
-              />
-            </Flex>
-            <BedroomInput
-              width="150px"
-              {...INPUT_PROPS}
-              numOfBeds={numOfBeds}
-              setNumOfBeds={setNumOfBeds}
+      <Heading as="h1" mb="6">
+        Search Listings
+      </Heading>
+      <Box>
+        <Text fontSize="xl" fontWeight="bold">
+          Dates
+        </Text>
+        <HStack spacing="6" minWidth="100%" mb="4">
+          <Flex direction="row" align="center">
+            <Input {...DATEPICKER_PROPS} selected={checkInDate} />
+            <Text mx="3"> - </Text>
+            <Input
+              {...DATEPICKER_PROPS}
+              selected={checkOutDate}
+              minDate={today < checkInDate ? checkInDate : today}
+              onChange={date => setEndDate(date)}
             />
-            <Button colorScheme="pink" width="150px" {...INPUT_PROPS}>
-              Search
-            </Button>
-          </HStack>
-          <Divider mb="4" borderWidth="1px" />
-        </Box>
-        {data && (
-          <Flex direction="column">
-            <Flex alignSelf="flex-end" align="center" mb="4">
-              <Text fontWeight="bold" fontSize="xl" mx="2">
-                Sort by -
-              </Text>
-              <Select
-                width="150px"
-                {...INPUT_PROPS}
-                onChange={e => setSortBy(e.target.value)}
-                value={sortBy}
-              >
-                <option disabled="disabled">Sort by</option>
-                <option value="costPerNight">Price</option>
-                <option value="overallRating">Rating</option>
-                <option value="numOfBeds">Number of bedrooms</option>
-              </Select>
-            </Flex>
-            <VStack spacing="4">
-              {sortedListings.map(listingData => (
-                <ListingCell key={listingData.title} {...listingData} />
-              ))}
-            </VStack>
           </Flex>
-        )}
+          <BedroomInput
+            width="150px"
+            {...INPUT_PROPS}
+            numOfBeds={numOfBeds}
+            setNumOfBeds={setNumOfBeds}
+          />
+          <Button colorScheme="pink" width="150px" {...INPUT_PROPS}>
+            Search
+          </Button>
+        </HStack>
+        <Divider mb="4" borderWidth="1px" />
+      </Box>
+      <QueryResult loading={loading} error={error} data={data}>
+        {data => {
+          const sortedListings = [...data.searchListings].sort((a, b) => {
+            if (sortBy === 'overallRating') {
+              return a[sortBy] < b[sortBy] ? 1 : -1;
+            } else {
+              return a[sortBy] < b[sortBy] ? -1 : 1;
+            }
+          });
+
+          return (
+            <Flex direction="column">
+              <Flex alignSelf="flex-end" align="center" mb="4">
+                <Text fontWeight="bold" fontSize="xl" mx="2">
+                  Sort by -
+                </Text>
+                <Select
+                  width="150px"
+                  {...INPUT_PROPS}
+                  onChange={e => setSortBy(e.target.value)}
+                  value={sortBy}
+                >
+                  <option disabled="disabled">Sort by</option>
+                  <option value="costPerNight">Price</option>
+                  <option value="overallRating">Rating</option>
+                  <option value="numOfBeds">Number of bedrooms</option>
+                </Select>
+              </Flex>
+              <VStack spacing="4">
+                {sortedListings.map(listingData => (
+                  <ListingCell key={listingData.title} {...listingData} />
+                ))}
+              </VStack>
+            </Flex>
+          );
+        }}
       </QueryResult>
     </Layout>
   );

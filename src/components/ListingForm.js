@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import QueryResult from './QueryResult';
 import React, {useState} from 'react';
 import intersection from 'lodash/intersection';
 import isEqual from 'lodash/isEqual';
@@ -45,17 +46,18 @@ export default function ListingForm({
 }) {
   const {loading, error, data} = useQuery(AMENITIES);
 
-  if (loading) return 'Loading...';
-  if (error) return `uhoh error! ${error.message}`;
-
   return (
-    <ListingFormBody
-      listingId={listingId}
-      listingData={listingData}
-      mutation={mutation}
-      amenities={data.listingAmenities}
-      mutationOptions={mutationOptions}
-    />
+    <QueryResult loading={loading} error={error} data={data}>
+      {({listingAmenities}) => (
+        <ListingFormBody
+          listingId={listingId}
+          listingData={listingData}
+          mutation={mutation}
+          amenities={listingAmenities}
+          mutationOptions={mutationOptions}
+        />
+      )}
+    </QueryResult>
   );
 }
 

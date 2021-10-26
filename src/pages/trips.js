@@ -1,11 +1,11 @@
 import CurrentTrips from '../components/Trips';
 import Layout from '../layouts/Layout';
+import QueryResult from '../components/QueryResult';
 import React from 'react';
-import {Center, Spinner} from '@chakra-ui/react';
 import {gql, useQuery} from '@apollo/client';
 
 export const GUEST_TRIPS = gql`
-  query getGuestTrips {
+  query GetGuestTrips {
     upcomingGuestBookings {
       checkInDate
       checkOutDate
@@ -36,20 +36,13 @@ export const GUEST_TRIPS = gql`
 export default function Trips() {
   const {loading, error, data} = useQuery(GUEST_TRIPS);
 
-  if (loading) {
-    return (
-      <Center minH="100vh">
-        <Spinner size="lg" />
-      </Center>
-    );
-  }
-  if (error) {
-    return <div>uhoh error! {error.message}</div>;
-  }
-
   return (
     <Layout>
-      <CurrentTrips trips={data.upcomingGuestBookings} />
+      <QueryResult loading={loading} error={error} data={data}>
+        {({upcomingGuestBookings}) => (
+          <CurrentTrips trips={upcomingGuestBookings} />
+        )}
+      </QueryResult>
     </Layout>
   );
 }

@@ -53,7 +53,7 @@ export default function Home() {
   const {loading, error, data} = useQuery(FEATURED_LISTINGS);
 
   return (
-    <QueryResult loading={loading} error={error} data={data}>
+    <>
       <Hero>
         <Nav isLight />
         <Container maxW="container.md" textColor="white">
@@ -104,19 +104,23 @@ export default function Home() {
           </Flex>
         </Container>
       </Hero>
-      <Layout noNav>
-        <Container maxW="container.xl" pt="4">
-          <Heading as="h1" fontSize="3xl" fontWeight="bold" mb="4">
-            Explore Space
-          </Heading>
-          <SimpleGrid columns={[2, null, 3]} spacing={4}>
-            {data &&
-              data.featuredListings.map(listing => (
-                <ListingCard key={listing.title} {...listing} />
-              ))}
-          </SimpleGrid>
-        </Container>
-      </Layout>
-    </QueryResult>
+      <QueryResult loading={loading} error={error} data={data}>
+        {data => (
+          <Layout noNav>
+            <Container maxW="container.xl" pt="4">
+              <Heading as="h1" fontSize="3xl" fontWeight="bold" mb="4">
+                Explore Space
+              </Heading>
+              <SimpleGrid columns={[2, null, 3]} spacing={4}>
+                {data &&
+                  data.featuredListings.map(listing => (
+                    <ListingCard key={listing.title} {...listing} />
+                  ))}
+              </SimpleGrid>
+            </Container>
+          </Layout>
+        )}
+      </QueryResult>
+    </>
   );
 }
