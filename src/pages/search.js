@@ -5,12 +5,14 @@ import React, {useState} from 'react';
 import {
   Box,
   Button,
+  Center,
   Divider,
   Flex,
   HStack,
   Heading,
   Input,
   Select,
+  Spinner,
   Text,
   VStack
 } from '@chakra-ui/react';
@@ -18,7 +20,7 @@ import {gql, useQuery} from '@apollo/client';
 import {useLocation} from 'react-router-dom';
 
 export const SEARCH_LISTINGS = gql`
-  query searchListings($searchListingsInput: SearchListingsInput!) {
+  query SearchListings($searchListingsInput: SearchListingsInput!) {
     searchListings(criteria: $searchListingsInput) {
       id
       title
@@ -44,6 +46,7 @@ export default function Search() {
   const [checkInDate, setStartDate] = useState(new Date(checkInDateFromUrl));
   const [checkOutDate, setEndDate] = useState(new Date(checkOutDateFromUrl));
   const [numOfBeds, setNumOfBeds] = useState(numOfBedsFromUrl);
+  const [sortBy, setSortBy] = useState('costPerNight');
 
   const INPUT_PROPS = {size: 'lg'};
 
@@ -59,8 +62,24 @@ export default function Search() {
     }
   });
 
-  console.log(checkInDate, checkOutDate, numOfBeds);
-  console.log(loading, error, data);
+  if (loading) {
+    return (
+      <Center minH="100vh">
+        <Spinner size="lg" />
+      </Center>
+    );
+  }
+  if (error) {
+    return <div>uhoh error! {error.message}</div>;
+  }
+
+  const sortedListings = [...data.searchListings].sort((a, b) => {
+    if (sortBy === 'overallRating') {
+      return a[sortBy] < b[sortBy] ? 1 : -1;
+    } else {
+      return a[sortBy] < b[sortBy] ? -1 : 1;
+    }
+  });
 
   return (
     <Layout>
@@ -98,15 +117,15 @@ export default function Search() {
             />
           </Flex>
           <Select
-            placeholder="number of beds"
             width="150px"
             {...INPUT_PROPS}
-            onChange={e => setNumOfBeds(e.target.value)}
-            defaultValue={numOfBeds}
+            onChange={e => setNumOfBeds(Number(e.target.value))}
+            value={numOfBeds}
           >
-            <option value={1}>1 bed</option>
-            <option value={2}>2 beds</option>
-            <option value={3}>3 beds</option>
+            <option disabled="disabled">Number of bedrooms</option>
+            <option value={1}>1+</option>
+            <option value={2}>2+</option>
+            <option value={3}>3+</option>
           </Select>
           <Button colorScheme="pink" width="150px" {...INPUT_PROPS}>
             Search
@@ -121,19 +140,19 @@ export default function Search() {
               Sort by -
             </Text>
             <Select
-              placeholder="price desc"
               width="150px"
               {...INPUT_PROPS}
-              onChange={e => setNumOfBeds(e.target.value)}
-              defaultValue={numOfBeds}
+              onChange={e => setSortBy(e.target.value)}
+              value={sortBy}
             >
-              <option value={1}>price desc.</option>
-              <option value={2}>rating desc.</option>
-              <option value={3}>3 beds</option>
+              <option disabled="disabled">Sort by</option>
+              <option value="costPerNight">Price</option>
+              <option value="overallRating">Rating</option>
+              <option value="numOfBeds">Number of bedrooms</option>
             </Select>
           </Flex>
           <VStack spacing="4">
-            {data.searchListings.map(listingData => (
+            {sortedListings.map(listingData => (
               <ListingCell key={listingData.title} {...listingData} />
             ))}
           </VStack>

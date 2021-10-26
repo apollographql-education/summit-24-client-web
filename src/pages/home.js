@@ -88,7 +88,7 @@ export default function Home() {
               placeholder="number of beds"
               {...INPUT_PROPS}
               onChange={e => setNumOfBeds(e.target.value)}
-              defaultValue={numOfBeds}
+              value={numOfBeds}
             >
               <option value={1}>1 bed</option>
               <option value={2}>2 beds</option>
