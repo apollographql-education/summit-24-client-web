@@ -19,6 +19,8 @@ import {
 import {gql, useQuery} from '@apollo/client';
 import {useLocation} from 'react-router-dom';
 
+import 'react-datepicker/dist/react-datepicker.css';
+
 export const SEARCH_LISTINGS = gql`
   query SearchListings($searchListingsInput: SearchListingsInput!) {
     searchListings(criteria: $searchListingsInput) {
@@ -43,12 +45,31 @@ export default function Search() {
   const checkOutDateFromUrl = query.get('endDate');
   const numOfBedsFromUrl = parseInt(query.get('numOfBeds')) || 1;
 
+  const today = new Date();
   const [checkInDate, setStartDate] = useState(new Date(checkInDateFromUrl));
   const [checkOutDate, setEndDate] = useState(new Date(checkOutDateFromUrl));
   const [numOfBeds, setNumOfBeds] = useState(numOfBedsFromUrl);
   const [sortBy, setSortBy] = useState('costPerNight');
 
   const INPUT_PROPS = {size: 'lg'};
+  const DATEPICKER_PROPS = {
+    ...INPUT_PROPS,
+    type: 'date',
+    variant: 'flushed',
+    as: DatePicker,
+    dateFormat: 'MMM d, yyyy',
+    minDate: today,
+    startDate: checkInDate,
+    endDate: checkOutDate,
+    onChange: date => {
+      setStartDate(date);
+
+      // match end date with start date if start date was changed to be farther in the future than the current end date
+      if (checkOutDate < date) {
+        setEndDate(date);
+      }
+    }
+  };
 
   const {loading, error, data} = useQuery(SEARCH_LISTINGS, {
     variables: {
@@ -92,27 +113,12 @@ export default function Search() {
         </Text>
         <HStack spacing="6" minWidth="100%" mb="4">
           <Flex direction="row" align="center">
-            <Input
-              type="date"
-              {...INPUT_PROPS}
-              as={DatePicker}
-              variant="flushed"
-              selected={checkInDate}
-              dateFormat="MMM d, yyyy"
-              startDate={checkInDate}
-              endDate={checkOutDate}
-              onChange={date => setStartDate(date)}
-            />
+            <Input {...DATEPICKER_PROPS} selected={checkInDate} />
             <Text mx="3"> - </Text>
             <Input
-              type="date"
-              {...INPUT_PROPS}
-              as={DatePicker}
-              variant="flushed"
+              {...DATEPICKER_PROPS}
               selected={checkOutDate}
-              dateFormat="MMM d, yyyy"
-              startDate={checkInDate}
-              endDate={checkOutDate}
+              minDate={today < checkInDate ? checkInDate : today}
               onChange={date => setEndDate(date)}
             />
           </Flex>

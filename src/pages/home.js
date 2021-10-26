@@ -1,4 +1,3 @@
-import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from 'react-datepicker';
 import Hero from '../components/Hero';
 import Layout from '../layouts/Layout';
@@ -20,6 +19,8 @@ import {Link} from 'react-router-dom';
 import {format} from 'date-fns';
 import {gql, useQuery} from '@apollo/client';
 
+import 'react-datepicker/dist/react-datepicker.css';
+
 export const FEATURED_LISTINGS = gql`
   query getFeaturedListings {
     featuredListings {
@@ -32,11 +33,29 @@ export const FEATURED_LISTINGS = gql`
   }
 `;
 export default function Home() {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [numOfBeds, setNumOfBeds] = useState(0);
+  const today = new Date();
+  const [startDate, setStartDate] = useState(today);
+  const [endDate, setEndDate] = useState(today);
+  const [numOfBeds, setNumOfBeds] = useState(1);
 
   const INPUT_PROPS = {size: 'lg', width: '300px'};
+  const DATEPICKER_PROPS = {
+    ...INPUT_PROPS,
+    type: 'date',
+    as: DatePicker,
+    dateFormat: 'MM-dd-yyyy',
+    minDate: today,
+    startDate,
+    endDate,
+    onChange: date => {
+      setStartDate(date);
+
+      // match end date with start date if start date was changed to be farther in the future than the current end date
+      if (endDate < date) {
+        setEndDate(date);
+      }
+    }
+  };
 
   const {loading, error, data} = useQuery(FEATURED_LISTINGS);
   if (loading) return 'Loading...';
@@ -57,29 +76,16 @@ export default function Home() {
                 <Text fontSize="large" fontWeight="bold">
                   Check in
                 </Text>
-                <Input
-                  type="date"
-                  {...INPUT_PROPS}
-                  as={DatePicker}
-                  selected={startDate}
-                  dateFormat="MM-dd-yyyy"
-                  startDate={startDate}
-                  endDate={endDate}
-                  onChange={date => setStartDate(date)}
-                />
+                <Input {...DATEPICKER_PROPS} selected={startDate} />
               </Stack>
               <Stack direction="column" spacing={2}>
                 <Text fontSize="large" fontWeight="bold">
                   Check out
                 </Text>
                 <Input
-                  type="date"
-                  {...INPUT_PROPS}
-                  as={DatePicker}
+                  {...DATEPICKER_PROPS}
+                  minDate={today < startDate ? startDate : today}
                   selected={endDate}
-                  dateFormat="MM-dd-yyyy"
-                  startDate={startDate}
-                  endDate={endDate}
                   onChange={date => setEndDate(date)}
                 />
               </Stack>
