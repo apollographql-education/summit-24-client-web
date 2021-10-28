@@ -1,12 +1,28 @@
 import Layout from '../layouts/Layout';
-import ListingCell from '../components/ListingCell';
 import QueryResult from '../components/QueryResult';
 import React from 'react';
-import {Button, Flex, Heading, VStack} from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Image,
+  Text,
+  VStack
+} from '@chakra-ui/react';
 import {HOST_LISTINGS} from '../utils';
-import {IoAddCircle} from 'react-icons/io5';
+import {IoAddCircle, IoStar} from 'react-icons/io5';
 import {Link} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
+
+const LINK_PROPS = {
+  as: Link,
+  mr: '4',
+  textDecoration: 'underline',
+  _hover: {
+    textDecoration: 'none'
+  }
+};
 
 export default function Listings() {
   const {loading, error, data} = useQuery(HOST_LISTINGS);
@@ -31,12 +47,79 @@ export default function Listings() {
         {({hostListings}) => {
           return (
             <VStack spacing="4">
-              {hostListings.map((listingData, index) => (
-                <ListingCell
-                  key={`${listingData.title}-${index}`}
-                  {...listingData}
-                />
-              ))}
+              {hostListings.map((listingData, index) => {
+                const {
+                  id,
+                  title,
+                  photoThumbnail,
+                  overallRating,
+                  numberOfUpcomingBookings
+                } = listingData;
+                return (
+                  <Box
+                    key={`${title}-${index}`}
+                    borderWidth="1px"
+                    borderRadius="lg"
+                    overflow="hidden"
+                    w="full"
+                  >
+                    <Flex direction="row" justify="space-between" h="100px">
+                      <Image
+                        src={photoThumbnail}
+                        alt={title}
+                        objectFit="cover"
+                        w="150px"
+                        h="full"
+                        maxW="150px"
+                      />
+                      <Flex
+                        boxSize="full"
+                        p="4"
+                        justifyContent="space-between"
+                        alignItems="center"
+                      >
+                        <Flex
+                          direction="column"
+                          justify="space-around"
+                          h="full"
+                        >
+                          <Flex
+                            direction="column"
+                            justify="space-between"
+                            h="full"
+                          >
+                            <Heading as="h2" size="md">
+                              {title}
+                            </Heading>
+                            <Flex>
+                              <Text>{numberOfUpcomingBookings} bookings</Text>
+                              {overallRating ? (
+                                <Flex alignItems="center" ml="4">
+                                  {overallRating} <Box as={IoStar} ml="1" />
+                                </Flex>
+                              ) : (
+                                <Text ml="4">No ratings yet</Text>
+                              )}
+                            </Flex>
+                          </Flex>
+                        </Flex>
+
+                        <Flex>
+                          <Box {...LINK_PROPS} to={`/listing/${id}/edit`}>
+                            Edit
+                          </Box>
+                          <Box {...LINK_PROPS} to={`/listing/${id}`}>
+                            View
+                          </Box>
+                          <Box {...LINK_PROPS} to={`/listing/${id}/bookings`}>
+                            Manage Bookings
+                          </Box>
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                );
+              })}
             </VStack>
           );
         }}
