@@ -88,7 +88,7 @@ export default function ListingCell({
 }
 
 ListingCell.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
   photoThumbnail: PropTypes.string,
