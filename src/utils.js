@@ -53,6 +53,7 @@ export const HOST_LISTINGS = gql`
   query GetHostListings {
     hostListings {
       ...ListingFragment
+      numberOfUpcomingBookings
     }
   }
   ${LISTING_FRAGMENT}
