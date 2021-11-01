@@ -9,3 +9,5 @@ export {default as Profile} from './profile';
 export {default as Wallet} from './wallet';
 export {default as EditListing} from './edit-listing';
 export {default as CreateListing} from './add-listing';
+export {default as HostBookings} from './bookings';
+export {default as HostPastBookings} from './past-bookings';

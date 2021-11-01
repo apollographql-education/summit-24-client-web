@@ -26,5 +26,5 @@ QueryResult.propTypes = {
   loading: PropTypes.bool,
   error: PropTypes.object,
   data: PropTypes.object,
-  children: PropTypes.node
+  children: PropTypes.func
 };

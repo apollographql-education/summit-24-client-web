@@ -5,8 +5,8 @@ import React from 'react';
 import {Button} from '@chakra-ui/react';
 import {IoArrowBackOutline} from 'react-icons/io5';
 import {LISTING_FRAGMENT} from '../utils';
-import {Link, useHistory, useParams} from 'react-router-dom';
 import {gql, useQuery} from '@apollo/client';
+import {useHistory, useParams} from 'react-router-dom';
 
 export const EDIT_LISTING = gql`
   mutation UpdateListingMutation(
@@ -50,7 +50,13 @@ export default function EditListing() {
 
   return (
     <Layout>
-      <Button as={Link} to="./" leftIcon={<IoArrowBackOutline />} mb="4">
+      <Button
+        role="link"
+        aria-label="Go back to previous page"
+        onClick={() => history.goBack()}
+        leftIcon={<IoArrowBackOutline />}
+        mb="4"
+      >
         Back
       </Button>
       <QueryResult loading={loading} error={error} data={data}>

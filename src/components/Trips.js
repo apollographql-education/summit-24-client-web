@@ -14,9 +14,37 @@ import {
   VStack
 } from '@chakra-ui/react';
 import {IoChevronDown, IoChevronUp} from 'react-icons/io5';
+import {PAST_GUEST_TRIPS} from '../pages/past-trips';
 import {Link as RouterLink, useLocation} from 'react-router-dom';
+import {gql} from '@apollo/client';
 import {useToggle} from 'react-use';
 
+export const SUBMIT_REVIEW = gql`
+  mutation SubmitReview(
+    $bookingId: ID!
+    $hostReview: ReviewInput!
+    $locationReview: ReviewInput!
+  ) {
+    submitHostAndLocationReviews(
+      bookingId: $bookingId
+      hostReview: $hostReview
+      locationReview: $locationReview
+    ) {
+      success
+      message
+      hostReview {
+        id
+        text
+        rating
+      }
+      locationReview {
+        id
+        text
+        rating
+      }
+    }
+  }
+`;
 function Trip({trip, isPast}) {
   const [isOpen, toggleOpen] = useToggle(false);
   const hasReviews = trip.locationReview && trip.hostReview;
@@ -83,13 +111,21 @@ function Trip({trip, isPast}) {
       {isPast ? (
         <Collapse in={isOpen} py="4">
           <TripReviews
-            bookingId={trip.id}
             ratingKey={`${trip.listing.title}`}
             location={trip.listing.title}
             locationReview={trip.locationReview}
             hostReview={trip.hostReview}
             guestReview={trip.guestReview}
             isPastTrip={isPast}
+            mutation={SUBMIT_REVIEW}
+            mutationOptions={{
+              variables: {
+                bookingId: trip.id
+              },
+              // NOTE: for the scope of this project, we've opted for the simpler refetch approach
+              // another, more optimized option is to update the cache directly -- https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
+              refetchQueries: [{query: PAST_GUEST_TRIPS}]
+            }}
           />
         </Collapse>
       ) : null}

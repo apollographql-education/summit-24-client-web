@@ -4,6 +4,8 @@ import {
   CreateListing,
   EditListing,
   Home,
+  HostBookings,
+  HostPastBookings,
   Listing,
   Listings,
   Login,
@@ -45,6 +47,12 @@ export default function App() {
         </Route>
         <Route path="/listing/:id/edit">
           <EditListing />
+        </Route>
+        <Route path="/listing/:id/bookings">
+          <HostBookings />
+        </Route>
+        <Route path="/listing/:id/past-bookings">
+          <HostPastBookings />
         </Route>
         <Route path="/trips">
           <Trips />
