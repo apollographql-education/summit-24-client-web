@@ -1,19 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import TripReviews from './TripReviews';
+import {Box, Flex, Heading, Link, Text, VStack} from '@chakra-ui/react';
 import {
-  Avatar,
-  Box,
-  Button,
-  Collapse,
-  Flex,
-  Heading,
-  Link,
-  Text,
-  VStack
-} from '@chakra-ui/react';
+  Content,
+  Image,
+  InnerContainer,
+  ListingReviews,
+  OuterContainer
+} from './Card';
 import {HOST_BOOKINGS, SUBMIT_REVIEW} from '../pages/past-bookings';
-import {IoChevronDown, IoChevronUp} from 'react-icons/io5';
 import {Link as RouterLink, useLocation, useParams} from 'react-router-dom';
 import {useToggle} from 'react-use';
 
@@ -24,71 +19,41 @@ function Booking({booking, listingTitle, isPast}) {
   const graphqlVariables = {listingId: booking.listing.id, status: 'COMPLETED'};
 
   return (
-    <Box w="full" borderWidth="1px" borderColor="gray.200">
-      <Flex
-        as="button"
-        boxSizing="border-box"
-        w="full"
-        h="100px"
-        p="3"
-        _hover={{
-          background: isPast && 'gray.100'
-        }}
-        _disabled={{
-          cursor: 'default'
-        }}
-        onClick={toggleOpen}
-        disabled={!isPast}
-      >
-        <Avatar
+    <OuterContainer>
+      <InnerContainer p="3" isPast={isPast} toggleOpen={toggleOpen}>
+        <Image
           src={booking.guest.profilePicture}
           name={booking.guest.name}
-          h="full"
           w="auto"
         />
         <Flex justifyContent="space-between" boxSize="full" ml="3">
-          <Flex direction="column" alignItems="flex-start">
-            <Heading as="h2" size="md" fontWeight="semibold">
-              {booking.guest.name}
-            </Heading>
-            <Text fontSize="lg" mt="auto">
-              {booking.checkInDate} - {booking.checkOutDate}
-            </Text>
-          </Flex>
-          {booking.status === 'CURRENT' ? (
-            <Box w="max-content">
-              <Text fontWeight="semibold" fontStyle="italic">
-                Current guest
-              </Text>
-            </Box>
-          ) : null}
-          {hasHostReview ? (
-            <Box
-              as={isOpen ? IoChevronUp : IoChevronDown}
-              alignSelf="center"
-              boxSize="1.5em"
-            />
-          ) : (
-            isPast && (
-              <Button as="p" variant="ghost">
-                {isOpen ? 'Cancel' : 'Leave a Review'}
-              </Button>
-            )
-          )}
+          <Content
+            title={booking.guest.name}
+            checkInDate={booking.checkInDate}
+            checkOutDate={booking.checkOutDate}
+            hasReviews={hasHostReview}
+            isPast={isPast}
+            isOpen={isOpen}
+          >
+            {booking.status === 'CURRENT' ? (
+              <Box w="max-content">
+                <Text fontWeight="semibold" fontStyle="italic">
+                  Current guest
+                </Text>
+              </Box>
+            ) : null}
+          </Content>
         </Flex>
-      </Flex>
+      </InnerContainer>
       {isPast ? (
-        <Collapse in={isOpen} py="4">
-          <TripReviews
-            ratingKey={title}
-            location={title}
-            locationReview={booking.locationReview}
-            hostReview={booking.hostReview}
-            guestReview={booking.guestReview}
-            isPastTrip={isPast}
-            isHost
-            mutation={SUBMIT_REVIEW}
-            mutationOptions={{
+        <ListingReviews
+          isOpen={isOpen}
+          title={title}
+          isPast={isPast}
+          trip={booking}
+          mutationConfig={{
+            mutation: SUBMIT_REVIEW,
+            mutationOptions: {
               variables: {
                 ...graphqlVariables,
                 bookingId: booking.id
@@ -101,11 +66,11 @@ function Booking({booking, listingTitle, isPast}) {
                   variables: graphqlVariables
                 }
               ]
-            }}
-          />
-        </Collapse>
+            }
+          }}
+        />
       ) : null}
-    </Box>
+    </OuterContainer>
   );
 }
 
