@@ -1,19 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import TripReviews from './TripReviews';
+import {Box, Flex, Heading, Link, Tag, VStack} from '@chakra-ui/react';
 import {
-  Box,
-  Button,
-  Collapse,
-  Flex,
-  Heading,
+  Content,
   Image,
-  Link,
-  Tag,
-  Text,
-  VStack
-} from '@chakra-ui/react';
-import {IoChevronDown, IoChevronUp} from 'react-icons/io5';
+  InnerContainer,
+  ListingReviews,
+  OuterContainer
+} from './Card';
 import {PAST_GUEST_TRIPS} from '../pages/past-trips';
 import {Link as RouterLink, useLocation} from 'react-router-dom';
 import {gql} from '@apollo/client';
@@ -50,86 +44,59 @@ function Trip({trip, isPast}) {
   const hasReviews = trip.locationReview && trip.hostReview;
 
   return (
-    <Box w="full" borderWidth="1px" borderColor="gray.200">
-      <Flex
-        as="button"
-        boxSizing="border-box"
-        w="full"
-        h="100px"
-        _hover={{
-          background: isPast && 'gray.100'
-        }}
-        _disabled={{
-          cursor: 'default'
-        }}
-        onClick={toggleOpen}
-        disabled={!isPast}
-      >
+    <OuterContainer>
+      <InnerContainer isPast={isPast} toggleOpen={toggleOpen}>
         <Image
           src={trip.listing.photoThumbnail}
           alt={trip.listing.title}
           w="100px"
           minW="100px"
-          h="full"
         />
         <Flex boxSize="full" p="3">
-          <Flex w="full" direction="column" alignItems="flex-start">
-            <Heading as="h2" size="md" fontWeight="semibold">
-              {trip.listing.title}
-            </Heading>
-            <Text fontSize="lg" mt="auto">
-              {trip.checkInDate} - {trip.checkOutDate}
-            </Text>
-          </Flex>
-          {trip.status === 'CURRENT' ? (
-            <Tag
-              h="18px"
-              w="300px"
-              rounded="xl"
-              bgColor="#425C0A"
-              color="white"
-              justifyContent="center"
-            >
-              You&apos;re staying here right now!
-            </Tag>
-          ) : null}
-          {hasReviews ? (
-            <Box
-              as={isOpen ? IoChevronUp : IoChevronDown}
-              alignSelf="center"
-              boxSize="1.5em"
-            />
-          ) : (
-            isPast && (
-              <Button as="p" variant="ghost">
-                {isOpen ? 'Cancel' : 'Leave a Review'}
-              </Button>
-            )
-          )}
+          <Content
+            title={trip.listing.title}
+            checkInDate={trip.checkInDate}
+            checkOutDate={trip.checkOutDate}
+            hasReviews={hasReviews}
+            isPast={isPast}
+            isOpen={isOpen}
+            wrapperProps={{w: 'full'}}
+          >
+            {trip.status === 'CURRENT' ? (
+              <Tag
+                h="18px"
+                w="300px"
+                rounded="xl"
+                bgColor="#425C0A"
+                color="white"
+                justifyContent="center"
+              >
+                You&apos;re staying here right now!
+              </Tag>
+            ) : null}
+          </Content>
         </Flex>
-      </Flex>
+      </InnerContainer>
       {isPast ? (
-        <Collapse in={isOpen} py="4">
-          <TripReviews
-            ratingKey={`${trip.listing.title}`}
-            location={trip.listing.title}
-            locationReview={trip.locationReview}
-            hostReview={trip.hostReview}
-            guestReview={trip.guestReview}
-            isPastTrip={isPast}
-            mutation={SUBMIT_REVIEW}
-            mutationOptions={{
+        <ListingReviews
+          isOpen={isOpen}
+          title={trip.listing.title}
+          isPast={isPast}
+          trip={trip}
+          mutationConfig={{
+            mutation: SUBMIT_REVIEW,
+            mutationOptions: {
               variables: {
                 bookingId: trip.id
               },
               // NOTE: for the scope of this project, we've opted for the simpler refetch approach
               // another, more optimized option is to update the cache directly -- https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
               refetchQueries: [{query: PAST_GUEST_TRIPS}]
-            }}
-          />
-        </Collapse>
+            }
+          }}
+        />
       ) : null}
-    </Box>
+    </OuterContainer>
   );
 }
 
