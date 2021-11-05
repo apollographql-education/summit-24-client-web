@@ -8,6 +8,7 @@ import {
   getDatePickerProps,
   getDatesToExclude,
   getFirstValidDate,
+  getNextDate,
   isDateValid
 } from '../utils';
 import {gql, useMutation} from '@apollo/client';
@@ -53,7 +54,7 @@ export default function BookStay({costPerNight, bookings, listingId, query}) {
   const [checkInDate, setCheckInDate] = useState(
     getFirstValidDate(stringDates)
   );
-  const [checkOutDate, setCheckOutDate] = useState(checkInDate);
+  const [checkOutDate, setCheckOutDate] = useState(getNextDate(checkInDate));
 
   const DATEPICKER_PROPS = getDatePickerProps({
     today,

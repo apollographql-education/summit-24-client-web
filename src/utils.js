@@ -61,6 +61,10 @@ export const HOST_LISTINGS = gql`
   ${LISTING_FRAGMENT}
 `;
 
+export const getNextDate = date => {
+  return new Date(date).setDate(date.getDate() + 1);
+};
+
 export const getDatePickerProps = ({
   today,
   startDate,
