@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import differenceInDays from 'date-fns/differenceInDays';
-import {Box, Button, Flex, Input, Text} from '@chakra-ui/react';
+import {Box, Button, Flex, Input, Link, Text} from '@chakra-ui/react';
+import {Link as RouterLink} from 'react-router-dom';
 import {
   areDatesValid,
   getDatePickerProps,
@@ -9,23 +10,46 @@ import {
   getFirstValidDate,
   isDateValid
 } from '../utils';
+import {gql, useMutation} from '@apollo/client';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default function BookStay({costPerNight, bookings}) {
+export const BOOK_STAY = gql`
+  mutation BookStay($createBookingInput: CreateBookingInput) {
+    createBooking(createBookingInput: $createBookingInput) {
+      success
+      message
+      booking {
+        id
+        checkInDate
+        checkOutDate
+      }
+    }
+  }
+`;
+
+export default function BookStay({costPerNight, bookings, listingId, query}) {
   const today = new Date();
-  const {datesToExclude, stringDates} = bookings.reduce(
-    (acc, curr) => {
-      const {checkInDate, checkOutDate} = curr;
-      const {dates, stringDates} = getDatesToExclude(checkInDate, checkOutDate);
+  const {datesToExclude, stringDates} = useMemo(
+    () =>
+      bookings.reduce(
+        (acc, curr) => {
+          const {checkInDate, checkOutDate} = curr;
+          const {dates, stringDates} = getDatesToExclude(
+            checkInDate,
+            checkOutDate
+          );
 
-      acc.datesToExclude = [...acc.datesToExclude, ...dates];
-      acc.stringDates = [...acc.stringDates, ...stringDates];
+          acc.datesToExclude = [...acc.datesToExclude, ...dates];
+          acc.stringDates = [...acc.stringDates, ...stringDates];
 
-      return acc;
-    },
-    {datesToExclude: [], stringDates: []}
+          return acc;
+        },
+        {datesToExclude: [], stringDates: []}
+      ),
+    [bookings]
   );
+
   const [checkInDate, setCheckInDate] = useState(
     getFirstValidDate(stringDates)
   );
@@ -41,20 +65,75 @@ export default function BookStay({costPerNight, bookings}) {
   });
 
   const numNights = differenceInDays(checkOutDate, checkInDate);
-  console.log('numNights: ', numNights);
+
+  const [bookStay, {loading, error, data}] = useMutation(BOOK_STAY, {
+    variables: {
+      createBookingInput: {
+        listingId,
+        checkInDate,
+        checkOutDate
+      },
+      // NOTE: for the scope of this project, we've opted for the simpler refetch approach to update the listing's bookings
+      // another, more optimized option is to update the cache directly -- https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
+      refetchQueries: [{query}]
+    }
+  });
+
+  if (error) {
+    return (
+      <Container title="Oh no! Booking incomplete.">
+        <Box p="2">
+          <Text>We couldn&apos;t complete your request.</Text>
+          <Button
+            colorScheme="blue"
+            w="full"
+            mt="2"
+            onClick={() => window.location.reload()}
+          >
+            Book new dates
+          </Button>
+        </Box>
+      </Container>
+    );
+  }
+
+  if (data) {
+    const {checkInDate, checkOutDate} = data.createBooking.booking;
+
+    return (
+      <Container title="Booking successful!">
+        <Box p="2" textAlign="center">
+          <Text>You&apos;re staying here on</Text>
+          <Text fontWeight="semibold">
+            {checkInDate} - {checkOutDate}
+          </Text>
+          <Button
+            as={RouterLink}
+            to="/trips" // TODO: route to specific trip (need to add functionality to trips to view trip details)
+            colorScheme="blue"
+            w="full"
+            mt="2"
+          >
+            Review booking
+          </Button>
+          <Link
+            as="button"
+            mt="2"
+            textDecoration="underline"
+            _hover={{
+              textDecoration: 'none'
+            }}
+            onClick={() => window.location.reload()}
+          >
+            Book new dates
+          </Link>
+        </Box>
+      </Container>
+    );
+  }
 
   return (
-    <Box
-      ml="4"
-      w="300px"
-      h="300px"
-      borderWidth="2px"
-      borderColor="gray.400"
-      pos="relative"
-    >
-      <Box bg="gray.200" p="2">
-        <Text fontWeight="bold">Book your stay</Text>
-      </Box>
+    <Container pos="relative" h="initial" title="Book your stay">
       <Box p="2">
         <Text fontWeight="semibold" fontSize="lg">
           Dates
@@ -102,18 +181,48 @@ export default function BookStay({costPerNight, bookings}) {
           colorScheme="blue"
           w="calc(100% - 16px)" // subtract box padding (2 = 8px)
           pos="absolute"
-          bottom="2"
+          bottom="2" // compensate for box padding
+          // center button horizontally
           left="50%"
           transform="translateX(-50%)"
+          onClick={bookStay}
+          disabled={numNights < 1}
+          isLoading={loading}
         >
           Book trip
         </Button>
       </Box>
-    </Box>
+    </Container>
   );
 }
 
 BookStay.propTypes = {
   costPerNight: PropTypes.number,
-  bookings: PropTypes.array
+  bookings: PropTypes.array.isRequired,
+  listingId: PropTypes.string.isRequired,
+  query: PropTypes.object.isRequired
+};
+
+function Container({title, children, ...props}) {
+  return (
+    <Box
+      ml="4"
+      w="300px"
+      maxH="300px"
+      h="fit-content"
+      borderWidth="2px"
+      borderColor="gray.400"
+      {...props}
+    >
+      <Box bg="gray.200" p="2" textAlign="center">
+        <Text fontWeight="bold">{title}</Text>
+      </Box>
+      {children}
+    </Box>
+  );
+}
+
+Container.propTypes = {
+  title: PropTypes.string,
+  children: PropTypes.node
 };
