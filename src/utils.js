@@ -108,6 +108,9 @@ export const getDatesToExclude = (startDate, endDate) => {
     currDate.setDate(currDate.getDate() + 1);
   }
 
+  // keeping string values of the dates makes it easier to check
+  // datepicker inputs to see if the user selected a date
+  // that should be excluded
   return {
     dates: [...datesArr, end],
     stringDates: [...stringDatesArr, end.toString()]
@@ -131,7 +134,7 @@ export const getFirstValidDate = (invalidDates, checkInDate) => {
   return currDate;
 };
 
-// check if check in and check out dates overlap with an existing booking
+// check if rangeToCheck (check in and check out dates) overlaps with an existing booking
 export const areDatesValid = (bookings, rangeToCheck) => {
   return bookings.find(booking =>
     areIntervalsOverlapping(
