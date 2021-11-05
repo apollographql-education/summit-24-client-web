@@ -1,3 +1,4 @@
+import BookStay from '../components/BookStay';
 import Layout from '../layouts/Layout';
 import LocationType from '../components/LocationType';
 import QueryResult from '../components/QueryResult';
@@ -49,6 +50,10 @@ export const LISTING = gql`
         profileDescription
         overallRating
       }
+      bookings {
+        checkInDate
+        checkOutDate
+      }
     }
   }
 `;
@@ -71,7 +76,8 @@ export default function Listings() {
             host,
             reviews,
             overallRating,
-            costPerNight
+            costPerNight,
+            bookings
           } = data?.listing;
 
           return (
@@ -180,22 +186,7 @@ export default function Listings() {
                     </Stack>
                   </Box>
                 </Stack>
-                <Box
-                  ml="4"
-                  w="300px"
-                  h="300px"
-                  borderWidth="2px"
-                  borderColor="gray.400"
-                >
-                  <Box bg="gray.200" p="2">
-                    <Text fontWeight="bold">Book your stay</Text>
-                  </Box>
-                  <Box p="2">
-                    <Text>Dates</Text>
-                    <Text>Price</Text>
-                    <Text>{costPerNight}</Text>
-                  </Box>
-                </Box>
+                <BookStay costPerNight={costPerNight} bookings={bookings} />
               </Flex>
             </Stack>
           );

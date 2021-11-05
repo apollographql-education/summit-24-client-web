@@ -1,7 +1,9 @@
 import DatePicker from 'react-datepicker';
+import areIntervalsOverlapping from 'date-fns/areIntervalsOverlapping';
+import format from 'date-fns/format';
+import {gql, useQuery} from '@apollo/client';
 import {useState} from 'react';
 
-import {gql, useQuery} from '@apollo/client';
 export const GET_USER = gql`
   query GetMyProfile {
     me {
@@ -84,4 +86,65 @@ export const getDatePickerProps = ({
     },
     ...props
   };
+};
+
+// need to normalize Date time (data from getDatesToExclude times are all 00:00:00)
+// from Fri Nov 05 2021 11:38:24 GMT-0600 (Mountain Daylight Time)
+// to Fri Nov 05 2021 00:00:00 GMT-0600 (Mountain Daylight Time)
+const normalizeDate = date => {
+  return new Date(format(date, 'MMM d yyyy'));
+};
+
+export const getDatesToExclude = (startDate, endDate) => {
+  const datesArr = [];
+  const stringDatesArr = [];
+  const end = new Date(endDate);
+  const currDate = new Date(startDate);
+
+  while (currDate < end) {
+    const dateToAdd = new Date(currDate);
+    datesArr.push(dateToAdd);
+    stringDatesArr.push(dateToAdd.toString());
+    currDate.setDate(currDate.getDate() + 1);
+  }
+
+  // keeping string values of the dates makes it easier to check
+  // datepicker inputs to see if the user selected a date
+  // that should be excluded
+  return {
+    dates: [...datesArr, end],
+    stringDates: [...stringDatesArr, end.toString()]
+  };
+};
+
+export const isDateValid = (invalidDates, dateToCheck) => {
+  const checkDateString = normalizeDate(dateToCheck).toString();
+
+  return !invalidDates.includes(checkDateString);
+};
+
+export const getFirstValidDate = (invalidDates, checkInDate) => {
+  const today = checkInDate || new Date();
+  const currDate = normalizeDate(today);
+
+  while (!isDateValid(invalidDates, currDate)) {
+    currDate.setDate(currDate.getDate() + 1);
+  }
+
+  return currDate;
+};
+
+// check if rangeToCheck (check in and check out dates) overlaps with an existing booking
+export const areDatesValid = (bookings, rangeToCheck) => {
+  return bookings.find(booking =>
+    areIntervalsOverlapping(
+      {
+        start: new Date(booking.checkInDate),
+        end: new Date(booking.checkOutDate)
+      },
+      rangeToCheck
+    )
+  )
+    ? false
+    : true;
 };
