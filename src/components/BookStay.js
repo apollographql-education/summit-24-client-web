@@ -112,6 +112,25 @@ export default function BookStay({costPerNight, bookings, listingId, query}) {
     );
   }
 
+  if (data?.createBooking?.success === false) {
+    return (
+      <Container title="Oh no! Booking incomplete.">
+        <Box p="2">
+          <Text>{data?.createBooking?.message}</Text>
+          <Button
+            as={RouterLink}
+            to="/wallet"
+            colorScheme="blue"
+            w="full"
+            mt="2"
+          >
+            Add funds
+          </Button>
+        </Box>
+      </Container>
+    );
+  }
+
   if (data) {
     const {checkInDate, checkOutDate} = data.createBooking.booking;
 
