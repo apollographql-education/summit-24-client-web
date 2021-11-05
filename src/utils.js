@@ -1,7 +1,9 @@
 import DatePicker from 'react-datepicker';
+import areIntervalsOverlapping from 'date-fns/areIntervalsOverlapping';
 import format from 'date-fns/format';
 import {gql, useQuery} from '@apollo/client';
 import {useState} from 'react';
+
 export const GET_USER = gql`
   query GetMyProfile {
     me {
@@ -127,4 +129,19 @@ export const getFirstValidDate = (invalidDates, checkInDate) => {
   }
 
   return currDate;
+};
+
+// check if check in and check out dates overlap with an existing booking
+export const areDatesValid = (bookings, rangeToCheck) => {
+  return bookings.find(booking =>
+    areIntervalsOverlapping(
+      {
+        start: new Date(booking.checkInDate),
+        end: new Date(booking.checkOutDate)
+      },
+      rangeToCheck
+    )
+  )
+    ? false
+    : true;
 };
