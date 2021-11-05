@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout';
 import ListingCell from '../components/ListingCell';
 import QueryResult from '../components/QueryResult';
 import React, {useState} from 'react';
+import format from 'date-fns/format';
 import {
   Box,
   Button,
@@ -135,7 +136,14 @@ export default function Search() {
               </Flex>
               <VStack spacing="4">
                 {sortedListings.map(listingData => (
-                  <ListingCell key={listingData.title} {...listingData} />
+                  <ListingCell
+                    key={listingData.title}
+                    {...listingData}
+                    to={`/listing/${listingData.id}/?startDate=${format(
+                      checkInDate,
+                      'MM-dd-yyyy'
+                    )}&endDate=${format(checkOutDate, 'MM-dd-yyyy')}`}
+                  />
                 ))}
               </VStack>
             </Flex>
