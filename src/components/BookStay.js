@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, {useState} from 'react';
-import {Box, Flex, Input, Text} from '@chakra-ui/react';
+import differenceInDays from 'date-fns/differenceInDays';
+import {Box, Button, Flex, Input, Text} from '@chakra-ui/react';
 import {
   areDatesValid,
   getDatePickerProps,
@@ -39,13 +40,25 @@ export default function BookStay({costPerNight, bookings}) {
     excludeDates: datesToExclude
   });
 
+  const numNights = differenceInDays(checkOutDate, checkInDate);
+  console.log('numNights: ', numNights);
+
   return (
-    <Box ml="4" w="300px" h="300px" borderWidth="2px" borderColor="gray.400">
+    <Box
+      ml="4"
+      w="300px"
+      h="300px"
+      borderWidth="2px"
+      borderColor="gray.400"
+      pos="relative"
+    >
       <Box bg="gray.200" p="2">
         <Text fontWeight="bold">Book your stay</Text>
       </Box>
       <Box p="2">
-        <Text>Dates</Text>
+        <Text fontWeight="semibold" fontSize="lg">
+          Dates
+        </Text>
         <Flex direction="row" align="center">
           <Input
             {...DATEPICKER_PROPS}
@@ -74,8 +87,27 @@ export default function BookStay({costPerNight, bookings}) {
             }}
           />
         </Flex>
-        <Text>Price</Text>
-        <Text>{costPerNight}</Text>
+        <Box mt="2">
+          <Text fontWeight="semibold" fontSize="lg">
+            Price
+          </Text>
+          <Text textAlign="center">
+            ${costPerNight} x {numNights} nights ={' '}
+            <Box as="span" fontWeight="semibold" fontSize="lg">
+              ${costPerNight * numNights}
+            </Box>
+          </Text>
+        </Box>
+        <Button
+          colorScheme="blue"
+          w="calc(100% - 16px)" // subtract box padding (2 = 8px)
+          pos="absolute"
+          bottom="2"
+          left="50%"
+          transform="translateX(-50%)"
+        >
+          Book trip
+        </Button>
       </Box>
     </Box>
   );
