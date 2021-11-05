@@ -67,6 +67,7 @@ export default function Listings() {
       <QueryResult loading={loading} error={error} data={data}>
         {data => {
           const {
+            id,
             title,
             description,
             numOfBeds,
@@ -186,7 +187,12 @@ export default function Listings() {
                     </Stack>
                   </Box>
                 </Stack>
-                <BookStay costPerNight={costPerNight} bookings={bookings} />
+                <BookStay
+                  costPerNight={costPerNight}
+                  bookings={bookings}
+                  listingId={id}
+                  query={LISTING}
+                />
               </Flex>
             </Stack>
           );
