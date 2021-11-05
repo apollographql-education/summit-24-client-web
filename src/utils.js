@@ -1,7 +1,7 @@
 import DatePicker from 'react-datepicker';
-import {useState} from 'react';
-
+import format from 'date-fns/format';
 import {gql, useQuery} from '@apollo/client';
+import {useState} from 'react';
 export const GET_USER = gql`
   query GetMyProfile {
     me {
@@ -84,4 +84,47 @@ export const getDatePickerProps = ({
     },
     ...props
   };
+};
+
+// need to normalize Date time (data from getDatesToExclude times are all 00:00:00)
+// from Fri Nov 05 2021 11:38:24 GMT-0600 (Mountain Daylight Time)
+// to Fri Nov 05 2021 00:00:00 GMT-0600 (Mountain Daylight Time)
+const normalizeDate = date => {
+  return new Date(format(date, 'MMM d yyyy'));
+};
+
+export const getDatesToExclude = (startDate, endDate) => {
+  const datesArr = [];
+  const stringDatesArr = [];
+  const end = new Date(endDate);
+  const currDate = new Date(startDate);
+
+  while (currDate < end) {
+    const dateToAdd = new Date(currDate);
+    datesArr.push(dateToAdd);
+    stringDatesArr.push(dateToAdd.toString());
+    currDate.setDate(currDate.getDate() + 1);
+  }
+
+  return {
+    dates: [...datesArr, end],
+    stringDates: [...stringDatesArr, end.toString()]
+  };
+};
+
+export const isDateValid = (invalidDates, dateToCheck) => {
+  const checkDateString = normalizeDate(dateToCheck).toString();
+
+  return !invalidDates.includes(checkDateString);
+};
+
+export const getFirstValidDate = (invalidDates, checkInDate) => {
+  const today = checkInDate || new Date();
+  const currDate = normalizeDate(today);
+
+  while (!isDateValid(invalidDates, currDate)) {
+    currDate.setDate(currDate.getDate() + 1);
+  }
+
+  return currDate;
 };
