@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, {useMemo, useState} from 'react';
 import differenceInDays from 'date-fns/differenceInDays';
 import {Box, Button, Flex, Input, Link, Text} from '@chakra-ui/react';
-import {Link as RouterLink} from 'react-router-dom';
+import {Link as RouterLink, useLocation} from 'react-router-dom';
 import {
   areDatesValid,
   getDatePickerProps,
@@ -30,7 +30,14 @@ export const BOOK_STAY = gql`
 `;
 
 export default function BookStay({costPerNight, bookings, listingId, query}) {
-  const today = new Date();
+  // get initial dates from url
+  const searchQuery = new URLSearchParams(useLocation().search);
+  const checkInDateStringFromUrl = searchQuery.get('startDate');
+  const checkOutDateStringFromUrl = searchQuery.get('endDate');
+  const checkInDateFromUrl = new Date(checkInDateStringFromUrl);
+  const checkOutDateFromUrl = new Date(checkOutDateStringFromUrl);
+
+  //   arrays of dates (in Date and string formats) that are already booked
   const {datesToExclude, stringDates} = useMemo(
     () =>
       bookings.reduce(
@@ -51,11 +58,20 @@ export default function BookStay({costPerNight, bookings, listingId, query}) {
     [bookings]
   );
 
+  //   if the dates from the url are "invalid" dates, initialize to the first available date
   const [checkInDate, setCheckInDate] = useState(
-    getFirstValidDate(stringDates)
+    checkInDateStringFromUrl && isDateValid(stringDates, checkInDateFromUrl)
+      ? new Date(checkInDateFromUrl)
+      : getFirstValidDate(stringDates)
   );
-  const [checkOutDate, setCheckOutDate] = useState(getNextDate(checkInDate));
+  const [checkOutDate, setCheckOutDate] = useState(
+    checkOutDateStringFromUrl && isDateValid(stringDates, checkOutDateFromUrl)
+      ? new Date(checkOutDateFromUrl)
+      : getNextDate(checkInDate)
+  );
+  const numNights = differenceInDays(checkOutDate, checkInDate);
 
+  const today = new Date();
   const DATEPICKER_PROPS = getDatePickerProps({
     today,
     startDate: checkInDate,
@@ -64,8 +80,6 @@ export default function BookStay({costPerNight, bookings, listingId, query}) {
     setEndDate: setCheckOutDate,
     excludeDates: datesToExclude
   });
-
-  const numNights = differenceInDays(checkOutDate, checkInDate);
 
   const [bookStay, {loading, error, data}] = useMutation(BOOK_STAY, {
     variables: {
