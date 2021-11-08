@@ -17,6 +17,7 @@ import {
   Text,
   UnorderedList
 } from '@chakra-ui/react';
+import {GUEST_TRIPS} from './trips';
 import {IoBed, IoCreate} from 'react-icons/io5';
 import {Link, useParams} from 'react-router-dom';
 import {gql, useQuery} from '@apollo/client';
@@ -67,6 +68,7 @@ export default function Listings() {
       <QueryResult loading={loading} error={error} data={data}>
         {data => {
           const {
+            id,
             title,
             description,
             numOfBeds,
@@ -186,7 +188,12 @@ export default function Listings() {
                     </Stack>
                   </Box>
                 </Stack>
-                <BookStay costPerNight={costPerNight} bookings={bookings} />
+                <BookStay
+                  costPerNight={costPerNight}
+                  bookings={bookings}
+                  listingId={id}
+                  refetchQueries={[{query: LISTING}, {query: GUEST_TRIPS}]}
+                />
               </Flex>
             </Stack>
           );
