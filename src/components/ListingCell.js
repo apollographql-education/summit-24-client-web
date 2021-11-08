@@ -79,7 +79,11 @@ export default function ListingCell({
               </Flex>
             </Flex>
 
-            <Stars size={20} rating={overallRating} />
+            {overallRating ? (
+              <Stars size={20} rating={overallRating} />
+            ) : (
+              <Text>No reviews yet</Text>
+            )}
           </Flex>
         </Flex>
       </Flex>
