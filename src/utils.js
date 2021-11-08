@@ -85,7 +85,7 @@ export const getDatePickerProps = ({
 
       // match end date with start date if start date was changed to be farther in the future than the current end date
       if (endDate < date) {
-        setEndDate(date);
+        setEndDate(new Date(getNextDate(date)));
       }
     },
     ...props
