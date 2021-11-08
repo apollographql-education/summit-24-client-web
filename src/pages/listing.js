@@ -109,7 +109,11 @@ export default function Listings() {
                       </Button>
                     )}
                   </Flex>
-                  <Stars size={20} rating={overallRating} />
+                  {overallRating ? (
+                    <Stars size={20} rating={overallRating} />
+                  ) : (
+                    <Text>No reviews yet</Text>
+                  )}
                   <Flex direction="row" justify="space-between">
                     <Text fontSize="lg" fontWeight="regular" mr="1">
                       {description}
