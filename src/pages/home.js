@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import {Link} from 'react-router-dom';
 import {format} from 'date-fns';
-import {getDatePickerProps} from '../utils';
+import {getDatePickerProps, getNextDate} from '../utils';
 import {gql, useQuery} from '@apollo/client';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -37,7 +37,7 @@ export const FEATURED_LISTINGS = gql`
 export default function Home() {
   const today = new Date();
   const [startDate, setStartDate] = useState(today);
-  const [endDate, setEndDate] = useState(today);
+  const [endDate, setEndDate] = useState(getNextDate(today));
   const [numOfBeds, setNumOfBeds] = useState(1);
 
   const INPUT_PROPS = {size: 'lg', width: '300px'};
