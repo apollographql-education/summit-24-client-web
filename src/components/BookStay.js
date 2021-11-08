@@ -29,7 +29,12 @@ export const BOOK_STAY = gql`
   }
 `;
 
-export default function BookStay({costPerNight, bookings, listingId, query}) {
+export default function BookStay({
+  costPerNight,
+  bookings,
+  listingId,
+  refetchQueries
+}) {
   // get initial dates from url
   const searchQuery = new URLSearchParams(useLocation().search);
   const checkInDateStringFromUrl = searchQuery.get('startDate');
@@ -91,7 +96,7 @@ export default function BookStay({costPerNight, bookings, listingId, query}) {
       // NOTE: for the scope of this project, we've opted for the simpler refetch approach to update the listing's bookings
       // another, more optimized option is to update the cache directly -- https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
     },
-    refetchQueries: [{query}]
+    refetchQueries
   });
 
   if (error) {
@@ -234,7 +239,7 @@ BookStay.propTypes = {
   costPerNight: PropTypes.number,
   bookings: PropTypes.array.isRequired,
   listingId: PropTypes.string.isRequired,
-  query: PropTypes.object.isRequired
+  refetchQueries: PropTypes.array
 };
 
 function Container({title, children, ...props}) {

@@ -17,6 +17,7 @@ import {
   Text,
   UnorderedList
 } from '@chakra-ui/react';
+import {GUEST_TRIPS} from './trips';
 import {IoBed, IoCreate} from 'react-icons/io5';
 import {Link, useParams} from 'react-router-dom';
 import {gql, useQuery} from '@apollo/client';
@@ -191,7 +192,7 @@ export default function Listings() {
                   costPerNight={costPerNight}
                   bookings={bookings}
                   listingId={id}
-                  query={LISTING}
+                  refetchQueries={[{query: LISTING}, {query: GUEST_TRIPS}]}
                 />
               </Flex>
             </Stack>
