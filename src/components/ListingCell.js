@@ -7,14 +7,14 @@ import {IoBed} from 'react-icons/io5';
 import {Link} from 'react-router-dom';
 
 export default function ListingCell({
-  id,
   title,
   photoThumbnail,
   description,
   numOfBeds,
   costPerNight,
   overallRating,
-  locationType
+  locationType,
+  to
 }) {
   return (
     <Box
@@ -27,7 +27,7 @@ export default function ListingCell({
         cursor: 'pointer'
       }}
       as={Link}
-      to={`/listing/${id}`}
+      to={to}
       mb="2"
     >
       <Flex direction="row" justify="space-between" minH="120px" maxH="200px">
@@ -88,12 +88,12 @@ export default function ListingCell({
 }
 
 ListingCell.propTypes = {
-  id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
   photoThumbnail: PropTypes.string,
   costPerNight: PropTypes.number,
   numOfBeds: PropTypes.number.isRequired,
   overallRating: PropTypes.number,
-  locationType: PropTypes.string
+  locationType: PropTypes.string,
+  to: PropTypes.string.isRequired
 };
