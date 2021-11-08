@@ -87,11 +87,11 @@ export default function BookStay({costPerNight, bookings, listingId, query}) {
         listingId,
         checkInDate,
         checkOutDate
-      },
+      }
       // NOTE: for the scope of this project, we've opted for the simpler refetch approach to update the listing's bookings
       // another, more optimized option is to update the cache directly -- https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
-      refetchQueries: [{query}]
-    }
+    },
+    refetchQueries: [{query}]
   });
 
   if (error) {
