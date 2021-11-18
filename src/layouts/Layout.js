@@ -6,12 +6,15 @@ import {Container} from '@chakra-ui/react';
 export default function Layout({
   noNav,
   children,
-  containerSize = 'container.xl'
+  containerSize = 'container.xl',
+  ...props
 }) {
   return (
     <>
       {!noNav && <Nav />}
-      <Container maxW={containerSize}>{children}</Container>
+      <Container maxW={containerSize} {...props}>
+        {children}
+      </Container>
     </>
   );
 }

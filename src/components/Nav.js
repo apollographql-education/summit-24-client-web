@@ -10,7 +10,7 @@ export default function Nav({isLight}) {
   const {user} = useUser();
 
   return (
-    <Box px="2">
+    <Box px="2" h="80px">
       <Flex direction="row" justify="space-between" align="center" p={4}>
         <Box as={Link} to="/">
           <HStack spacing="2">

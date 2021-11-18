@@ -4,16 +4,19 @@ import {Box} from '@chakra-ui/react';
 
 export default function Hero({children}) {
   return (
-    <div>
+    <Box bgColor="#1f1c27">
       <Box
-        backgroundImage="url('https://source.unsplash.com/rdtkE1fHi6c/2000x600')"
-        backgroundPosition="center"
-        backgroundRepeat="no-repeat"
-        minHeight="500px"
+        bgImage="url('https://source.unsplash.com/rdtkE1fHi6c/2000x600')"
+        bgPos="center"
+        bgRepeat="no-repeat"
+        h="500px"
+        minH="500px"
+        maxW="2000px"
+        mx="auto"
       >
         {children}
       </Box>
-    </div>
+    </Box>
   );
 }
 
