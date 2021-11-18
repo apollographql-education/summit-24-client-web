@@ -13,9 +13,10 @@ export default function ListingCard({
   overallRating
 }) {
   return (
-    <Box
+    <Flex
       borderWidth="1px"
       borderRadius="lg"
+      direction="column"
       overflow="hidden"
       _hover={{
         background: 'gray.100',
@@ -42,10 +43,14 @@ export default function ListingCard({
             </Text>
             <IoBed size={22} />
           </Flex>
-          {overallRating && <Stars size={20} rating={overallRating} />}
+          {overallRating ? (
+            <Stars size={20} rating={overallRating} />
+          ) : (
+            <Text>No reviews yet</Text>
+          )}
         </Flex>
       </Flex>
-    </Box>
+    </Flex>
   );
 }
 
