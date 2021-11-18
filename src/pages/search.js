@@ -13,6 +13,7 @@ import {
   Heading,
   Input,
   Select,
+  Stack,
   Text,
   VStack
 } from '@chakra-ui/react';
@@ -58,8 +59,7 @@ export default function Search() {
     startDate: checkInDate,
     endDate: checkOutDate,
     setStartDate,
-    setEndDate,
-    props: INPUT_PROPS
+    setEndDate
   });
 
   const {loading, error, data} = useQuery(SEARCH_LISTINGS, {
@@ -80,27 +80,34 @@ export default function Search() {
         Search Listings
       </Heading>
       <Box>
-        <Text fontSize="xl" fontWeight="bold">
-          Dates
-        </Text>
-        <HStack spacing="6" minWidth="100%" mb="4">
-          <Flex direction="row" align="center">
-            <Input {...DATEPICKER_PROPS} selected={checkInDate} />
-            <Text mx="3"> - </Text>
-            <Input
-              {...DATEPICKER_PROPS}
-              selected={checkOutDate}
-              minDate={today < checkInDate ? checkInDate : today}
-              onChange={date => setEndDate(date)}
-            />
-          </Flex>
+        <HStack spacing="6" minWidth="100%" mb="4" align="flex-end">
+          <Stack direction="column" spacing={2}>
+            <Text fontSize="xl" fontWeight="bold">
+              Dates
+            </Text>
+            <Flex direction="row" align="center">
+              <Input
+                {...DATEPICKER_PROPS}
+                {...INPUT_PROPS}
+                selected={checkInDate}
+              />
+              <Text mx="3"> - </Text>
+              <Input
+                {...DATEPICKER_PROPS}
+                {...INPUT_PROPS}
+                selected={checkOutDate}
+                minDate={today < checkInDate ? checkInDate : today}
+                onChange={date => setEndDate(date)}
+              />
+            </Flex>
+          </Stack>
           <BedroomInput
-            width="150px"
             {...INPUT_PROPS}
+            w="150px"
             numOfBeds={numOfBeds}
             setNumOfBeds={setNumOfBeds}
           />
-          <Button colorScheme="pink" width="150px" {...INPUT_PROPS}>
+          <Button colorScheme="pink" w="150px" {...INPUT_PROPS}>
             Search
           </Button>
         </HStack>

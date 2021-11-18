@@ -3,6 +3,7 @@ import Hero from '../components/Hero';
 import Layout from '../layouts/Layout';
 import ListingCard from '../components/ListingCard';
 import Nav from '../components/Nav';
+import PropTypes from 'prop-types';
 import QueryResult from '../components/QueryResult';
 import React, {useState} from 'react';
 import {
@@ -34,20 +35,20 @@ export const FEATURED_LISTINGS = gql`
   }
 `;
 
+const INPUT_PROPS = {size: 'lg', maxWidth: '300px', marginTop: '2'};
+
 export default function Home() {
   const today = new Date();
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(getNextDate(today));
   const [numOfBeds, setNumOfBeds] = useState(1);
 
-  const INPUT_PROPS = {size: 'lg', width: '300px'};
   const DATEPICKER_PROPS = getDatePickerProps({
     today,
     startDate,
     endDate,
     setStartDate,
-    setEndDate,
-    props: INPUT_PROPS
+    setEndDate
   });
 
   const {loading, error, data} = useQuery(FEATURED_LISTINGS);
@@ -63,30 +64,30 @@ export default function Home() {
             minH="300px"
             align="center"
           >
-            <Flex direction="row" justify="space-between" minWidth="100%">
-              <Stack direction="column" spacing={2}>
-                <Text fontSize="large" fontWeight="bold">
-                  Check in
-                </Text>
-                <Input {...DATEPICKER_PROPS} selected={startDate} />
-              </Stack>
-              <Stack direction="column" spacing={2}>
-                <Text fontSize="large" fontWeight="bold">
-                  Check out
-                </Text>
+            <Stack spacing="4" direction="row" minWidth="100%">
+              <InputContainer label="Check in">
                 <Input
                   {...DATEPICKER_PROPS}
+                  {...INPUT_PROPS}
+                  selected={startDate}
+                />
+              </InputContainer>
+              <InputContainer label="Check out">
+                <Input
+                  {...DATEPICKER_PROPS}
+                  {...INPUT_PROPS}
                   minDate={today < startDate ? startDate : today}
                   selected={endDate}
                   onChange={date => setEndDate(date)}
                 />
-              </Stack>
-            </Flex>
-            <BedroomInput
-              {...INPUT_PROPS}
-              numOfBeds={numOfBeds}
-              setNumOfBeds={setNumOfBeds}
-            />
+              </InputContainer>
+              <BedroomInput
+                {...INPUT_PROPS}
+                numOfBeds={numOfBeds}
+                setNumOfBeds={setNumOfBeds}
+              />
+            </Stack>
+
             <Button
               as={Link}
               to={`/search/?startDate=${format(
@@ -97,7 +98,6 @@ export default function Home() {
                 'MM-dd-yyyy'
               )}&numOfBeds=${numOfBeds}`}
               colorScheme="pink"
-              {...INPUT_PROPS}
             >
               Find a place
             </Button>
@@ -124,3 +124,19 @@ export default function Home() {
     </>
   );
 }
+
+function InputContainer({label, children}) {
+  return (
+    <Stack direction="column" spacing={2}>
+      <Text as="label" fontSize="large" fontWeight="bold">
+        {label}
+        {children}
+      </Text>
+    </Stack>
+  );
+}
+
+InputContainer.propTypes = {
+  label: PropTypes.string,
+  children: PropTypes.node
+};
