@@ -124,7 +124,7 @@ export default function Search() {
           });
 
           return (
-            <Flex direction="column">
+            <Flex direction="column" mb="8">
               <Flex alignSelf="flex-end" align="center" mb="4">
                 <Text fontWeight="bold" fontSize="xl" mx="2">
                   Sort by -
