@@ -23,20 +23,22 @@ import {Link} from 'react-router-dom';
 export default function Login() {
   const [value, setValue] = useState();
   const handleChange = event => setValue(event.target.value);
-  const userIds = [
-    'user-1',
-    'user-2',
-    'user-3',
-    'user-4',
-    'user-5',
-    'user-6',
-    'user-7',
-    'user-8',
-    'user-9',
-    'user-10'
+  const users = [
+    'Athes - Guest',
+    'Kelle - Host',
+    'Renie - Host',
+    'Flinson - Host',
+    'Cara - Guest',
+    'Wardy - Guest',
+    'Brise - Guest',
+    'Hendav - Guest'
   ];
-  function login() {
-    localStorage.setItem('token', value);
+  const HOST_USER = 'user-1';
+  const GUEST_USER = 'user-2';
+
+  function login(userId) {
+    const id = userId ? userId : value;
+    localStorage.setItem('token', id);
   }
 
   return (
@@ -66,8 +68,7 @@ export default function Login() {
               flex="1"
               mr="16"
               onClick={() => {
-                setValue('user-1');
-                login();
+                login(HOST_USER);
               }}
             >
               Log in as host
@@ -77,40 +78,38 @@ export default function Login() {
               to="/"
               flex="1"
               onClick={() => {
-                setValue('user-2');
-                login();
+                login(GUEST_USER);
               }}
             >
               Log in as guest
             </Button>
           </Flex>
-          <Spacer />
+          <Spacer mt={16} />
           <Accordion allowToggle>
             <AccordionItem>
               <h2>
                 <AccordionButton>
                   <Box flex="1" textAlign="left">
-                    More users
+                    More login options
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
               </h2>
-              <AccordionPanel pb={4}>
+              <AccordionPanel py={4}>
+                <Text fontSize="xs" color="gray.600">
+                  Want to test out other accounts? Choose a user from the list!
+                </Text>
                 <Select
                   onChange={handleChange}
-                  placeholder="Select a userId"
+                  placeholder="Select a user"
                   value={value}
                 >
-                  {userIds.map(userId => (
-                    <option key={userId} value={userId}>
+                  {users.map((userId, index) => (
+                    <option key={index + 2} value={`user-${index + 2}`}>
                       {userId}
                     </option>
                   ))}
                 </Select>
-                <Text fontSize="xs" color="gray.600">
-                  With this demo site you can play around with different user
-                  profiles
-                </Text>
                 <Button
                   as={Link}
                   to="/"
@@ -118,8 +117,9 @@ export default function Login() {
                     value ? login() : e.preventDefault();
                   }}
                   isDisabled={!value}
+                  mt={4}
                 >
-                  Login
+                  Log in
                 </Button>
               </AccordionPanel>
             </AccordionItem>
