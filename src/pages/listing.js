@@ -156,18 +156,24 @@ export default function Listings() {
                   </Box>
                   <Box>
                     <Heading as="h2" size="md" mb="2">
-                      Host
+                      About your host
                     </Heading>
-                    <Stack>
-                      <Avatar
-                        name="profile"
-                        size="md"
-                        borderColor="white"
-                        borderWidth="1px"
-                        src={host.profilePicture}
-                      />
-                      <Text fontWeight="semibold">{host.name}</Text>
-                    </Stack>
+                    <Flex align="flex-start">
+                      <Stack>
+                        <Avatar
+                          name="profile"
+                          size="md"
+                          borderColor="white"
+                          borderWidth="1px"
+                          src={host.profilePicture}
+                        />
+                        <Text fontWeight="semibold">{host.name}</Text>
+                      </Stack>
+                      <Stack pl={4}>
+                        <Stars size={16} rating={host.overallRating} />
+                        <Text>{host.profileDescription}</Text>
+                      </Stack>
+                    </Flex>
                   </Box>
                   <Box>
                     <Heading as="h2" size="md" mb="2">
