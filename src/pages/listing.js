@@ -115,7 +115,7 @@ export default function Listings() {
                   {overallRating ? (
                     <Stars size={20} rating={overallRating} />
                   ) : (
-                    <Text>No reviews yet</Text>
+                    <Text>Uh-oh, this place has no reviews yet!</Text>
                   )}
                   <Flex direction="row" justify="space-between">
                     <Text fontSize="lg" fontWeight="regular" mr="1">
@@ -179,8 +179,8 @@ export default function Listings() {
                     </Flex>
                   </Box>
                   <Box>
-                    <Heading as="h2" size="md" mb="2">
-                      Reviews
+                    <Heading as="h2" size="md" mb={4}>
+                      Here&apos;s what past guests had to say!
                     </Heading>
                     <Stack
                       direction="column"
@@ -188,7 +188,7 @@ export default function Listings() {
                       divider={<StackDivider borderColor="gray.200" />}
                     >
                       {reviews.length === 0 ? (
-                        <Text>No reviews yet</Text>
+                        <Text>Uh-oh, this place has no reviews yet!</Text>
                       ) : (
                         reviews.map(({text, author, rating}) => (
                           <Flex align="flex-start" key={author.id}>
