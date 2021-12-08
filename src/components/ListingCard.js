@@ -1,16 +1,17 @@
+import LocationType from './LocationType';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Stars from './Stars';
-import {Box, Flex, Heading, Image, Text} from '@chakra-ui/react';
+import {Flex, Heading, Image, Text} from '@chakra-ui/react';
 import {IoBed} from 'react-icons/io5';
 import {Link} from 'react-router-dom';
-
 export default function ListingCard({
   id,
   title,
   photoThumbnail,
   numOfBeds,
-  overallRating
+  overallRating,
+  locationType
 }) {
   return (
     <Flex
@@ -42,6 +43,12 @@ export default function ListingCard({
               {numOfBeds}
             </Text>
             <IoBed size={22} />
+            <Flex direction="row" align="center" ml={6}>
+              <LocationType locType={locationType} size="20px" />
+              <Text fontSize="lg" fontWeight="bold" ml={1} casing="lowercase">
+                {locationType}
+              </Text>
+            </Flex>
           </Flex>
           {overallRating ? (
             <Stars size={20} rating={overallRating} />
@@ -59,5 +66,6 @@ ListingCard.propTypes = {
   title: PropTypes.string.isRequired,
   photoThumbnail: PropTypes.string,
   numOfBeds: PropTypes.number.isRequired,
-  overallRating: PropTypes.number
+  overallRating: PropTypes.number,
+  locationType: PropTypes.string.isRequired
 };
