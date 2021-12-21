@@ -32,6 +32,7 @@ export const FEATURED_LISTINGS = gql`
       photoThumbnail
       numOfBeds
       overallRating
+      locationType
     }
   }
 `;

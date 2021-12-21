@@ -9,6 +9,7 @@ import {
   Box,
   Button,
   Flex,
+  HStack,
   Heading,
   Image,
   ListItem,
@@ -40,7 +41,9 @@ export const LISTING = gql`
       reviews {
         text
         author {
+          id
           name
+          profilePicture
         }
         rating
       }
@@ -112,7 +115,7 @@ export default function Listings() {
                   {overallRating ? (
                     <Stars size={20} rating={overallRating} />
                   ) : (
-                    <Text>No reviews yet</Text>
+                    <Text>Uh-oh, this place has no reviews yet!</Text>
                   )}
                   <Flex direction="row" justify="space-between">
                     <Text fontSize="lg" fontWeight="regular" mr="1">
@@ -156,22 +159,28 @@ export default function Listings() {
                   </Box>
                   <Box>
                     <Heading as="h2" size="md" mb="2">
-                      Host
+                      About your host
                     </Heading>
-                    <Stack>
-                      <Avatar
-                        name="profile"
-                        size="md"
-                        borderColor="white"
-                        borderWidth="1px"
-                        src={host.profilePicture}
-                      />
-                      <Text fontWeight="semibold">{host.name}</Text>
-                    </Stack>
+                    <Flex align="flex-start">
+                      <Stack>
+                        <Avatar
+                          name="profile"
+                          size="md"
+                          borderColor="white"
+                          borderWidth="1px"
+                          src={host.profilePicture}
+                        />
+                        <Text fontWeight="semibold">{host.name}</Text>
+                      </Stack>
+                      <Stack pl={4}>
+                        <Stars size={16} rating={host.overallRating} />
+                        <Text>{host.profileDescription}</Text>
+                      </Stack>
+                    </Flex>
                   </Box>
                   <Box>
-                    <Heading as="h2" size="md" mb="2">
-                      Reviews
+                    <Heading as="h2" size="md" mb={4}>
+                      Here&apos;s what past guests had to say!
                     </Heading>
                     <Stack
                       direction="column"
@@ -179,14 +188,27 @@ export default function Listings() {
                       divider={<StackDivider borderColor="gray.200" />}
                     >
                       {reviews.length === 0 ? (
-                        <Text>No reviews yet</Text>
+                        <Text>Uh-oh, this place has no reviews yet!</Text>
                       ) : (
                         reviews.map(({text, author, rating}) => (
-                          <Stack direction="column" spacing="1" key={text}>
-                            <Heading size="sm">{author.name}</Heading>
-                            <Stars size={16} rating={rating} />
-                            <Text>{text}</Text>
-                          </Stack>
+                          <Flex align="flex-start" key={author.id}>
+                            <Stack>
+                              <Avatar
+                                name="profile"
+                                size="md"
+                                borderColor="white"
+                                borderWidth="1px"
+                                src={author.profilePicture}
+                              />
+                            </Stack>
+                            <Stack direction="column" spacing="1" pl={4}>
+                              <HStack align="flex-start">
+                                <Heading size="sm">{author.name}</Heading>
+                                <Stars size={16} rating={rating} />
+                              </HStack>
+                              <Text>{text}</Text>
+                            </Stack>
+                          </Flex>
                         ))
                       )}
                     </Stack>
