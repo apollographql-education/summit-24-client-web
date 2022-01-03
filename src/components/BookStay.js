@@ -33,7 +33,8 @@ export default function BookStay({
   costPerNight,
   bookings,
   listingId,
-  refetchQueries
+  refetchQueries,
+  userRole
 }) {
   // get initial dates from url
   const searchQuery = new URLSearchParams(useLocation().search);
@@ -111,6 +112,28 @@ export default function BookStay({
             onClick={() => window.location.reload()}
           >
             Book new dates
+          </Button>
+        </Box>
+      </Container>
+    );
+  }
+
+  if (userRole === 'Host') {
+    return (
+      <Container title="Not bookable as Host">
+        <Box p="2">
+          <Text>
+            You can&apos;t book a listing while logged in as a host. To book
+            this listing, please first logout and log back in as a guest.
+          </Text>
+          <Button
+            as={RouterLink}
+            to="/login"
+            colorScheme="blue"
+            w="full"
+            mt="2"
+          >
+            Log in as Guest
           </Button>
         </Box>
       </Container>
@@ -239,7 +262,8 @@ BookStay.propTypes = {
   costPerNight: PropTypes.number,
   bookings: PropTypes.array.isRequired,
   listingId: PropTypes.string.isRequired,
-  refetchQueries: PropTypes.array
+  refetchQueries: PropTypes.array,
+  userRole: PropTypes.string
 };
 
 function Container({title, children, ...props}) {

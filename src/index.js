@@ -10,7 +10,7 @@ import {
 import {setContext} from '@apollo/client/link/context';
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000'
+  uri: process.env.GRAPHQL_SERVER_URL || 'http://localhost:4000'
 });
 
 import {ChakraProvider} from '@chakra-ui/react';

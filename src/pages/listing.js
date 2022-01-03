@@ -214,11 +214,13 @@ export default function Listings() {
                     </Stack>
                   </Box>
                 </Stack>
+
                 <BookStay
                   costPerNight={costPerNight}
                   bookings={bookings}
                   listingId={id}
                   refetchQueries={[{query: LISTING}, {query: GUEST_TRIPS}]}
+                  userRole={user?.__typename}
                 />
               </Flex>
             </Stack>
