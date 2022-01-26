@@ -7,6 +7,7 @@ import format from 'date-fns/format';
 import {
   Box,
   Button,
+  Center,
   Divider,
   Flex,
   HStack,
@@ -76,43 +77,58 @@ export default function Search() {
 
   return (
     <Layout>
-      <Heading as="h1" mb="6">
-        Search Listings
-      </Heading>
-      <Box>
-        <HStack spacing="6" minWidth="100%" mb="4" align="flex-end">
-          <Stack direction="column" spacing={2}>
-            <Text fontSize="xl" fontWeight="bold">
-              Dates
-            </Text>
-            <Flex direction="row" align="center">
-              <Input
-                {...DATEPICKER_PROPS}
+      <Center>
+        <Stack>
+          <Heading as="h1" mb="6" textAlign="center">
+            Your search
+          </Heading>
+          <Box>
+            <Flex
+              spacing="6"
+              minWidth="100%"
+              mb="4"
+              align="flex-end"
+              flexWrap="wrap"
+              sx={{gap: '24px'}}
+            >
+              <Stack direction="column" spacing={2}>
+                <Text as="label" fontSize="large" fontWeight="bold">
+                  Check-in Date
+                </Text>
+                <Input
+                  {...DATEPICKER_PROPS}
+                  {...INPUT_PROPS}
+                  selected={checkInDate}
+                  width="150px"
+                />
+              </Stack>
+              <Stack direction="column" spacing={2}>
+                <Text as="label" fontSize="large" fontWeight="bold">
+                  Check-out Date
+                </Text>
+                <Input
+                  {...DATEPICKER_PROPS}
+                  {...INPUT_PROPS}
+                  selected={checkOutDate}
+                  minDate={today < checkInDate ? checkInDate : today}
+                  onChange={date => setEndDate(date)}
+                  width="150px"
+                />
+              </Stack>
+              <BedroomInput
                 {...INPUT_PROPS}
-                selected={checkInDate}
+                w="150px"
+                numOfBeds={numOfBeds}
+                setNumOfBeds={setNumOfBeds}
               />
-              <Text mx="3"> - </Text>
-              <Input
-                {...DATEPICKER_PROPS}
-                {...INPUT_PROPS}
-                selected={checkOutDate}
-                minDate={today < checkInDate ? checkInDate : today}
-                onChange={date => setEndDate(date)}
-              />
+              <Button w="150px" {...INPUT_PROPS}>
+                Find a place
+              </Button>
             </Flex>
-          </Stack>
-          <BedroomInput
-            {...INPUT_PROPS}
-            w="150px"
-            numOfBeds={numOfBeds}
-            setNumOfBeds={setNumOfBeds}
-          />
-          <Button colorScheme="pink" w="150px" {...INPUT_PROPS}>
-            Search
-          </Button>
-        </HStack>
-        <Divider mb="4" borderWidth="1px" />
-      </Box>
+          </Box>
+        </Stack>
+      </Center>
+      <Divider borderWidth="1px" />
       <QueryResult loading={loading} error={error} data={data}>
         {data => {
           const sortedListings = [...data.searchListings].sort((a, b) => {
@@ -124,22 +140,32 @@ export default function Search() {
           });
 
           return (
-            <Flex direction="column" mb="8">
-              <Flex alignSelf="flex-end" align="center" mb="4">
-                <Text fontWeight="bold" fontSize="xl" mx="2">
-                  Sort by -
-                </Text>
-                <Select
-                  width="150px"
-                  {...INPUT_PROPS}
-                  onChange={e => setSortBy(e.target.value)}
-                  value={sortBy}
-                >
-                  <option disabled="disabled">Sort by</option>
-                  <option value="costPerNight">Price</option>
-                  <option value="overallRating">Rating</option>
-                  <option value="numOfBeds">Number of bedrooms</option>
-                </Select>
+            <Stack mb="8" p={12} pt={9}>
+              <Flex
+                alignItems="center"
+                justifyContent="space-between"
+                mb="4"
+                flexWrap="wrap"
+              >
+                <Heading as="h2" fontSize="3xl">
+                  Stays across space
+                </Heading>
+                <Flex alignItems="center" flexWrap="wrap">
+                  <Text fontWeight="bold" fontSize="lg" mr={4}>
+                    Sort by
+                  </Text>
+                  <Select
+                    width="200px"
+                    {...INPUT_PROPS}
+                    onChange={e => setSortBy(e.target.value)}
+                    value={sortBy}
+                  >
+                    <option disabled="disabled">Sort by</option>
+                    <option value="costPerNight">Price (low to high)</option>
+                    <option value="overallRating">Rating</option>
+                    <option value="numOfBeds">Number of bedrooms</option>
+                  </Select>
+                </Flex>
               </Flex>
               <VStack spacing="4">
                 {sortedListings.map(listingData => (
@@ -153,7 +179,7 @@ export default function Search() {
                   />
                 ))}
               </VStack>
-            </Flex>
+            </Stack>
           );
         }}
       </QueryResult>
