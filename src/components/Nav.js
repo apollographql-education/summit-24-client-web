@@ -20,7 +20,7 @@ export default function Nav({isLight}) {
               src={Logo}
               alt="airlock logo"
             />
-            <Text fontWeight="extrabold" fontSize="2xl" textColor={txtColor}>
+            <Text fontWeight="extrabold" fontSize="2xl">
               Airlock
             </Text>
           </HStack>
@@ -57,13 +57,8 @@ export default function Nav({isLight}) {
             </Box>
           )}
           {!user && (
-            <Button
-              as={NavLink}
-              to="/login"
-              variant="ghost"
-              textColor={txtColor}
-            >
-              Login
+            <Button as={NavLink} to="/login">
+              Log in
             </Button>
           )}
         </HStack>
