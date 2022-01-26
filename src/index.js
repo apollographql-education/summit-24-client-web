@@ -13,7 +13,9 @@ const httpLink = createHttpLink({
   uri: process.env.GRAPHQL_SERVER_URL || 'http://localhost:4000'
 });
 
+import theme from './theme.js';
 import {ChakraProvider} from '@chakra-ui/react';
+
 const authLink = setContext((_, {headers}) => {
   // get the authentication token from local storage if it exists
   const token = localStorage.getItem('token');
@@ -35,7 +37,7 @@ const client = new ApolloClient({
 });
 
 ReactDOM.render(
-  <ChakraProvider>
+  <ChakraProvider theme={theme}>
     <ApolloProvider client={client}>
       <App />
     </ApolloProvider>
