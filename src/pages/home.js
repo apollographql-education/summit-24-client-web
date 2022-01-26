@@ -33,6 +33,7 @@ export const FEATURED_LISTINGS = gql`
       numOfBeds
       overallRating
       locationType
+      costPerNight
     }
   }
 `;
@@ -133,7 +134,7 @@ export default function Home() {
             <Heading as="h1" fontSize="3xl" fontWeight="bold" mb={6}>
               Ideas for your next stellar trip
             </Heading>
-            <SimpleGrid columns={[2, null, 3]} spacing={4}>
+            <SimpleGrid minChildWidth="255px" spacing={6}>
               {data &&
                 data.featuredListings.map(listing => (
                   <ListingCard key={listing.title} {...listing} />

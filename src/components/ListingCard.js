@@ -1,4 +1,3 @@
-import LocationType from './LocationType';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Stars from './Stars';
@@ -11,12 +10,11 @@ export default function ListingCard({
   photoThumbnail,
   numOfBeds,
   overallRating,
-  locationType
+  locationType,
+  costPerNight
 }) {
   return (
     <Flex
-      borderWidth="1px"
-      borderRadius="lg"
       direction="column"
       overflow="hidden"
       _hover={{
@@ -32,29 +30,38 @@ export default function ListingCard({
         boxSize="100%"
         maxH="200px"
         objectFit="cover"
+        borderRadius={3}
       />
       <Flex direction="column" p="3" justify="space-between" minH="120px">
+        <Text
+          fontSize="sm"
+          fontWeight={600}
+          casing="uppercase"
+          color="grey.dark"
+          fontFamily="Source Code Pro"
+        >
+          {locationType}
+        </Text>
         <Heading as="h2" size="md">
           {title}
         </Heading>
         <Flex direction="row" justify="space-between">
           <Flex direction="row" align="center">
-            <Text fontSize="lg" fontWeight="bold" mr="1">
-              {numOfBeds}
-            </Text>
-            <IoBed size={22} />
-            <Flex direction="row" align="center" ml={6}>
-              <LocationType locType={locationType} size="20px" />
-              <Text fontSize="lg" fontWeight="bold" ml={1} casing="lowercase">
-                {locationType}
+            {overallRating ? (
+              <Stars size={20} rating={overallRating} />
+            ) : (
+              <Text>No reviews yet</Text>
+            )}
+            <Flex ml={6} align="center">
+              <IoBed size={22} />
+              <Text fontSize="lg" ml={1}>
+                {numOfBeds}
               </Text>
             </Flex>
+            <Flex fontSize="lg" ml={6}>
+              <Text fontWeight="bold"> @{costPerNight}</Text> / night
+            </Flex>
           </Flex>
-          {overallRating ? (
-            <Stars size={20} rating={overallRating} />
-          ) : (
-            <Text>No reviews yet</Text>
-          )}
         </Flex>
       </Flex>
     </Flex>
@@ -67,5 +74,6 @@ ListingCard.propTypes = {
   photoThumbnail: PropTypes.string,
   numOfBeds: PropTypes.number.isRequired,
   overallRating: PropTypes.number,
-  locationType: PropTypes.string.isRequired
+  locationType: PropTypes.string.isRequired,
+  costPerNight: PropTypes.number.isRequired
 };

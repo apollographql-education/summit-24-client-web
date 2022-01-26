@@ -58,11 +58,15 @@ export default extendTheme({
       darkest: '#2D1F66',
       dark: '#3F20BA',
       light: '#AD9BF6'
+    },
+    grey: {
+      dark: '#5A6270'
     }
   },
   fonts: {
     heading: "'Source Sans Pro', sans-serif",
-    body: "'Source Sans Pro', sans-serif"
+    body: "'Source Sans Pro', sans-serif",
+    code: "'Source Code Pro', sans-serif"
   },
   components: {
     Button
