@@ -162,8 +162,7 @@ export default function Search() {
                   >
                     <option disabled="disabled">Sort by</option>
                     <option value="costPerNight">Price (low to high)</option>
-                    <option value="overallRating">Rating</option>
-                    <option value="numOfBeds">Number of bedrooms</option>
+                    <option value="costPerNight">Price (high to low)</option>
                   </Select>
                 </Flex>
               </Flex>
