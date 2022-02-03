@@ -15,6 +15,12 @@ export const PAST_GUEST_TRIPS = gql`
       listing {
         title
         photoThumbnail
+        host {
+          id
+        }
+      }
+      guest {
+        id
       }
       locationReview {
         id

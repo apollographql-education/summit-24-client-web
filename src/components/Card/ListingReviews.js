@@ -16,7 +16,7 @@ export function ListingReviews({isOpen, title, isPast, trip, mutationConfig}) {
         hostReview={hostReview}
         guestReview={guestReview}
         isPastTrip={isPast}
-        isHost
+        isHost={trip.listing.host.id === localStorage.id}
         mutation={mutation}
         mutationOptions={mutationOptions}
       />
