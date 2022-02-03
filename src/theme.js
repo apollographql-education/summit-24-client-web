@@ -1,6 +1,10 @@
 import '@apollo/space-kit/reset.css';
 import {extendTheme} from '@chakra-ui/react';
 
+import {colors} from '@apollo/space-kit/colors';
+
+const {grey, silver, midnight} = colors;
+
 const Button = {
   // The styles all buttons have in common
   baseStyle: {
@@ -41,6 +45,7 @@ const Button = {
     variant: 'solid'
   }
 };
+
 export default extendTheme({
   colors: {
     brand: {
@@ -59,7 +64,16 @@ export default extendTheme({
       dark: '#3F20BA',
       light: '#AD9BF6'
     },
-    grey: {
+    gray: {
+      50: silver.light,
+      100: silver.base,
+      200: silver.dark,
+      300: silver.darker,
+      400: grey.light,
+      500: grey.dark,
+      600: midnight.dark,
+      800: midnight.darker,
+      900: midnight.darkest,
       dark: '#5A6270'
     }
   },
