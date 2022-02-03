@@ -1,20 +1,26 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {IoBonfire, IoCube, IoFish, IoHome, IoRocket} from 'react-icons/io5';
+import {
+  IoBonfireOutline,
+  IoBusinessOutline,
+  IoCubeOutline,
+  IoHomeOutline,
+  IoRocketOutline
+} from 'react-icons/io5';
 
 export default function LocationType({locType, size}) {
   const Icon = ({locType, size = '1em'}) => {
     switch (locType) {
       case 'SPACESHIP':
-        return <IoRocket size={size} />;
+        return <IoRocketOutline size={size} />;
       case 'HOUSE':
-        return <IoHome size={size} />;
+        return <IoHomeOutline size={size} />;
       case 'CAMPSITE':
-        return <IoBonfire size={size} />;
+        return <IoBonfireOutline size={size} />;
       case 'APARTMENT':
-        return <IoCube size={size} />;
+        return <IoBusinessOutline size={size} />;
       case 'ROOM':
-        return <IoFish size={size} />;
+        return <IoCubeOutline size={size} />;
       default:
         return null;
     }
