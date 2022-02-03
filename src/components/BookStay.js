@@ -1,7 +1,16 @@
 import PropTypes from 'prop-types';
 import React, {useMemo, useState} from 'react';
 import differenceInDays from 'date-fns/differenceInDays';
-import {Box, Button, Flex, Input, Link, Text} from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Input,
+  Link,
+  Stack,
+  Text
+} from '@chakra-ui/react';
 import {Link as RouterLink, useLocation} from 'react-router-dom';
 import {
   areDatesValid,
@@ -121,7 +130,7 @@ export default function BookStay({
   if (userRole === 'Host') {
     return (
       <Container title="Not bookable as Host">
-        <Box p="2">
+        <Stack spacing="3">
           <Text>
             You can&apos;t book a listing while logged in as a host. To book
             this listing, please first logout and log back in as a guest.
@@ -135,7 +144,7 @@ export default function BookStay({
           >
             Log in as Guest
           </Button>
-        </Box>
+        </Stack>
       </Container>
     );
   }
@@ -150,10 +159,22 @@ export default function BookStay({
             to="/wallet"
             colorScheme="blue"
             w="full"
-            mt="2"
+            mt="4"
           >
             Add funds
           </Button>
+          <Link
+            as="button"
+            mt="2"
+            alignSelf="center"
+            textDecoration="underline"
+            _hover={{
+              textDecoration: 'none'
+            }}
+            onClick={() => window.location.reload()}
+          >
+            Book new dates
+          </Link>
         </Box>
       </Container>
     );
@@ -196,64 +217,52 @@ export default function BookStay({
 
   return (
     <Container pos="relative" h="initial" title="Book your stay">
-      <Box p="2">
-        <Text fontWeight="semibold" fontSize="lg">
-          Dates
-        </Text>
-        <Flex direction="row" align="center">
-          <Input
-            {...DATEPICKER_PROPS}
-            selected={checkInDate}
-            onChange={date => {
-              if (isDateValid(stringDates, date)) {
-                setCheckInDate(date);
+      <Stack spacing="3">
+        <Text fontWeight="semibold">Check-in Date</Text>
+        <Input
+          {...DATEPICKER_PROPS}
+          selected={checkInDate}
+          onChange={date => {
+            if (isDateValid(stringDates, date)) {
+              setCheckInDate(date);
 
-                const newCheckout = date > checkInDate ? date : checkInDate;
-                setCheckOutDate(newCheckout);
-              }
-            }}
-          />
-          <Text mx="3"> - </Text>
-          <Input
-            {...DATEPICKER_PROPS}
-            selected={checkOutDate}
-            minDate={today < checkInDate ? checkInDate : today}
-            onChange={date => {
-              if (
-                isDateValid(stringDates, date) &&
-                areDatesValid(bookings, {start: checkInDate, end: date})
-              ) {
-                setCheckOutDate(date);
-              }
-            }}
-          />
-        </Flex>
-        <Box mt="2">
+              const newCheckout = date > checkInDate ? date : checkInDate;
+              setCheckOutDate(newCheckout);
+            }
+          }}
+        />
+        <Text fontWeight="semibold">Check-out Date</Text>
+        <Input
+          {...DATEPICKER_PROPS}
+          selected={checkOutDate}
+          minDate={today < checkInDate ? checkInDate : today}
+          onChange={date => {
+            if (
+              isDateValid(stringDates, date) &&
+              areDatesValid(bookings, {start: checkInDate, end: date})
+            ) {
+              setCheckOutDate(date);
+            }
+          }}
+        />
+        <Text fontWeight="semibold">Pricing</Text>
+        <Flex justifyContent="space-between">
+          <Text>
+            @{costPerNight} x {numNights} nights
+          </Text>
           <Text fontWeight="semibold" fontSize="lg">
-            Price
+            ${costPerNight * numNights}
           </Text>
-          <Text textAlign="center">
-            ${costPerNight} x {numNights} nights ={' '}
-            <Box as="span" fontWeight="semibold" fontSize="lg">
-              ${costPerNight * numNights}
-            </Box>
-          </Text>
-        </Box>
+        </Flex>
         <Button
           colorScheme="blue"
-          w="calc(100% - 16px)" // subtract box padding (2 = 8px)
-          pos="absolute"
-          bottom="2" // compensate for box padding
-          // center button horizontally
-          left="50%"
-          transform="translateX(-50%)"
           onClick={bookStay}
           disabled={numNights < 1}
           isLoading={loading}
         >
           Book trip
         </Button>
-      </Box>
+      </Stack>
     </Container>
   );
 }
@@ -268,20 +277,21 @@ BookStay.propTypes = {
 
 function Container({title, children, ...props}) {
   return (
-    <Box
-      ml="4"
+    <Stack
+      p="4"
       w="300px"
-      maxH="300px"
-      h="fit-content"
-      borderWidth="2px"
-      borderColor="gray.400"
+      maxHeight="fit-content"
+      borderWidth="1px"
+      borderColor="gray.200"
+      borderRadius="8px"
+      css={{height: 'fit-content'}}
       {...props}
     >
-      <Box bg="gray.200" p="2" textAlign="center">
-        <Text fontWeight="bold">{title}</Text>
-      </Box>
+      <Heading as="h2" size="md" fontWeight="bold" mb="4">
+        {title}
+      </Heading>
       {children}
-    </Box>
+    </Stack>
   );
 }
 
