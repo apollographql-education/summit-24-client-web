@@ -19,7 +19,7 @@ export function Content({
         <Heading as="h2" size="md" fontWeight="semibold">
           {title}
         </Heading>
-        <Text fontSize="lg" mt="auto">
+        <Text mt="auto">
           {checkInDate} - {checkOutDate}
         </Text>
       </Flex>

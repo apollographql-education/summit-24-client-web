@@ -8,8 +8,7 @@ export function InnerContainer({isPast, toggleOpen, children, ...props}) {
       as="button"
       boxSizing="border-box"
       w="full"
-      h="100px"
-      //   p="3"
+      alignItems="center"
       _hover={{
         background: isPast && 'gray.100'
       }}

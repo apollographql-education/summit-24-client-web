@@ -52,7 +52,7 @@ function Trip({trip, isPast}) {
           w="100px"
           minW="100px"
         />
-        <Flex boxSize="full" p="3">
+        <Flex boxSize="full" px={4}>
           <Content
             title={trip.listing.title}
             checkInDate={trip.checkInDate}
