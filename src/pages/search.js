@@ -2,7 +2,7 @@ import BedroomInput from '../components/BedroomInput';
 import Layout from '../layouts/Layout';
 import ListingCell from '../components/ListingCell';
 import QueryResult from '../components/QueryResult';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import format from 'date-fns/format';
 import {
   Box,
@@ -10,7 +10,6 @@ import {
   Center,
   Divider,
   Flex,
-  HStack,
   Heading,
   Input,
   Select,
@@ -52,7 +51,9 @@ export default function Search() {
   const [checkInDate, setStartDate] = useState(new Date(checkInDateFromUrl));
   const [checkOutDate, setEndDate] = useState(new Date(checkOutDateFromUrl));
   const [numOfBeds, setNumOfBeds] = useState(numOfBedsFromUrl);
-  const [sortBy, setSortBy] = useState('costPerNight');
+  const [sortBy, setSortBy] = useState('COST_ASC');
+  const [page, setPage] = useState(1);
+  const [nextPageButtonDisabled, setNextPageButtonDisabled] = useState(false);
 
   const INPUT_PROPS = {size: 'lg'};
   const DATEPICKER_PROPS = getDatePickerProps({
@@ -63,17 +64,35 @@ export default function Search() {
     setEndDate
   });
 
-  const {loading, error, data} = useQuery(SEARCH_LISTINGS, {
+  const {loading, error, data, fetchMore} = useQuery(SEARCH_LISTINGS, {
     variables: {
       searchListingsInput: {
         checkInDate,
         checkOutDate,
         numOfBeds,
-        page: 1,
-        limit: 5
+        page,
+        limit: 5,
+        sortBy
       }
     }
   });
+
+  useEffect(() => {
+    const fetchPreviousPage = async newPage => {
+      await fetchMore({
+        variables: {
+          page: newPage
+        }
+      });
+    };
+
+    if (data?.searchListings?.length === 0) {
+      const newPage = page - 1;
+      fetchPreviousPage(newPage);
+      setPage(newPage);
+      setNextPageButtonDisabled(true);
+    }
+  }, [data?.searchListings?.length, page, fetchMore]);
 
   return (
     <Layout>
@@ -131,14 +150,6 @@ export default function Search() {
       <Divider borderWidth="1px" />
       <QueryResult loading={loading} error={error} data={data}>
         {data => {
-          const sortedListings = [...data.searchListings].sort((a, b) => {
-            if (sortBy === 'overallRating') {
-              return a[sortBy] < b[sortBy] ? 1 : -1;
-            } else {
-              return a[sortBy] < b[sortBy] ? -1 : 1;
-            }
-          });
-
           return (
             <Stack mb="8" p={12} pt={9}>
               <Flex
@@ -157,27 +168,66 @@ export default function Search() {
                   <Select
                     width="200px"
                     {...INPUT_PROPS}
-                    onChange={e => setSortBy(e.target.value)}
+                    onChange={e => {
+                      setSortBy(e.target.value);
+                      setPage(1);
+                    }}
                     value={sortBy}
                   >
                     <option disabled="disabled">Sort by</option>
-                    <option value="costPerNight">Price (low to high)</option>
-                    <option value="costPerNight">Price (high to low)</option>
+                    <option value="COST_ASC">Price (low to high)</option>
+                    <option value="COST_DESC">Price (high to low)</option>
                   </Select>
                 </Flex>
               </Flex>
-              <VStack spacing="4">
-                {sortedListings.map(listingData => (
-                  <ListingCell
-                    key={listingData.title}
-                    {...listingData}
-                    to={`/listing/${listingData.id}/?startDate=${format(
-                      checkInDate,
-                      'MM-dd-yyyy'
-                    )}&endDate=${format(checkOutDate, 'MM-dd-yyyy')}`}
-                  />
-                ))}
-              </VStack>
+              {data.searchListings.length > 0 ? (
+                <VStack spacing="4">
+                  {data.searchListings.map(listingData => (
+                    <ListingCell
+                      key={listingData.title}
+                      {...listingData}
+                      to={`/listing/${listingData.id}/?startDate=${format(
+                        checkInDate,
+                        'MM-dd-yyyy'
+                      )}&endDate=${format(checkOutDate, 'MM-dd-yyyy')}`}
+                    />
+                  ))}
+                </VStack>
+              ) : (
+                <Heading size="lg">No results found.</Heading>
+              )}
+
+              <Flex justifyContent="space-between">
+                <Button
+                  onClick={async () => {
+                    const newPage = page - 1;
+                    await fetchMore({
+                      variables: {
+                        page: newPage
+                      }
+                    });
+                    setPage(newPage);
+                    setNextPageButtonDisabled(false);
+                  }}
+                  disabled={page === 1}
+                >
+                  Previous page
+                </Button>
+                <Button
+                  onClick={async () => {
+                    const newPage = page + 1;
+                    await fetchMore({
+                      variables: {
+                        page: newPage
+                      }
+                    });
+                    setPage(newPage);
+                  }}
+                  disabled={nextPageButtonDisabled}
+                >
+                  Next page
+                </Button>
+              </Flex>
             </Stack>
           );
         }}
