@@ -24,7 +24,8 @@ import {
   NumberInputStepper,
   Select,
   Stack,
-  Textarea
+  Textarea,
+  Wrap
 } from '@chakra-ui/react';
 import {gql, useMutation, useQuery} from '@apollo/client';
 
@@ -128,6 +129,27 @@ function ListingFormBody({
       }
     }
   };
+
+  const handleSelectAll = allAmenitiesInCategory => {
+    setFormValues(prevState => {
+      return {
+        ...prevState,
+        amenities: union(prevState.amenities, allAmenitiesInCategory) // union merges and deduplicates arrays
+      };
+    });
+  };
+
+  const handleDeselectAll = allAmenitiesInCategory => {
+    setFormValues(prevState => {
+      const newAmenities = prevState.amenities.filter(
+        a => !allAmenitiesInCategory.includes(a)
+      );
+      return {
+        ...prevState,
+        amenities: newAmenities
+      };
+    });
+  };
   return (
     <Stack
       as="form"
@@ -153,20 +175,20 @@ function ListingFormBody({
     >
       <FormControl as="fieldset">
         <Stack spacing="4">
-          <FormLabel as="legend" textTransform="uppercase">
-            General Information
+          <FormLabel as="legend" fontSize="xl" fontWeight="bold">
+            General information
           </FormLabel>
           <FormControl isRequired>
-            <FormLabel>Title</FormLabel>
+            <FormLabel fontWeight="bold">Title</FormLabel>
             <Input
               type="text"
               name="title"
-              placeholder="Location name"
+              placeholder="Give your location a name"
               defaultValue={listingData.title}
             />
           </FormControl>
           <FormControl isRequired>
-            <FormLabel>Description</FormLabel>
+            <FormLabel fontWeight="bold">Description</FormLabel>
             <Textarea
               name="description"
               placeholder="Describe your location"
@@ -178,12 +200,12 @@ function ListingFormBody({
 
       <FormControl as="fieldset">
         <Stack spacing="4">
-          <FormLabel as="legend" textTransform="uppercase">
-            Location Details
+          <FormLabel as="legend" fontSize="xl" fontWeight="bold">
+            Location details
           </FormLabel>
-          <HStack spacing="8">
-            <FormControl as={Stack} isRequired>
-              <FormLabel>Type</FormLabel>
+          <Wrap spacing={6} alignItems="center">
+            <FormControl as={Stack} isRequired maxW="250px">
+              <FormLabel fontWeight="bold">Location type</FormLabel>
               <Select
                 name="locationType"
                 placeholder="Select option"
@@ -196,9 +218,8 @@ function ListingFormBody({
                 <option value="SPACESHIP">Spaceship</option>
               </Select>
             </FormControl>
-
             <FormControl as={Stack} maxW="146px">
-              <FormLabel>Bedrooms</FormLabel>
+              <FormLabel fontWeight="bold">Bedrooms</FormLabel>
               <NumberInput
                 name="numOfBeds"
                 min={1}
@@ -211,43 +232,40 @@ function ListingFormBody({
                 </NumberInputStepper>
               </NumberInput>
             </FormControl>
-          </HStack>
-
-          <FormControl as={Stack} maxW="146px" isRequired>
-            <FormLabel>Cost per night</FormLabel>
-            <InputGroup>
-              <InputLeftAddon bg="transparent" paddingRight="0">
-                $
-              </InputLeftAddon>
-              <NumberInput
-                name="costPerNight"
-                min={1}
-                defaultValue={listingData.costPerNight}
-              >
-                <NumberInputField
-                  borderLeftWidth="0"
-                  borderTopLeftRadius="0"
-                  borderBottomLeftRadius="0"
-                />
-              </NumberInput>
-            </InputGroup>
-          </FormControl>
-
-          <FormControl isRequired>
-            <FormLabel>Image</FormLabel>
-            <Input
-              name="photoThumbnail"
-              type="text"
-              placeholder="Image URL"
-              defaultValue={listingData.photoThumbnail}
-            />
-          </FormControl>
+            <FormControl as={Stack} maxW="146px" isRequired>
+              <FormLabel fontWeight="bold">Cost per night</FormLabel>
+              <InputGroup>
+                <InputLeftAddon bg="transparent" paddingRight="0">
+                  @
+                </InputLeftAddon>
+                <NumberInput
+                  name="costPerNight"
+                  min={1}
+                  defaultValue={listingData.costPerNight}
+                >
+                  <NumberInputField
+                    borderLeftWidth="0"
+                    borderTopLeftRadius="0"
+                    borderBottomLeftRadius="0"
+                  />
+                </NumberInput>
+              </InputGroup>
+            </FormControl>
+            <FormControl as={Stack} isRequired flex={1}>
+              <FormLabel fontWeight="bold">Image</FormLabel>
+              <Input
+                name="photoThumbnail"
+                type="text"
+                placeholder="Image URL"
+                defaultValue={listingData.photoThumbnail}
+              />
+            </FormControl>
+          </Wrap>
         </Stack>
       </FormControl>
-
       <FormControl as="fieldset">
         <Stack spacing="4">
-          <FormLabel as="legend" textTransform="uppercase">
+          <FormLabel as="legend" fontSize="xl" fontWeight="bold">
             Amenities
           </FormLabel>
 
@@ -257,6 +275,8 @@ function ListingFormBody({
               category={key}
               amenities={val}
               onChange={handleAmenitiesChange}
+              onSelectAll={handleSelectAll}
+              onDeselectAll={handleDeselectAll}
               formValues={formValues.amenities}
             />
           ))}
@@ -280,7 +300,14 @@ ListingFormBody.propTypes = {
   mutationOptions: PropTypes.object.isRequired
 };
 
-function AmenitiesSelection({formValues, category, amenities, onChange}) {
+function AmenitiesSelection({
+  formValues,
+  category,
+  amenities,
+  onChange,
+  onSelectAll,
+  onDeselectAll
+}) {
   // example value for `category` -- 'ACCOMMODATION_DETAILS'
   const title = startCase(category.toLowerCase());
 
@@ -289,11 +316,19 @@ function AmenitiesSelection({formValues, category, amenities, onChange}) {
   return (
     <Stack>
       <HStack mb="2">
-        <FormLabel mb="0">{title}</FormLabel>
+        <FormLabel mb="0" fontWeight="bold">
+          {title}
+        </FormLabel>
         <Checkbox
           id={`${category}-select-all`}
           isChecked={isEqual(overlappingAmenities, allAmenitiesInCategory)}
-          onChange={e => onChange(e, allAmenitiesInCategory)}
+          onChange={() => {
+            if (isEqual(overlappingAmenities, allAmenitiesInCategory)) {
+              onDeselectAll(allAmenitiesInCategory);
+            } else {
+              onSelectAll(allAmenitiesInCategory);
+            }
+          }}
         >
           Select all
         </Checkbox>
@@ -323,5 +358,7 @@ AmenitiesSelection.propTypes = {
   category: PropTypes.string,
   amenities: PropTypes.array,
   formValues: PropTypes.array,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  onSelectAll: PropTypes.func.isRequired,
+  onDeselectAll: PropTypes.func.isRequired
 };

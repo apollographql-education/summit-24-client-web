@@ -50,14 +50,19 @@ export default function CreateListing() {
           update: (cache, {data}) => {
             // update the cache to add our new listing
             // https://www.apollographql.com/docs/react/api/react/hooks/#update
-            const {hostListings} = cache.readQuery({query: HOST_LISTINGS});
+            const query = cache.readQuery({query: HOST_LISTINGS});
 
-            cache.writeQuery({
-              query: HOST_LISTINGS,
-              data: {
-                hostListings: [...hostListings, data.createListing.listing]
-              }
-            });
+            if (query?.hostListings) {
+              cache.writeQuery({
+                query: HOST_LISTINGS,
+                data: {
+                  hostListings: [
+                    ...query.hostListings,
+                    data.createListing.listing
+                  ]
+                }
+              });
+            }
           }
         }}
       />
