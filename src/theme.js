@@ -37,6 +37,12 @@ const Button = {
       _hover: {
         bg: 'indigo.darkest'
       }
+    },
+    ghost: {
+      _hover: {
+        bg: 'indigo.dark',
+        color: 'white'
+      }
     }
   },
   // The default size and variant values
