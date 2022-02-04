@@ -6,7 +6,7 @@ export default function Hero({children}) {
   return (
     <Box bgColor="#1f1c27">
       <Box
-        bgColor="#DEE2E7"
+        bgColor="indigo.darkest"
         bgPos="center"
         bgRepeat="no-repeat"
         minH="500px"

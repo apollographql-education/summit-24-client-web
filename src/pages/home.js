@@ -73,10 +73,10 @@ export default function Home() {
               minH="225px"
               align="center"
             >
-              <Heading as="h1" size="3xl" mb={4}>
+              <Heading as="h1" size="3xl" mb={4} color="white">
                 Your home away from homeworld
               </Heading>
-              <Heading as="h2" size="md" mb={10} fontWeight={500}>
+              <Heading as="h2" size="md" mb={10} fontWeight={500} color="white">
                 Let&apos;s plan your next space adventure!
               </Heading>
               <Stack

@@ -20,7 +20,7 @@ export default function Nav({isLight}) {
               src={Logo}
               alt="airlock logo"
             />
-            <Text fontWeight="extrabold" fontSize="2xl">
+            <Text fontWeight="extrabold" fontSize="2xl" textColor={txtColor}>
               Airlock
             </Text>
           </HStack>
