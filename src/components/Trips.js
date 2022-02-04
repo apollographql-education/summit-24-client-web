@@ -52,7 +52,7 @@ function Trip({trip, isPast}) {
           w="100px"
           minW="100px"
         />
-        <Flex boxSize="full" p="3">
+        <Flex boxSize="full" px={4}>
           <Content
             title={trip.listing.title}
             checkInDate={trip.checkInDate}
@@ -111,7 +111,7 @@ export default function Trips({trips, isPast = false}) {
   return (
     <>
       <Heading as="h1" mb="4">
-        My Trips
+        My trips
       </Heading>
       <Box
         as="nav"
@@ -126,15 +126,17 @@ export default function Trips({trips, isPast = false}) {
           to="/trips"
           mr="8"
           fontWeight={pathname === '/trips' ? 'bold' : 'normal'}
+          color={pathname === '/trips' ? 'indigo.dark' : 'gray.dark'}
         >
-          My Trips
+          Upcoming
         </Link>
         <Link
           as={RouterLink}
           to="/past-trips"
           fontWeight={pathname === '/past-trips' ? 'bold' : 'normal'}
+          color={pathname === '/past-trips' ? 'indigo.dark' : 'gray.dark'}
         >
-          Past Trips
+          Past trips
         </Link>
       </Box>
 

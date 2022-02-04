@@ -4,7 +4,7 @@ import {Box} from '@chakra-ui/react';
 
 export function OuterContainer({children, ...props}) {
   return (
-    <Box w="full" borderWidth="1px" borderColor="gray.200" {...props}>
+    <Box w="full" {...props}>
       {children}
     </Box>
   );

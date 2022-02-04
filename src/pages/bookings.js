@@ -22,6 +22,9 @@ export const HOST_BOOKINGS = gql`
       id
       listing {
         id
+        host {
+          id
+        }
       }
       guest {
         id
@@ -41,6 +44,9 @@ export const HOST_BOOKINGS = gql`
       listing {
         id
         title
+        host {
+          id
+        }
       }
       guest {
         id

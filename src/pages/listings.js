@@ -1,26 +1,29 @@
 import Layout from '../layouts/Layout';
 import QueryResult from '../components/QueryResult';
 import React from 'react';
+import Stars from '../components/Stars';
 import {
   Box,
   Button,
   Flex,
   Heading,
   Image,
+  StackDivider,
   Text,
   VStack
 } from '@chakra-ui/react';
 import {HOST_LISTINGS} from '../utils';
-import {IoAddCircle, IoStar} from 'react-icons/io5';
+import {IoAddCircleOutline} from 'react-icons/io5';
 import {Link} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
 
 const LINK_PROPS = {
   as: Link,
   mr: '4',
-  textDecoration: 'underline',
+  color: 'indigo.dark',
+  fontWeight: 'semibold',
   _hover: {
-    textDecoration: 'none'
+    textDecoration: 'underline'
   }
 };
 
@@ -29,24 +32,26 @@ export default function Listings() {
 
   return (
     <Layout>
-      <Heading as="h1" mb="4">
-        My Listings
-      </Heading>
-      <Flex w="full" justifyContent="flex-end">
+      <Flex w="full" justifyContent="space-between">
+        <Heading as="h1" mb="4">
+          My listings
+        </Heading>
         <Button
           as={Link}
           to="/listings/create"
-          rightIcon={<IoAddCircle />}
+          leftIcon={<IoAddCircleOutline />}
           mb="4"
-          colorScheme="blue"
         >
-          Add Listing
+          Add
         </Button>
       </Flex>
       <QueryResult loading={loading} error={error} data={data}>
         {({hostListings}) => {
           return (
-            <VStack spacing="4">
+            <VStack
+              spacing="4"
+              divider={<StackDivider borderColor="gray.200" />}
+            >
               {hostListings.map((listingData, index) => {
                 const {
                   id,
@@ -56,54 +61,32 @@ export default function Listings() {
                   numberOfUpcomingBookings
                 } = listingData;
                 return (
-                  <Box
-                    key={`${title}-${index}`}
-                    borderWidth="1px"
-                    borderRadius="lg"
-                    overflow="hidden"
-                    w="full"
-                  >
-                    <Flex direction="row" justify="space-between" h="100px">
+                  <Box key={`${title}-${index}`} overflow="hidden" w="full">
+                    <Flex direction="row" flexWrap="wrap">
                       <Image
                         src={photoThumbnail}
                         alt={title}
                         objectFit="cover"
-                        w="150px"
-                        h="full"
-                        maxW="150px"
+                        w="250px"
+                        h="140px"
+                        borderRadius={4}
                       />
-                      <Flex
-                        boxSize="full"
-                        p="4"
-                        justifyContent="space-between"
-                        alignItems="center"
-                      >
-                        <Flex
-                          direction="column"
-                          justify="space-around"
-                          h="full"
-                        >
-                          <Flex
-                            direction="column"
-                            justify="space-between"
-                            h="full"
-                          >
-                            <Heading as="h2" size="md">
-                              {title}
-                            </Heading>
-                            <Flex>
-                              <Text>{numberOfUpcomingBookings} bookings</Text>
-                              {overallRating ? (
-                                <Flex alignItems="center" ml="4">
-                                  {overallRating} <Box as={IoStar} ml="1" />
-                                </Flex>
-                              ) : (
-                                <Text ml="4">No ratings yet</Text>
-                              )}
-                            </Flex>
+                      <Flex direction="column" px="4">
+                        <Flex direction="column" h="full">
+                          <Heading as="h2" size="md">
+                            {title}
+                          </Heading>
+                          <Flex flexWrap="wrap" mt={4}>
+                            <Text mr={4}>
+                              {numberOfUpcomingBookings} bookings
+                            </Text>
+                            {overallRating ? (
+                              <Stars size={20} rating={overallRating} />
+                            ) : (
+                              <Text>No reviews yet</Text>
+                            )}
                           </Flex>
                         </Flex>
-
                         <Flex>
                           <Box {...LINK_PROPS} to={`/listing/${id}/edit`}>
                             Edit

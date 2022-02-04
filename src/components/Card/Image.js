@@ -13,7 +13,7 @@ export function Image({src, alt, isAvatar = false}) {
     return <Avatar {...IMG_PROPS} w="auto" />;
   }
 
-  return <ChakraImage {...IMG_PROPS} w="100px" />;
+  return <ChakraImage {...IMG_PROPS} w="200px" borderRadius={4} />;
 }
 
 Image.propTypes = {

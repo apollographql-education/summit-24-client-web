@@ -6,7 +6,7 @@ export default function BedroomInput({numOfBeds, setNumOfBeds, ...props}) {
   return (
     <Stack direction="column" spacing={2}>
       <Text as="label" fontSize="large" fontWeight="bold">
-        # bedrooms
+        Bedrooms
         <Select
           onChange={e => setNumOfBeds(Number(e.target.value))}
           value={numOfBeds}

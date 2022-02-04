@@ -33,6 +33,7 @@ export const FEATURED_LISTINGS = gql`
       numOfBeds
       overallRating
       locationType
+      costPerNight
     }
   }
 `;
@@ -64,29 +65,45 @@ export default function Home() {
     <>
       <Hero>
         <Nav isLight />
-        <Center h="calc(100% - 80px)">
-          <Container maxW="container.md" textColor="white">
+        <Center minHeight="500px">
+          <Container maxWidth="100%">
             <Flex
               direction="column"
               justify="space-between"
               minH="225px"
               align="center"
             >
-              <Stack spacing="4" direction="row" minWidth="100%">
-                <InputContainer label="Check in">
+              <Heading as="h1" size="3xl" mb={4}>
+                Your home away from homeworld
+              </Heading>
+              <Heading as="h2" size="md" mb={10} fontWeight={500}>
+                Let&apos;s plan your next space adventure!
+              </Heading>
+              <Stack
+                spacing={4}
+                p={6}
+                borderRadius={3}
+                direction={['column', 'row']}
+                maxWidth="862px"
+                alignItems="flex-end"
+                bgColor="white"
+              >
+                <InputContainer label="Check-in Date">
                   <Input
                     {...DATEPICKER_PROPS}
                     {...INPUT_PROPS}
                     selected={startDate}
+                    width="150px"
                   />
                 </InputContainer>
-                <InputContainer label="Check out">
+                <InputContainer label="Check-out Date">
                   <Input
                     {...DATEPICKER_PROPS}
                     {...INPUT_PROPS}
                     minDate={today < startDate ? startDate : today}
                     selected={endDate}
                     onChange={date => setEndDate(date)}
+                    width="150px"
                   />
                 </InputContainer>
                 <BedroomInput
@@ -94,31 +111,30 @@ export default function Home() {
                   numOfBeds={numOfBeds}
                   setNumOfBeds={setNumOfBeds}
                 />
+                <Button
+                  as={Link}
+                  to={`/search/?startDate=${format(
+                    startDate,
+                    'MM-dd-yyyy'
+                  )}&endDate=${format(
+                    endDate,
+                    'MM-dd-yyyy'
+                  )}&numOfBeds=${numOfBeds}`}
+                >
+                  Find a place
+                </Button>
               </Stack>
-              <Button
-                as={Link}
-                to={`/search/?startDate=${format(
-                  startDate,
-                  'MM-dd-yyyy'
-                )}&endDate=${format(
-                  endDate,
-                  'MM-dd-yyyy'
-                )}&numOfBeds=${numOfBeds}`}
-                colorScheme="pink"
-              >
-                Find a place
-              </Button>
             </Flex>
           </Container>
         </Center>
       </Hero>
       <QueryResult loading={loading} error={error} data={data}>
         {data => (
-          <Layout noNav pt="4">
-            <Heading as="h1" fontSize="3xl" fontWeight="bold" mb="4">
-              Explore Space
+          <Layout noNav p={12} pt={8}>
+            <Heading as="h1" fontSize="3xl" fontWeight="bold" mb={6}>
+              Ideas for your next stellar trip
             </Heading>
-            <SimpleGrid columns={[2, null, 3]} spacing={4}>
+            <SimpleGrid minChildWidth="255px" spacing={6}>
               {data &&
                 data.featuredListings.map(listing => (
                   <ListingCard key={listing.title} {...listing} />
