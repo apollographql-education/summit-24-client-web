@@ -14,7 +14,7 @@ import {useToggle} from 'react-use';
 
 function Booking({booking, listingTitle, isPast}) {
   const [isOpen, toggleOpen] = useToggle(false);
-  const hasHostReview = booking.guestReview;
+  const hasHostReview = booking.guestReview !== null;
   const title = booking.listing?.title || listingTitle;
   const graphqlVariables = {listingId: booking.listing.id, status: 'COMPLETED'};
 

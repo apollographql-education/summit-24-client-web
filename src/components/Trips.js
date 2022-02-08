@@ -41,7 +41,7 @@ export const SUBMIT_REVIEW = gql`
 `;
 function Trip({trip, isPast}) {
   const [isOpen, toggleOpen] = useToggle(false);
-  const hasReviews = trip.locationReview && trip.hostReview;
+  const hasReviews = trip.locationReview !== null && trip.hostReview !== null;
 
   return (
     <OuterContainer>
