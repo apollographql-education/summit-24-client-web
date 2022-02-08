@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Stars from './Stars';
-import {Flex, Heading, Image, Text} from '@chakra-ui/react';
+import {Flex, Heading, Image, Text, Wrap} from '@chakra-ui/react';
 import {IoBed} from 'react-icons/io5';
 import {Link} from 'react-router-dom';
 export default function ListingCard({
@@ -45,24 +45,24 @@ export default function ListingCard({
         <Heading as="h2" size="md">
           {title}
         </Heading>
-        <Flex direction="row" justify="space-between">
-          <Flex direction="row" align="center">
+        <Wrap direction="row" justify="space-between" align="center">
+          <Wrap spacing={4}>
             {overallRating ? (
               <Stars size={20} rating={overallRating} />
             ) : (
               <Text>No reviews yet</Text>
             )}
-            <Flex ml={6} align="center">
+            <Flex align="center">
               <IoBed size={22} />
               <Text fontSize="lg" ml={1}>
                 {numOfBeds}
               </Text>
             </Flex>
-            <Flex fontSize="lg" ml={6}>
-              <Text fontWeight="bold"> @{costPerNight}</Text> / night
-            </Flex>
+          </Wrap>
+          <Flex fontSize="lg" ml={6}>
+            <Text fontWeight="bold"> @{costPerNight}</Text> / night
           </Flex>
-        </Flex>
+        </Wrap>
       </Flex>
     </Flex>
   );
