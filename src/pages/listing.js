@@ -270,7 +270,7 @@ export default function Listings() {
                   costPerNight={costPerNight}
                   bookings={bookings}
                   listingId={id}
-                  refetchQueries={[{query: LISTING}, {query: GUEST_TRIPS}]}
+                  refetchQueries={[LISTING, {query: GUEST_TRIPS}]}
                   userRole={user?.__typename}
                 />
               </Flex>
