@@ -30,9 +30,9 @@ export default function ListingCard({
         boxSize="100%"
         maxH="200px"
         objectFit="cover"
-        borderRadius={3}
+        borderRadius="8"
       />
-      <Flex direction="column" p="3" justify="space-between" minH="120px">
+      <Flex direction="column" py="3" justify="space-between" minH="120px">
         <Text
           fontSize="sm"
           fontWeight={600}

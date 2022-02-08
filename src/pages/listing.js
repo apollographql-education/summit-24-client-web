@@ -70,8 +70,8 @@ export const LISTING = gql`
 function AmenityList({amenities, category}) {
   const title = startCase(category.toLowerCase());
   return (
-    <Stack>
-      <Text>{title}</Text>
+    <Stack spacing="3">
+      <Text fontWeight="semibold">{title}</Text>
       <Wrap spacing="2">
         {amenities.map(amenity => (
           <Text
@@ -129,8 +129,8 @@ export default function Listings() {
           }, {});
 
           return (
-            <Stack direction="column" mb="12">
-              <Flex justifyContent="space-between" mb={3}>
+            <Stack direction="column" mb="12" spacing="6">
+              <Flex justifyContent="space-between">
                 <Stack>
                   <Heading as="h1" size="lg">
                     {title}
@@ -158,9 +158,9 @@ export default function Listings() {
                 objectFit="cover"
                 width="100%"
                 maxH="500px"
-                borderRadius={4}
+                borderRadius={8}
               />
-              <Flex direction="row" mt={3} flexWrap="wrap">
+              <Flex direction="row" flexWrap="wrap">
                 <Stack flex="1" direction="column" spacing="6" mr={8}>
                   <Stack spacing="4">
                     <Heading as="h2" size="md">
@@ -199,9 +199,17 @@ export default function Listings() {
                     <Heading as="h2" size="md" mb="2">
                       Amenities
                     </Heading>
-                    {Object.entries(amenitiesByCategory).map(([key, value]) => (
-                      <AmenityList category={key} amenities={value} key={key} />
-                    ))}
+                    <Stack spacing="3">
+                      {Object.entries(amenitiesByCategory).map(
+                        ([key, value]) => (
+                          <AmenityList
+                            category={key}
+                            amenities={value}
+                            key={key}
+                          />
+                        )
+                      )}
+                    </Stack>
                   </Box>
                   <Divider />
                   <Box>

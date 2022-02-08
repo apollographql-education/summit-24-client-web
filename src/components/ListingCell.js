@@ -35,7 +35,7 @@ export default function ListingCell({
             objectFit="cover"
             width="320px"
             maxW="320px"
-            borderRadius={3}
+            borderRadius="8"
           />
           <Flex
             direction="column"
