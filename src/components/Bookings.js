@@ -25,6 +25,7 @@ function Booking({booking, listingTitle, isPast}) {
           src={booking.guest.profilePicture}
           name={booking.guest.name}
           w="auto"
+          alt={booking.guest.name}
         />
         <Flex justifyContent="space-between" boxSize="full" ml="3">
           <Content
