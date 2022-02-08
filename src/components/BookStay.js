@@ -127,6 +127,27 @@ export default function BookStay({
     );
   }
 
+  if (userRole === undefined) {
+    return (
+      <Container title="You must be logged in">
+        <Stack spacing="4">
+          <Text>
+            You can&apos;t book a stay without being logged in as a guest.
+          </Text>
+          <Button
+            as={RouterLink}
+            to="/login"
+            colorScheme="blue"
+            w="full"
+            mt="2"
+          >
+            Log in as Guest
+          </Button>
+        </Stack>
+      </Container>
+    );
+  }
+
   if (userRole === 'Host') {
     return (
       <Container title="Not bookable as Host">
