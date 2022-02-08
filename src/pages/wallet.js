@@ -76,7 +76,6 @@ export default function Wallet() {
                   onChange={(_, val) => {
                     setFunds(val);
                   }}
-                  isFullWidth
                 >
                   <NumberInputField
                     borderLeftWidth="0"
