@@ -1,26 +1,18 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Flex} from '@chakra-ui/react';
+import {Wrap} from '@chakra-ui/react';
 
-export function InnerContainer({isPast, toggleOpen, children, ...props}) {
+export function InnerContainer({children, ...props}) {
   return (
-    <Flex
-      as="button"
+    <Wrap
       boxSizing="border-box"
       w="full"
-      alignItems="center"
-      _hover={{
-        background: isPast && 'gray.100'
-      }}
-      _disabled={{
-        cursor: 'default'
-      }}
-      onClick={toggleOpen}
-      disabled={!isPast}
+      spacing="8"
+      alignItems="flex-start"
       {...props}
     >
       {children}
-    </Flex>
+    </Wrap>
   );
 }
 

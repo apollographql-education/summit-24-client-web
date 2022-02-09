@@ -67,7 +67,9 @@ export default function ReviewInput({reviewType, setReviewsInput}) {
   return (
     <>
       <Flex alignItems="center">
-        <Text mr="4">Review the {reviewType}</Text>
+        <Text fontWeight="semibold" textTransform="capitalize" mr={2}>
+          {reviewType}
+        </Text>
         <ReviewRating
           setReviewsInput={setReviewsInput}
           reviewType={reviewType}
@@ -80,6 +82,7 @@ export default function ReviewInput({reviewType, setReviewsInput}) {
           setTextVal(e.target.value);
           updateState(e);
         }}
+        w="400px"
       />
     </>
   );
