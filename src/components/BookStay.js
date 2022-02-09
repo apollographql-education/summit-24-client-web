@@ -269,10 +269,10 @@ export default function BookStay({
         <Text fontWeight="semibold">Pricing</Text>
         <Flex justifyContent="space-between">
           <Text>
-            @{costPerNight} x {numNights} nights
+            ¤ {costPerNight} x {numNights} nights
           </Text>
           <Text fontWeight="semibold" fontSize="lg">
-            ${costPerNight * numNights}
+            ¤ {costPerNight * numNights}
           </Text>
         </Flex>
         <Button

@@ -60,7 +60,7 @@ export default function ListingCard({
             </Flex>
           </Wrap>
           <Flex fontSize="lg" ml={6}>
-            <Text fontWeight="bold"> @{costPerNight}</Text> / night
+            <Text fontWeight="bold"> ¤ {costPerNight}</Text> / night
           </Flex>
         </Wrap>
       </Flex>

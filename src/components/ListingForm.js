@@ -236,7 +236,7 @@ function ListingFormBody({
               <FormLabel fontWeight="bold">Cost per night</FormLabel>
               <InputGroup>
                 <InputLeftAddon bg="transparent" paddingRight="0">
-                  @
+                  ¤
                 </InputLeftAddon>
                 <NumberInput
                   name="costPerNight"
