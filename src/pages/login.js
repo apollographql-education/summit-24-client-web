@@ -8,6 +8,7 @@ import {
   AccordionPanel,
   Box,
   Button,
+  Center,
   Container,
   Flex,
   HStack,
@@ -18,6 +19,7 @@ import {
   Stack,
   Text
 } from '@chakra-ui/react';
+import {IoCheckmark} from 'react-icons/io5';
 import {Link} from 'react-router-dom';
 
 export default function Login() {
@@ -57,44 +59,99 @@ export default function Login() {
         </HStack>
       </Box>
       <Container maxW="container.md">
-        <Stack spacing={4}>
-          <Heading as="h1" size="md">
+        <Stack spacing={6} alignItems="center">
+          <Heading as="h1" size="xl">
             Choose a user role
           </Heading>
-          <Flex>
-            <Button
-              as={Link}
-              to="/"
-              flex="1"
-              mr="16"
-              onClick={() => {
-                login(HOST_USER);
-              }}
+          <HStack spacing={6}>
+            <Box
+              border="1px solid"
+              borderRadius="8"
+              borderColor="gray.100"
+              p="6"
             >
-              Log in as host
-            </Button>
-            <Button
-              as={Link}
-              to="/"
-              flex="1"
-              onClick={() => {
-                login(GUEST_USER);
-              }}
+              <Center h="300px">
+                <Flex alignItems="center" w="330px" direction="column">
+                  <Heading as="h2" size="lg">
+                    Host
+                  </Heading>
+                  <Stack mt="4">
+                    <HStack alignItems="center">
+                      <IoCheckmark /> <Text>Create and manage listings</Text>
+                    </HStack>
+                    <HStack alignItems="center">
+                      <IoCheckmark /> <Text>Edit your profile</Text>
+                    </HStack>
+                    <HStack alignItems="center">
+                      <IoCheckmark />{' '}
+                      <Text>Write reviews about your guests</Text>
+                    </HStack>
+                  </Stack>
+                  <Button
+                    as={Link}
+                    to="/"
+                    flex="1"
+                    mt="8"
+                    onClick={() => {
+                      login(HOST_USER);
+                    }}
+                    isFullWidth
+                  >
+                    Log in as host
+                  </Button>
+                </Flex>
+              </Center>
+            </Box>
+            <Box
+              border="1px solid"
+              borderRadius="8"
+              borderColor="gray.100"
+              p="6"
             >
-              Log in as guest
-            </Button>
-          </Flex>
+              <Center h="300px">
+                <Flex alignItems="center" w="330px" direction="column">
+                  <Heading as="h2" size="lg">
+                    Guest
+                  </Heading>
+                  <Stack mt="4">
+                    <HStack alignItems="center">
+                      <IoCheckmark />
+                      <Text>Book places to stay</Text>
+                    </HStack>
+                    <HStack alignItems="center">
+                      <IoCheckmark />
+                      <Text>Add funds to your wallet</Text>
+                    </HStack>
+                    <HStack alignItems="center">
+                      <IoCheckmark />
+                      <Text>Write reviews about your stay</Text>
+                    </HStack>
+                  </Stack>
+                  <Button
+                    as={Link}
+                    to="/"
+                    flex="1"
+                    onClick={() => {
+                      login(GUEST_USER);
+                    }}
+                    mt="8"
+                    isFullWidth
+                  >
+                    Log in as guest
+                  </Button>
+                </Flex>
+              </Center>
+            </Box>
+          </HStack>
           <Spacer mt={16} />
-          <Accordion allowToggle>
-            <AccordionItem>
-              <h2>
-                <AccordionButton>
-                  <Box flex="1" textAlign="left">
-                    More login options
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-              </h2>
+          <Accordion allowToggle width="500px">
+            <AccordionItem borderTop={0} borderBottom={0}>
+              <AccordionButton _hover={{bgColor: 'white'}}>
+                <Box flex="1" textAlign="center">
+                  <Button variant="link">More login options</Button>
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
               <AccordionPanel py={4}>
                 <Text fontSize="xs" color="gray.600">
                   Want to test out other accounts? Choose a user from the list!
