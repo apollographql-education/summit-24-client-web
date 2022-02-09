@@ -18,7 +18,6 @@ import {
   Heading,
   Image,
   Stack,
-  StackDivider,
   Text,
   Wrap
 } from '@chakra-ui/react';
@@ -157,7 +156,6 @@ export default function Listings() {
                 alt={title}
                 objectFit="cover"
                 width="100%"
-                maxH="500px"
                 borderRadius={8}
               />
               <Flex direction="row" flexWrap="wrap">
@@ -238,14 +236,10 @@ export default function Listings() {
                   </Box>
                   <Divider />
                   <Box>
-                    <Heading as="h2" size="md" mb={4}>
+                    <Heading as="h2" size="md" mb="6">
                       What other space travelers have to say about this stay
                     </Heading>
-                    <Stack
-                      direction="column"
-                      spacing="4"
-                      divider={<StackDivider borderColor="gray.200" />}
-                    >
+                    <Stack direction="column" spacing="6">
                       {reviews.length === 0 ? (
                         <Text>Uh-oh, this place has no reviews yet!</Text>
                       ) : (
