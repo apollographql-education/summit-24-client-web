@@ -30,7 +30,7 @@ function Booking({booking, listingTitle, isPast}) {
   if (isPast) {
     return (
       <OuterContainer p={2}>
-        <InnerContainer isPast={isPast}>
+        <InnerContainer>
           <VStack>
             <Image
               src={booking.guest.profilePicture}
@@ -44,7 +44,6 @@ function Booking({booking, listingTitle, isPast}) {
               checkInDate={booking.checkInDate}
               checkOutDate={booking.checkOutDate}
               hasReviews={hasHostReview}
-              isPast={isPast}
             >
               {booking.status === 'CURRENT' ? (
                 <Box w="max-content">

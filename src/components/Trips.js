@@ -52,7 +52,7 @@ function Trip({trip, isPast}) {
   if (isPast) {
     return (
       <OuterContainer p={2}>
-        <InnerContainer isPast={isPast}>
+        <InnerContainer>
           <VStack>
             <Image
               src={trip.listing.photoThumbnail}
@@ -65,7 +65,6 @@ function Trip({trip, isPast}) {
               checkInDate={trip.checkInDate}
               checkOutDate={trip.checkOutDate}
               hasReviews={hasReviews}
-              isPast={isPast}
               wrapperProps={{w: 'full'}}
             />
           </VStack>

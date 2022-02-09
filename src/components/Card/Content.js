@@ -28,7 +28,6 @@ Content.propTypes = {
   checkInDate: PropTypes.string.isRequired,
   checkOutDate: PropTypes.string.isRequired,
   hasReviews: PropTypes.bool,
-  isPast: PropTypes.bool,
   children: PropTypes.node,
   wrapperProps: PropTypes.object
 };

@@ -17,7 +17,5 @@ export function InnerContainer({children, ...props}) {
 }
 
 InnerContainer.propTypes = {
-  isPast: PropTypes.bool,
-  toggleOpen: PropTypes.func,
   children: PropTypes.node
 };
