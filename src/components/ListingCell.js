@@ -20,9 +20,12 @@ export default function ListingCell({
       <Box
         overflow="hidden"
         width="100%"
+        transition="0.3s all ease-in-out"
+        opacity="95%"
         _hover={{
-          background: 'gray.100',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          transform: 'scale(1.1)',
+          opacity: '100%'
         }}
         as={Link}
         to={to}

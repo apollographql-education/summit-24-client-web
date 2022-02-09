@@ -17,12 +17,16 @@ export default function ListingCard({
     <Flex
       direction="column"
       overflow="hidden"
+      transition="0.3s all ease-in-out"
+      opacity="95%"
       _hover={{
-        background: 'gray.100',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        transform: 'scale(1.1)',
+        opacity: '100%'
       }}
       as={Link}
       to={`/listing/${id}`}
+      borderRadius="8"
     >
       <Image
         src={photoThumbnail}
