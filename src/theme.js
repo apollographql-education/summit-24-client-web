@@ -43,6 +43,12 @@ const Button = {
         bg: 'indigo.dark',
         color: 'white'
       }
+    },
+    link: {
+      color: 'indigo.dark',
+      _hover: {
+        textDecoration: 'underline'
+      }
     }
   },
   // The default size and variant values

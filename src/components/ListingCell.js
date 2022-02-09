@@ -20,9 +20,12 @@ export default function ListingCell({
       <Box
         overflow="hidden"
         width="100%"
+        transition="0.3s all ease-in-out"
+        opacity="95%"
         _hover={{
-          background: 'gray.100',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          transform: 'scale(1.1)',
+          opacity: '100%'
         }}
         as={Link}
         to={to}
@@ -35,7 +38,7 @@ export default function ListingCell({
             objectFit="cover"
             width="320px"
             maxW="320px"
-            borderRadius={3}
+            borderRadius="8"
           />
           <Flex
             direction="column"
@@ -82,7 +85,7 @@ export default function ListingCell({
                   </Text>
                 </Flex>
                 <Flex fontSize="lg" ml={6}>
-                  <Text fontWeight="bold"> @{costPerNight}</Text> / night
+                  <Text fontWeight="bold"> ¤ {costPerNight}</Text> / night
                 </Flex>
               </Flex>
             </Flex>

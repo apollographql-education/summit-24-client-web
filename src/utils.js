@@ -62,7 +62,8 @@ export const HOST_LISTINGS = gql`
 `;
 
 export const getNextDate = date => {
-  return new Date(date).setDate(date.getDate() + 1);
+  const nextDate = new Date(date).setDate(date.getDate() + 1);
+  return new Date(nextDate);
 };
 
 export const getDatePickerProps = ({

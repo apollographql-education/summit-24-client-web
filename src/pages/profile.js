@@ -50,13 +50,12 @@ export default function Profile() {
       }
     }
   );
-  if (loading) return 'Submitting...';
+
   if (error) return `Submission error! ${error.message}`;
 
   return (
     <Layout containerSize="container.lg">
       <Center>
-        {loading && <p>Loading...</p>}
         {user && (
           <VStack direction="column" spacing="3" textAlign="center">
             <Heading as="h2">My profile</Heading>
@@ -97,20 +96,18 @@ export default function Profile() {
                 <Button
                   rightIcon={<IoCheckmark />}
                   onClick={() => {
-                    const updateProfileInput = {};
-                    if (user.__typename === 'Host') {
-                      updateProfileInput.profileDescription =
-                        txtProfileDescRef?.current.value;
-                    }
+                    const updateProfileInput = {
+                      profileDescription: txtProfileDescRef?.current.value
+                    };
                     return updateProfileData({
                       variables: {
                         updateProfileInput
                       }
                     });
                   }}
-                  colorScheme="green"
+                  disabled={loading}
                 >
-                  Update Profile
+                  {loading ? 'Updating...' : 'Update Profile'}
                 </Button>
               )}
               {user.__typename === 'Guest' && (

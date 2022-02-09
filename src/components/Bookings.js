@@ -1,6 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Box, Flex, Heading, Link, Text, VStack} from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Heading,
+  Link,
+  StackDivider,
+  Text,
+  VStack,
+  Wrap
+} from '@chakra-ui/react';
 import {
   Content,
   Image,
@@ -8,70 +17,99 @@ import {
   ListingReviews,
   OuterContainer
 } from './Card';
+import {IoChevronBack} from 'react-icons/io5';
+
 import {HOST_BOOKINGS, SUBMIT_REVIEW} from '../pages/past-bookings';
 import {Link as RouterLink, useLocation, useParams} from 'react-router-dom';
-import {useToggle} from 'react-use';
 
 function Booking({booking, listingTitle, isPast}) {
-  const [isOpen, toggleOpen] = useToggle(false);
-  const hasHostReview = booking.guestReview;
+  const hasHostReview = booking.guestReview !== null;
   const title = booking.listing?.title || listingTitle;
   const graphqlVariables = {listingId: booking.listing.id, status: 'COMPLETED'};
 
-  return (
-    <OuterContainer>
-      <InnerContainer p="3" isPast={isPast} toggleOpen={toggleOpen}>
-        <Image
-          src={booking.guest.profilePicture}
-          name={booking.guest.name}
-          w="auto"
-        />
-        <Flex justifyContent="space-between" boxSize="full" ml="3">
-          <Content
-            title={booking.guest.name}
-            checkInDate={booking.checkInDate}
-            checkOutDate={booking.checkOutDate}
-            hasReviews={hasHostReview}
+  if (isPast) {
+    return (
+      <OuterContainer p={2}>
+        <InnerContainer isPast={isPast}>
+          <VStack>
+            <Image
+              src={booking.guest.profilePicture}
+              name={booking.guest.name}
+              w="200px"
+              h="auto"
+              alt={booking.guest.name}
+            />
+            <Content
+              title={booking.guest.name}
+              checkInDate={booking.checkInDate}
+              checkOutDate={booking.checkOutDate}
+              hasReviews={hasHostReview}
+              isPast={isPast}
+            >
+              {booking.status === 'CURRENT' ? (
+                <Box w="max-content">
+                  <Text fontWeight="semibold" fontStyle="italic">
+                    Current guest
+                  </Text>
+                </Box>
+              ) : null}
+            </Content>
+          </VStack>
+          <ListingReviews
+            title={title}
             isPast={isPast}
-            isOpen={isOpen}
-          >
-            {booking.status === 'CURRENT' ? (
-              <Box w="max-content">
-                <Text fontWeight="semibold" fontStyle="italic">
-                  Current guest
-                </Text>
-              </Box>
-            ) : null}
-          </Content>
-        </Flex>
-      </InnerContainer>
-      {isPast ? (
-        <ListingReviews
-          isOpen={isOpen}
-          title={title}
-          isPast={isPast}
-          trip={booking}
-          mutationConfig={{
-            mutation: SUBMIT_REVIEW,
-            mutationOptions: {
-              variables: {
-                ...graphqlVariables,
-                bookingId: booking.id
-              },
-              // NOTE: for the scope of this project, we've opted for the simpler refetch approach
-              // another, more optimized option is to update the cache directly -- https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
-              refetchQueries: [
-                {
-                  query: HOST_BOOKINGS,
-                  variables: graphqlVariables
-                }
-              ]
-            }
-          }}
-        />
-      ) : null}
-    </OuterContainer>
-  );
+            trip={booking}
+            mutationConfig={{
+              mutation: SUBMIT_REVIEW,
+              mutationOptions: {
+                variables: {
+                  ...graphqlVariables,
+                  bookingId: booking.id
+                },
+                // NOTE: for the scope of this project, we've opted for the simpler refetch approach
+                // another, more optimized option is to update the cache directly -- https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
+                refetchQueries: [
+                  {
+                    query: HOST_BOOKINGS,
+                    variables: graphqlVariables
+                  }
+                ]
+              }
+            }}
+          />
+        </InnerContainer>
+      </OuterContainer>
+    );
+  } else {
+    return (
+      <OuterContainer p={2}>
+        <InnerContainer>
+          <Wrap align="center" spacing="4">
+            <Image
+              src={booking.guest.profilePicture}
+              name={booking.guest.name}
+              w="100px"
+              h="auto"
+              alt={booking.guest.name}
+            />
+            <Content
+              title={booking.guest.name}
+              checkInDate={booking.checkInDate}
+              checkOutDate={booking.checkOutDate}
+            >
+              {booking.status === 'CURRENT' ? (
+                <Box w="max-content">
+                  <Text fontWeight="semibold" fontStyle="italic">
+                    Current guest
+                  </Text>
+                </Box>
+              ) : null}
+            </Content>
+          </Wrap>
+        </InnerContainer>
+      </OuterContainer>
+    );
+  }
 }
 
 Booking.propTypes = {
@@ -86,7 +124,18 @@ export default function Bookings({title, bookings, isPast = false}) {
 
   return (
     <>
-      <Heading as="h1" mb="4">
+      <Flex
+        alignItems="center"
+        mb="4"
+        color="indigo.dark"
+        fontWeight="semibold"
+      >
+        <IoChevronBack />
+        <Link as={RouterLink} to={'/listings'} fontWeight="semibold">
+          Back to listings
+        </Link>
+      </Flex>
+      <Heading as="h1" mb={4}>
         {title}
       </Heading>
       <Box
@@ -104,6 +153,9 @@ export default function Bookings({title, bookings, isPast = false}) {
           fontWeight={
             pathname === `/listing/${id}/bookings` ? 'bold' : 'normal'
           }
+          color={
+            pathname === `/listing/${id}/bookings` ? 'indigo.dark' : 'gray.dark'
+          }
         >
           Upcoming Bookings
         </Link>
@@ -113,13 +165,18 @@ export default function Bookings({title, bookings, isPast = false}) {
           fontWeight={
             pathname === `/listing/${id}/past-bookings` ? 'bold' : 'normal'
           }
+          color={
+            pathname === `/listing/${id}/past-bookings`
+              ? 'indigo.dark'
+              : 'gray.dark'
+          }
         >
           Past Bookings
         </Link>
       </Box>
 
       {bookings.length ? (
-        <VStack spacing="4">
+        <VStack spacing="4" divider={<StackDivider />}>
           {bookings.map((booking, i) => {
             return (
               <Booking

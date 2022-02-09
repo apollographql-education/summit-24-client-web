@@ -1,6 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Box, Flex, Heading, Link, Tag, VStack} from '@chakra-ui/react';
+import {
+  Box,
+  Heading,
+  Link,
+  StackDivider,
+  Tag,
+  VStack,
+  Wrap
+} from '@chakra-ui/react';
 import {
   Content,
   Image,
@@ -11,7 +19,6 @@ import {
 import {PAST_GUEST_TRIPS} from '../pages/past-trips';
 import {Link as RouterLink, useLocation} from 'react-router-dom';
 import {gql} from '@apollo/client';
-import {useToggle} from 'react-use';
 
 export const SUBMIT_REVIEW = gql`
   mutation SubmitReview(
@@ -40,64 +47,82 @@ export const SUBMIT_REVIEW = gql`
   }
 `;
 function Trip({trip, isPast}) {
-  const [isOpen, toggleOpen] = useToggle(false);
-  const hasReviews = trip.locationReview && trip.hostReview;
+  const hasReviews = trip.locationReview !== null && trip.hostReview !== null;
 
-  return (
-    <OuterContainer>
-      <InnerContainer isPast={isPast} toggleOpen={toggleOpen}>
-        <Image
-          src={trip.listing.photoThumbnail}
-          alt={trip.listing.title}
-          w="100px"
-          minW="100px"
-        />
-        <Flex boxSize="full" px={4}>
-          <Content
+  if (isPast) {
+    return (
+      <OuterContainer p={2}>
+        <InnerContainer isPast={isPast}>
+          <VStack>
+            <Image
+              src={trip.listing.photoThumbnail}
+              alt={trip.listing.title}
+              w="auto"
+              h="200px"
+            />
+            <Content
+              title={trip.listing.title}
+              checkInDate={trip.checkInDate}
+              checkOutDate={trip.checkOutDate}
+              hasReviews={hasReviews}
+              isPast={isPast}
+              wrapperProps={{w: 'full'}}
+            />
+          </VStack>
+          <ListingReviews
             title={trip.listing.title}
-            checkInDate={trip.checkInDate}
-            checkOutDate={trip.checkOutDate}
-            hasReviews={hasReviews}
             isPast={isPast}
-            isOpen={isOpen}
-            wrapperProps={{w: 'full'}}
-          >
-            {trip.status === 'CURRENT' ? (
-              <Tag
-                h="18px"
-                w="300px"
-                rounded="xl"
-                bgColor="#425C0A"
-                color="white"
-                justifyContent="center"
-              >
-                You&apos;re staying here right now!
-              </Tag>
-            ) : null}
-          </Content>
-        </Flex>
-      </InnerContainer>
-      {isPast ? (
-        <ListingReviews
-          isOpen={isOpen}
-          title={trip.listing.title}
-          isPast={isPast}
-          trip={trip}
-          mutationConfig={{
-            mutation: SUBMIT_REVIEW,
-            mutationOptions: {
-              variables: {
-                bookingId: trip.id
-              },
-              // NOTE: for the scope of this project, we've opted for the simpler refetch approach
-              // another, more optimized option is to update the cache directly -- https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
-              refetchQueries: [{query: PAST_GUEST_TRIPS}]
-            }
-          }}
-        />
-      ) : null}
-    </OuterContainer>
-  );
+            trip={trip}
+            mutationConfig={{
+              mutation: SUBMIT_REVIEW,
+              mutationOptions: {
+                variables: {
+                  bookingId: trip.id
+                },
+                // NOTE: for the scope of this project, we've opted for the simpler refetch approach
+                // another, more optimized option is to update the cache directly -- https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
+                refetchQueries: [{query: PAST_GUEST_TRIPS}]
+              }
+            }}
+          />
+        </InnerContainer>
+      </OuterContainer>
+    );
+  } else {
+    return (
+      <OuterContainer p={2}>
+        <InnerContainer>
+          <Wrap align="center" spacing="4">
+            <Image
+              src={trip.listing.photoThumbnail}
+              alt={trip.listing.title}
+              w="auto"
+              h="200px"
+            />
+            <Content
+              title={trip.listing.title}
+              checkInDate={trip.checkInDate}
+              checkOutDate={trip.checkOutDate}
+              wrapperProps={{ml: '4'}}
+            >
+              {trip.status === 'CURRENT' ? (
+                <Tag
+                  h="18px"
+                  w="300px"
+                  rounded="xl"
+                  bgColor="#425C0A"
+                  color="white"
+                  justifyContent="center"
+                >
+                  You&apos;re staying here right now!
+                </Tag>
+              ) : null}
+            </Content>
+          </Wrap>
+        </InnerContainer>
+      </OuterContainer>
+    );
+  }
 }
 
 Trip.propTypes = {
@@ -140,7 +165,7 @@ export default function Trips({trips, isPast = false}) {
         </Link>
       </Box>
 
-      <VStack spacing="4">
+      <VStack spacing="6" divider={<StackDivider />}>
         {trips.map((trip, i) => {
           return (
             <Trip

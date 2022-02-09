@@ -12,7 +12,7 @@ export default function Layout({
   return (
     <>
       {!noNav && <Nav />}
-      <Container maxW={containerSize} {...props}>
+      <Container maxW={containerSize} {...props} mb={24}>
         {children}
       </Container>
     </>
