@@ -78,9 +78,15 @@ export default function TripReviews({
     ...mutationOptions,
     variables: {...mutationOptions.variables, ...reviewsInput},
     onCompleted: data => {
-      data.submitGuestReview.success
-        ? toast(successfulToast)
-        : toast(errorToast);
+      if (isHost) {
+        data.submitGuestReview.success
+          ? toast(successfulToast)
+          : toast(errorToast);
+      } else {
+        data.submitHostAndLocationReviews.success
+          ? toast(successfulToast)
+          : toast(errorToast);
+      }
     }
   });
 
