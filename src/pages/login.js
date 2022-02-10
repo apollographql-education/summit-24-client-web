@@ -171,7 +171,7 @@ export default function Login() {
                       value={value}
                     >
                       {users.map((userId, index) => (
-                        <option key={index + 2} value={`user-${index + 2}`}>
+                        <option key={index + 3} value={`user-${index + 3}`}>
                           {userId}
                         </option>
                       ))}
