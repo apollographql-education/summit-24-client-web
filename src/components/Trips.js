@@ -65,7 +65,7 @@ function Trip({trip, isPast}) {
               checkInDate={trip.checkInDate}
               checkOutDate={trip.checkOutDate}
               hasReviews={hasReviews}
-              wrapperProps={{w: 'full'}}
+              wrapperProps={{w: '355px'}}
             />
           </VStack>
           <ListingReviews
