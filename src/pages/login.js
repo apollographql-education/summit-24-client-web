@@ -19,7 +19,8 @@ import {
   Stack,
   Text
 } from '@chakra-ui/react';
-import {IoCheckmark} from 'react-icons/io5';
+import {IoCheckmark, IoChevronDown, IoChevronUp} from 'react-icons/io5';
+
 import {Link} from 'react-router-dom';
 
 export default function Login() {
@@ -146,39 +147,50 @@ export default function Login() {
           <Spacer mt={16} />
           <Accordion allowToggle width="500px">
             <AccordionItem borderTop={0} borderBottom={0}>
-              <AccordionButton _hover={{bgColor: 'white'}}>
-                <Box flex="1" textAlign="center">
-                  <Button variant="link">More login options</Button>
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel py={4}>
-                <Text fontSize="xs" color="gray.600">
-                  Want to test out other accounts? Choose a user from the list!
-                </Text>
-                <Select
-                  onChange={handleChange}
-                  placeholder="Select a user"
-                  value={value}
-                >
-                  {users.map((userId, index) => (
-                    <option key={index + 2} value={`user-${index + 2}`}>
-                      {userId}
-                    </option>
-                  ))}
-                </Select>
-                <Button
-                  as={Link}
-                  to="/"
-                  onClick={e => {
-                    value ? login() : e.preventDefault();
-                  }}
-                  isDisabled={!value}
-                  mt={4}
-                >
-                  Log in
-                </Button>
-              </AccordionPanel>
+              {({isExpanded}) => (
+                <>
+                  <AccordionButton
+                    _hover={{bgColor: 'white'}}
+                    color="indigo.dark"
+                  >
+                    <Flex flex="1" alignItems="center" justifyContent="center">
+                      <Button variant="link" mr={2}>
+                        More login options
+                      </Button>
+                      {isExpanded ? <IoChevronUp /> : <IoChevronDown />}
+                    </Flex>
+                  </AccordionButton>
+                  <AccordionPanel py={4}>
+                    <Text fontSize="md" color="gray.600" mb={2}>
+                      Want to test out other accounts? Choose a user from the
+                      list!
+                    </Text>
+                    <Select
+                      onChange={handleChange}
+                      placeholder="Select a user"
+                      value={value}
+                    >
+                      {users.map((userId, index) => (
+                        <option key={index + 2} value={`user-${index + 2}`}>
+                          {userId}
+                        </option>
+                      ))}
+                    </Select>
+                    <Button
+                      as={Link}
+                      to="/"
+                      onClick={e => {
+                        value ? login() : e.preventDefault();
+                      }}
+                      isDisabled={!value}
+                      mt={4}
+                      isFullWidth
+                    >
+                      Log in
+                    </Button>
+                  </AccordionPanel>
+                </>
+              )}
             </AccordionItem>
           </Accordion>
         </Stack>
