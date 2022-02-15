@@ -10,7 +10,10 @@ import {
 import {setContext} from '@apollo/client/link/context';
 
 const httpLink = createHttpLink({
-  uri: process.env.GRAPHQL_SERVER_URL || 'http://localhost:4000'
+  uri:
+    process.env.NODE_ENV !== 'production'
+      ? 'http://localhost:4000'
+      : process.env.GRAPHQL_SERVER_URL
 });
 
 import theme from './theme.js';
