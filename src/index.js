@@ -13,7 +13,7 @@ const httpLink = createHttpLink({
   uri:
     process.env.NODE_ENV !== 'production'
       ? 'http://localhost:4000'
-      : process.env.GRAPHQL_SERVER_URL
+      : process.env.REACT_APP_GQL_SERVER
 });
 
 import theme from './theme.js';
