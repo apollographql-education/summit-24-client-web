@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import {
   Accordion,
   AccordionButton,
-  AccordionIcon,
   AccordionItem,
   AccordionPanel,
   Box,
