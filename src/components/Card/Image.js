@@ -6,7 +6,8 @@ export function Image({src, alt, isAvatar = false, w, h}) {
   const IMG_PROPS = {
     src,
     alt,
-    h: h ? h : 'full'
+    h: h ? h : 'full',
+    bg: 'gray.50'
   };
 
   if (isAvatar) {

@@ -231,6 +231,7 @@ export default function Listings() {
                         borderWidth="1px"
                         src={host.profilePicture}
                         ml={4}
+                        bg="gray.50"
                       />
                     </Flex>
                   </Box>
@@ -252,6 +253,7 @@ export default function Listings() {
                                 borderColor="white"
                                 borderWidth="1px"
                                 src={author.profilePicture}
+                                bg="gray.50"
                               />
                             </Stack>
                             <Stack direction="column" spacing="1" pl={4}>

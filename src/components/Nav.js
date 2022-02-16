@@ -51,6 +51,7 @@ export default function Nav({isLight}) {
               <Avatar
                 name="profile"
                 borderColor="white"
+                bg="gray.50"
                 borderWidth="1px"
                 src={user.profilePicture}
               />

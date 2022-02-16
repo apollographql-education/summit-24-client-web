@@ -33,6 +33,7 @@ function Booking({booking, listingTitle, isPast}) {
         <InnerContainer>
           <VStack>
             <Image
+              isAvatar
               src={booking.guest.profilePicture}
               name={booking.guest.name}
               w="200px"
@@ -85,6 +86,7 @@ function Booking({booking, listingTitle, isPast}) {
         <InnerContainer>
           <Wrap align="center" spacing="4">
             <Image
+              isAvatar
               src={booking.guest.profilePicture}
               name={booking.guest.name}
               w="100px"
