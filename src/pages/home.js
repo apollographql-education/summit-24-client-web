@@ -63,8 +63,8 @@ export default function Home() {
 
   return (
     <>
+      <Nav />
       <Hero>
-        <Nav isLight />
         <Center minHeight="500px">
           <Container maxWidth="100%">
             <Flex

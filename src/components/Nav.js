@@ -1,4 +1,4 @@
-import Logo from '../assets/logo2.svg';
+import Logo from '../assets/airlock-logo.svg';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {Avatar, Box, Button, Flex, HStack, Image, Text} from '@chakra-ui/react';
@@ -10,7 +10,7 @@ export default function Nav({isLight}) {
   const {user} = useUser();
 
   return (
-    <Box px="2" h="80px" mb={4}>
+    <Box px="2" h="80px" bgColor="white">
       <Flex direction="row" justify="space-between" align="center" p={4}>
         <Box as={Link} to="/">
           <HStack spacing="2">
@@ -20,7 +20,14 @@ export default function Nav({isLight}) {
               src={Logo}
               alt="airlock logo"
             />
-            <Text fontWeight="extrabold" fontSize="2xl" textColor={txtColor}>
+            <Text
+              fontWeight="600"
+              fontSize="2xl"
+              textColor={txtColor}
+              textTransform="uppercase"
+              fontFamily="Source Sans Pro"
+              letterSpacing="1.4px"
+            >
               Airlock
             </Text>
           </HStack>
