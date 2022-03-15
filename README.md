@@ -1,5 +1,5 @@
 # Odyssey Airlock frontend
 
-[Back-end GraphQL server](https://github.com/apollographql/odyssey-federation-part2)
+[Back-end GraphQL server](https://github.com/apollographql-education/airlock-managed-gateway)
 
 You need to have the backend app running on your local machine for this app to work
