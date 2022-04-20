@@ -53,7 +53,14 @@ export default function Login() {
             src={Logo}
             alt="airlock logo"
           />
-          <Text fontWeight="extrabold" fontSize="2xl">
+
+          <Text
+            fontWeight="600"
+            fontSize="2xl"
+            textTransform="uppercase"
+            fontFamily="Source Sans Pro"
+            letterSpacing="1.4px"
+          >
             Airlock
           </Text>
         </HStack>
