@@ -9,6 +9,19 @@ import {
 } from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
 
+import * as Sentry from '@sentry/react';
+import { BrowserTracing } from '@sentry/tracing';
+
+Sentry.init({
+  dsn: 'https://28bb6dfdd21e40e68b9967f453200653@o53943.ingest.sentry.io/4504050601295872',
+  integrations: [new BrowserTracing()],
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 0.3,
+});
+
 const httpLink = createHttpLink({
   uri:
     process.env.NODE_ENV !== 'production'
