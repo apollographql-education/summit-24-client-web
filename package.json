@@ -2,38 +2,37 @@
   "name": "airlock-frontend",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "@apollo/client": "^3.4.16",
+    "@apollo/client": "^3.11.6",
     "@apollo/space-kit": "^9.11.0",
-    "@chakra-ui/react": "^1.6.8",
+    "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@fontsource/source-code-pro": "^4.5.1",
     "@fontsource/source-sans-pro": "^4.5.1",
-    "@sentry/react": "^7.16.0",
-    "@sentry/tracing": "^7.16.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "date-fns": "^2.25.0",
     "framer-motion": "^4.1.17",
-    "graphql": "^15.6.1",
+    "graphql": "^16.9.0",
     "lodash": "^4.17.21",
-    "react": "^17.0.2",
-    "react-datepicker": "^4.2.1",
-    "react-dom": "^17.0.2",
+    "react": "^18.3.1",
+    "react-datepicker": "^7.3.0",
+    "react-dom": "^18.3.1",
+    "react-error-boundary": "^4.0.13",
     "react-icons": "^4.3.1",
     "react-rating-stars-component": "^2.2.0",
-    "react-router-dom": "^5.3.0",
-    "react-scripts": "4.0.3",
-    "react-use": "^17.3.1",
+    "react-router-dom": "^6.26.1",
+    "vite": "^5.4.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "browserslist": {
     "production": [
@@ -48,8 +47,24 @@
     ]
   },
   "devDependencies": {
-    "@trevorblades/eslint-config": "^7.2.1",
-    "eslint": "^7.11.0",
-    "eslint-plugin-jsx-a11y": "^6.4.1"
+    "@0no-co/graphqlsp": "^1.12.13",
+    "@eslint/js": "^9.9.0",
+    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/near-operation-file-preset": "^3.0.0",
+    "@graphql-codegen/typescript": "^4.0.9",
+    "@graphql-codegen/typescript-operations": "^4.2.3",
+    "@parcel/watcher": "^2.4.1",
+    "@types/react": "^18.3.4",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^9.9.0",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "globals": "^15.9.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.2.0"
+  },
+  "prettier": {
+    "semi": true
   }
 }
