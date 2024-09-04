@@ -47,16 +47,16 @@ export const SEARCH_LISTINGS: TypedDocumentNode<
 `;
 
 function getListingSearchParams(searchParams: URLSearchParams) {
-  const checkInDateString = searchParams.get("startDate");
-  const checkOutDateString = searchParams.get("endDate");
+  const checkInDate = searchParams.get("startDate");
+  const checkOutDate = searchParams.get("endDate");
 
-  if (!checkInDateString || !checkOutDateString) {
+  if (!checkInDate || !checkOutDate) {
     throw new Error("Could not determine dates to check");
   }
 
   return {
-    checkInDate: checkInDateString,
-    checkOutDate: checkOutDateString,
+    checkInDate,
+    checkOutDate,
     sortBy:
       (searchParams.get("sortBy") as SortByCriteria | null) ??
       SortByCriteria.COST_ASC,
