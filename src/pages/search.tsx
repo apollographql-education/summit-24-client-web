@@ -66,6 +66,7 @@ export default function Search() {
 
   const checkInDate = new Date(listingParams.checkInDate);
   const checkOutDate = new Date(listingParams.checkOutDate);
+  const [page, setPage] = useState(1);
 
   const { data, loading, error, fetchMore } = useQuery(SEARCH_LISTINGS, {
     notifyOnNetworkStatusChange: true,
@@ -191,11 +192,13 @@ export default function Search() {
           <PageError error={error} />
         ) : (
           <SearchResults
+            page={page}
             searchListings={data?.searchListings ?? []}
             checkInDate={listingParams.checkInDate}
             checkOutDate={listingParams.checkOutDate}
-            onChangePage={async (page) => {
-              await fetchMore({
+            onChangePage={(page) => {
+              setPage(page);
+              fetchMore({
                 variables: {
                   searchListingsInput: {
                     ...getListingSearchParams(searchParams),
@@ -206,8 +209,6 @@ export default function Search() {
                   return { searchListings: fetchMoreResult.searchListings };
                 },
               });
-
-              setParams({ page: String(page) });
             }}
           />
         )}
@@ -218,6 +219,7 @@ export default function Search() {
 
 interface SearchResultsProps {
   searchListings: SearchListingsQuery["searchListings"];
+  page: number;
   checkInDate: string;
   checkOutDate: string;
   onChangePage: (page: number) => void;
@@ -225,12 +227,11 @@ interface SearchResultsProps {
 
 function SearchResults({
   searchListings,
+  page,
   checkInDate,
   checkOutDate,
   onChangePage,
 }: SearchResultsProps) {
-  const [page, setPage] = useState(1);
-
   return (
     <>
       {searchListings.length > 0 ? (
@@ -252,25 +253,12 @@ function SearchResults({
       )}
 
       <Flex justifyContent="space-between" alignItems="center">
-        <Button
-          onClick={async () => {
-            const newPage = page - 1;
-
-            onChangePage(newPage);
-            setPage(newPage);
-          }}
-          isDisabled={page === 1}
-        >
+        <Button onClick={() => onChangePage(page - 1)} isDisabled={page === 1}>
           Previous page
         </Button>
         <Box>Page {page}</Box>
         <Button
-          onClick={() => {
-            const newPage = page + 1;
-
-            onChangePage(newPage);
-            setPage(newPage);
-          }}
+          onClick={() => onChangePage(page + 1)}
           isDisabled={searchListings.length === 0}
         >
           Next page
