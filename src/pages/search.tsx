@@ -9,6 +9,7 @@ import {
   Flex,
   Heading,
   Select,
+  Spinner,
   Stack,
   Text,
   VStack,
@@ -23,7 +24,6 @@ import {
 } from "./__generated__/search.types";
 import { SortByCriteria } from "../__generated__/types";
 import { DatePickerInput } from "../components/DatePickerInput";
-import { PageSpinner } from "../components/PageSpinner";
 import { PageError } from "../components/PageError";
 import { PageContainer } from "../components/PageContainer";
 
@@ -199,7 +199,9 @@ export default function Search() {
         </Flex>
 
         {loading ? (
-          <PageSpinner />
+          <Center minH="20rem">
+            <Spinner size="lg" />
+          </Center>
         ) : error ? (
           <PageError error={error} />
         ) : (
