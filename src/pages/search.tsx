@@ -8,6 +8,7 @@ import {
   Divider,
   Flex,
   Heading,
+  list,
   Select,
   Spinner,
   Stack,
@@ -223,6 +224,7 @@ export default function Search() {
             <SearchResults
               queryRef={queryRef}
               page={listingParams.page}
+              limit={listingParams.limit}
               checkInDate={listingParams.checkInDate}
               checkOutDate={listingParams.checkOutDate}
               onChangePage={(page) => setParams({ page: String(page) })}
@@ -237,6 +239,7 @@ export default function Search() {
 interface SearchResultsProps {
   queryRef: QueryRef<SearchListingsQuery, SearchListingsQueryVariables>;
   page: number;
+  limit: number;
   checkInDate: string;
   checkOutDate: string;
   onChangePage: (page: number) => void;
@@ -245,6 +248,7 @@ interface SearchResultsProps {
 function SearchResults({
   queryRef,
   page,
+  limit,
   checkInDate,
   checkOutDate,
   onChangePage,
@@ -278,7 +282,7 @@ function SearchResults({
         <Box>Page {page}</Box>
         <Button
           onClick={() => onChangePage(page + 1)}
-          isDisabled={data.searchListings.length === 0}
+          isDisabled={data.searchListings.length < limit}
         >
           Next page
         </Button>
