@@ -279,7 +279,7 @@ function SearchResults({
         <Button onClick={() => onChangePage(page - 1)} isDisabled={page === 1}>
           Previous page
         </Button>
-        <Box>Page {page}</Box>
+        <Text fontWeight="semibold">Page {page}</Text>
         <Button
           onClick={() => onChangePage(page + 1)}
           isDisabled={data.searchListings.length < limit}
