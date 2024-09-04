@@ -1,6 +1,5 @@
 import BedroomInput from "../components/BedroomInput";
 import ListingCell from "../components/ListingCell";
-import { useState } from "react";
 import format from "date-fns/format";
 import {
   Box,
@@ -54,8 +53,9 @@ function getListingSearchParams(searchParams: URLSearchParams) {
     sortBy:
       (searchParams.get("sortBy") as SortByCriteria | null) ??
       SortByCriteria.COST_ASC,
-    limit: parseInt(searchParams.get("limit") ?? "1", 10),
+    limit: parseInt(searchParams.get("limit") ?? "5", 10),
     numOfBeds: parseInt(searchParams.get("numOfBeds") ?? "1", 10),
+    page: parseInt(searchParams.get("page") ?? "1", 10),
   };
 }
 
@@ -66,11 +66,10 @@ export default function Search() {
 
   const checkInDate = new Date(listingParams.checkInDate);
   const checkOutDate = new Date(listingParams.checkOutDate);
-  const [page, setPage] = useState(1);
 
-  const { data, loading, error, fetchMore } = useQuery(SEARCH_LISTINGS, {
+  const { data, loading, error } = useQuery(SEARCH_LISTINGS, {
     notifyOnNetworkStatusChange: true,
-    variables: { searchListingsInput: { ...listingParams, page: 1 } },
+    variables: { searchListingsInput: listingParams },
   });
 
   function setParams(params: Record<string, string>) {
@@ -205,24 +204,11 @@ export default function Search() {
           <PageError error={error} />
         ) : (
           <SearchResults
-            page={page}
+            page={listingParams.page}
             searchListings={data?.searchListings ?? []}
             checkInDate={listingParams.checkInDate}
             checkOutDate={listingParams.checkOutDate}
-            onChangePage={(page) => {
-              setPage(page);
-              fetchMore({
-                variables: {
-                  searchListingsInput: {
-                    ...getListingSearchParams(searchParams),
-                    page,
-                  },
-                },
-                updateQuery: (_, { fetchMoreResult }) => {
-                  return { searchListings: fetchMoreResult.searchListings };
-                },
-              });
-            }}
+            onChangePage={(page) => setParams({ page: String(page) })}
           />
         )}
       </Stack>
