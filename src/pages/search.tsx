@@ -14,8 +14,12 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
-import { useSearchParams } from "react-router-dom";
+import { gql, QueryRef, TypedDocumentNode, useReadQuery } from "@apollo/client";
+import {
+  LoaderFunctionArgs,
+  useLoaderData,
+  useSearchParams,
+} from "react-router-dom";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -26,6 +30,9 @@ import { SortByCriteria } from "../__generated__/types";
 import { DatePickerInput } from "../components/DatePickerInput";
 import { PageError } from "../components/PageError";
 import { PageContainer } from "../components/PageContainer";
+import { preloadQuery } from "../apolloClient";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 export const SEARCH_LISTINGS: TypedDocumentNode<
   SearchListingsQuery,
@@ -59,18 +66,23 @@ function getListingSearchParams(searchParams: URLSearchParams) {
   };
 }
 
+export function loader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  const listingParams = getListingSearchParams(url.searchParams);
+
+  return preloadQuery(SEARCH_LISTINGS, {
+    variables: { searchListingsInput: listingParams },
+  }).toPromise();
+}
+
 export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
   const today = new Date();
   const listingParams = getListingSearchParams(searchParams);
 
   const checkInDate = new Date(listingParams.checkInDate);
   const checkOutDate = new Date(listingParams.checkOutDate);
-
-  const { data, loading, error } = useQuery(SEARCH_LISTINGS, {
-    notifyOnNetworkStatusChange: true,
-    variables: { searchListingsInput: listingParams },
-  });
 
   function setParams(params: Record<string, string>) {
     setSearchParams(
@@ -198,28 +210,32 @@ export default function Search() {
           </Flex>
         </Flex>
 
-        {loading ? (
-          <Center minH="20rem">
-            <Spinner size="lg" />
-          </Center>
-        ) : error ? (
-          <PageError error={error} />
-        ) : (
-          <SearchResults
-            page={listingParams.page}
-            searchListings={data?.searchListings ?? []}
-            checkInDate={listingParams.checkInDate}
-            checkOutDate={listingParams.checkOutDate}
-            onChangePage={(page) => setParams({ page: String(page) })}
-          />
-        )}
+        <Suspense
+          fallback={
+            <Center minH="20rem">
+              <Spinner size="lg" />
+            </Center>
+          }
+        >
+          <ErrorBoundary
+            fallbackRender={({ error }) => <PageError error={error} />}
+          >
+            <SearchResults
+              queryRef={queryRef}
+              page={listingParams.page}
+              checkInDate={listingParams.checkInDate}
+              checkOutDate={listingParams.checkOutDate}
+              onChangePage={(page) => setParams({ page: String(page) })}
+            />
+          </ErrorBoundary>
+        </Suspense>
       </Stack>
     </PageContainer>
   );
 }
 
 interface SearchResultsProps {
-  searchListings: SearchListingsQuery["searchListings"];
+  queryRef: QueryRef<SearchListingsQuery, SearchListingsQueryVariables>;
   page: number;
   checkInDate: string;
   checkOutDate: string;
@@ -227,17 +243,19 @@ interface SearchResultsProps {
 }
 
 function SearchResults({
-  searchListings,
+  queryRef,
   page,
   checkInDate,
   checkOutDate,
   onChangePage,
 }: SearchResultsProps) {
+  const { data } = useReadQuery(queryRef);
+
   return (
     <>
-      {searchListings.length > 0 ? (
+      {data.searchListings.length > 0 ? (
         <VStack spacing="4">
-          {searchListings.filter(Boolean).map((listing) => (
+          {data.searchListings.filter(Boolean).map((listing) => (
             <ListingCell
               key={listing.id}
               listing={listing}
@@ -260,7 +278,7 @@ function SearchResults({
         <Box>Page {page}</Box>
         <Button
           onClick={() => onChangePage(page + 1)}
-          isDisabled={searchListings.length === 0}
+          isDisabled={data.searchListings.length === 0}
         >
           Next page
         </Button>
