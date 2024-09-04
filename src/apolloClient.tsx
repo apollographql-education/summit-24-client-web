@@ -12,6 +12,9 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
+        searchListings: {
+          merge: (_, incoming) => incoming,
+        },
         listing: {
           read: (_, { args, toReference }) => {
             return toReference({ __typename: "Listing", id: args?.id });

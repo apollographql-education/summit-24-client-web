@@ -1,6 +1,6 @@
 import BedroomInput from "../components/BedroomInput";
 import ListingCell from "../components/ListingCell";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import format from "date-fns/format";
 import {
   Box,
@@ -14,13 +14,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import {
-  gql,
-  QueryRef,
-  TypedDocumentNode,
-  useQuery,
-  useReadQuery,
-} from "@apollo/client";
+import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
 import { useSearchParams } from "react-router-dom";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -70,13 +64,13 @@ export default function Search() {
   const today = new Date();
   const listingParams = getListingSearchParams(searchParams);
 
-  const { data, loading, error, fetchMore } = useQuery(SEARCH_LISTINGS, {
-    variables: { searchListingsInput: { ...listingParams, page: 1 } },
-  });
-
   const checkInDate = new Date(listingParams.checkInDate);
   const checkOutDate = new Date(listingParams.checkOutDate);
-  const page = parseInt(searchParams.get("page") ?? "1", 10);
+
+  const { data, loading, error, fetchMore } = useQuery(SEARCH_LISTINGS, {
+    notifyOnNetworkStatusChange: true,
+    variables: { searchListingsInput: { ...listingParams, page: 1 } },
+  });
 
   function setParams(params: Record<string, string>) {
     setSearchParams(
@@ -198,20 +192,22 @@ export default function Search() {
         ) : (
           <SearchResults
             searchListings={data?.searchListings ?? []}
-            page={page}
             checkInDate={listingParams.checkInDate}
             checkOutDate={listingParams.checkOutDate}
-            onChangePage={(page) => {
-              setParams({ page: String(page) });
-
-              fetchMore({
+            onChangePage={async (page) => {
+              await fetchMore({
                 variables: {
                   searchListingsInput: {
                     ...getListingSearchParams(searchParams),
                     page,
                   },
                 },
+                updateQuery: (_, { fetchMoreResult }) => {
+                  return { searchListings: fetchMoreResult.searchListings };
+                },
               });
+
+              setParams({ page: String(page) });
             }}
           />
         )}
@@ -222,7 +218,6 @@ export default function Search() {
 
 interface SearchResultsProps {
   searchListings: SearchListingsQuery["searchListings"];
-  page: number;
   checkInDate: string;
   checkOutDate: string;
   onChangePage: (page: number) => void;
@@ -232,18 +227,9 @@ function SearchResults({
   searchListings,
   checkInDate,
   checkOutDate,
-  page,
   onChangePage,
 }: SearchResultsProps) {
-  const [nextPageButtonDisabled, setNextPageButtonDisabled] = useState(false);
-
-  useEffect(() => {
-    if (searchListings.length === 0) {
-      const newPage = page - 1;
-      onChangePage(newPage);
-      setNextPageButtonDisabled(true);
-    }
-  }, [searchListings.length, page, onChangePage]);
+  const [page, setPage] = useState(1);
 
   return (
     <>
@@ -260,14 +246,18 @@ function SearchResults({
           ))}
         </VStack>
       ) : (
-        <Heading size="lg">No results found.</Heading>
+        <Center my={20}>
+          <Heading size="lg">No results found</Heading>
+        </Center>
       )}
 
       <Flex justifyContent="space-between" alignItems="center">
         <Button
           onClick={async () => {
-            onChangePage(page - 1);
-            setNextPageButtonDisabled(false);
+            const newPage = page - 1;
+
+            onChangePage(newPage);
+            setPage(newPage);
           }}
           isDisabled={page === 1}
         >
@@ -275,8 +265,13 @@ function SearchResults({
         </Button>
         <Box>Page {page}</Box>
         <Button
-          onClick={() => onChangePage(page + 1)}
-          isDisabled={nextPageButtonDisabled}
+          onClick={() => {
+            const newPage = page + 1;
+
+            onChangePage(newPage);
+            setPage(newPage);
+          }}
+          isDisabled={searchListings.length === 0}
         >
           Next page
         </Button>
