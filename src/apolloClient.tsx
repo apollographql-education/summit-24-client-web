@@ -12,6 +12,12 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
+        searchListings: {
+          keyArgs: [
+            "criteria",
+            ["checkInDate", "checkOutDate", "sortBy", "numOfBeds"],
+          ],
+        },
         listing: {
           read: (_, { args, toReference }) => {
             return toReference({ __typename: "Listing", id: args?.id });
