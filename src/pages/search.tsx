@@ -157,9 +157,6 @@ export default function Search() {
                   setParams({ numOfBeds: String(numOfBeds) })
                 }
               />
-              <Button w="150px" size="lg">
-                Find a place
-              </Button>
             </Flex>
           </Box>
         </Stack>
