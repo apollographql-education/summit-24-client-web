@@ -79,11 +79,15 @@ export default function Search() {
   const checkOutDate = new Date(listingParams.checkOutDate);
 
   function setParams(params: Record<string, string>) {
-    Object.entries(params).forEach(([key, value]) => {
-      searchParams.set(key, value);
-    });
-
-    setSearchParams(searchParams);
+    setSearchParams(
+      (currentParams) =>
+        new URLSearchParams(
+          Object.fromEntries([
+            ...Array.from(currentParams.entries()),
+            ...Object.entries(params),
+          ]),
+        ),
+    );
   }
 
   function formatDateForURL(date: Date) {
@@ -95,7 +99,7 @@ export default function Search() {
   }
 
   function setEndDate(date: Date) {
-    setSearchParams({ endDate: formatDateForURL(date) });
+    setParams({ endDate: formatDateForURL(date) });
   }
 
   return (
