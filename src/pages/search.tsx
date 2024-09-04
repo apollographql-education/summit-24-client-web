@@ -62,7 +62,6 @@ function getListingSearchParams(searchParams: URLSearchParams) {
       SortByCriteria.COST_ASC,
     limit: 5,
     numOfBeds: parseInt(searchParams.get("numOfBeds") ?? "1", 10),
-    page: parseInt(searchParams.get("page") ?? "1", 10),
   };
 }
 
@@ -71,12 +70,13 @@ export default function Search() {
   const today = new Date();
   const listingParams = getListingSearchParams(searchParams);
 
-  const { data, loading, error } = useQuery(SEARCH_LISTINGS, {
-    variables: { searchListingsInput: listingParams },
+  const { data, loading, error, fetchMore } = useQuery(SEARCH_LISTINGS, {
+    variables: { searchListingsInput: { ...listingParams, page: 1 } },
   });
 
   const checkInDate = new Date(listingParams.checkInDate);
   const checkOutDate = new Date(listingParams.checkOutDate);
+  const page = parseInt(searchParams.get("page") ?? "1", 10);
 
   function setParams(params: Record<string, string>) {
     setSearchParams(
@@ -198,10 +198,21 @@ export default function Search() {
         ) : (
           <SearchResults
             searchListings={data?.searchListings ?? []}
-            page={listingParams.page}
+            page={page}
             checkInDate={listingParams.checkInDate}
             checkOutDate={listingParams.checkOutDate}
-            onChangePage={(page) => setParams({ page: String(page) })}
+            onChangePage={(page) => {
+              setParams({ page: String(page) });
+
+              fetchMore({
+                variables: {
+                  searchListingsInput: {
+                    ...getListingSearchParams(searchParams),
+                    page,
+                  },
+                },
+              });
+            }}
           />
         )}
       </Stack>
@@ -252,7 +263,7 @@ function SearchResults({
         <Heading size="lg">No results found.</Heading>
       )}
 
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="space-between" alignItems="center">
         <Button
           onClick={async () => {
             onChangePage(page - 1);
@@ -262,6 +273,7 @@ function SearchResults({
         >
           Previous page
         </Button>
+        <Box>Page {page}</Box>
         <Button
           onClick={() => onChangePage(page + 1)}
           isDisabled={nextPageButtonDisabled}
