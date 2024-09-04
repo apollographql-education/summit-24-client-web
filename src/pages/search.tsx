@@ -54,7 +54,7 @@ function getListingSearchParams(searchParams: URLSearchParams) {
     sortBy:
       (searchParams.get("sortBy") as SortByCriteria | null) ??
       SortByCriteria.COST_ASC,
-    limit: 5,
+    limit: parseInt(searchParams.get("limit") ?? "1", 10),
     numOfBeds: parseInt(searchParams.get("numOfBeds") ?? "1", 10),
   };
 }
@@ -158,15 +158,28 @@ export default function Search() {
       </Center>
       <Divider borderWidth="1px" />
       <Stack mb="8" p={12} pt={9}>
-        <Flex
-          alignItems="center"
-          justifyContent="space-between"
-          mb="4"
-          flexWrap="wrap"
-        >
-          <Heading as="h2" fontSize="3xl">
+        <Flex alignItems="center" mb="4" flexWrap="wrap" gap={4}>
+          <Heading as="h2" fontSize="3xl" flex={1}>
             Stays across space
           </Heading>
+          <Flex alignItems="center" flexWrap="wrap">
+            <Text fontWeight="bold" fontSize="lg" mr={4}>
+              Results per page
+            </Text>
+            <Select
+              width="75px"
+              size="lg"
+              onChange={(e) => {
+                setParams({ limit: e.target.value, page: "1" });
+              }}
+              value={listingParams.limit}
+            >
+              <option disabled>Per page</option>
+              <option value={2}>2</option>
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+            </Select>
+          </Flex>
           <Flex alignItems="center" flexWrap="wrap">
             <Text fontWeight="bold" fontSize="lg" mr={4}>
               Sort by
