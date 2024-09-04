@@ -25,7 +25,6 @@ import {
   Profile,
   ProfileLoader,
   Search,
-  SearchLoader,
   Trips,
   TripsLoader,
   Wallet,
@@ -47,7 +46,7 @@ export const router = createBrowserRouter(
     >
       <Route path="/" element={<Home />} loader={HomeLoader} />
       <Route path="/login" element={<Login />} />
-      <Route path="/search" element={<Search />} loader={SearchLoader} />
+      <Route path="/search" element={<Search />} />
       <Route path="/listings" element={<Listings />} loader={ListingsLoader} />
       <Route
         path="/listings/create"

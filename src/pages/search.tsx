@@ -1,6 +1,6 @@
 import BedroomInput from "../components/BedroomInput";
 import ListingCell from "../components/ListingCell";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import format from "date-fns/format";
 import {
   Box,
@@ -14,12 +14,14 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { gql, QueryRef, TypedDocumentNode, useReadQuery } from "@apollo/client";
 import {
-  LoaderFunctionArgs,
-  useLoaderData,
-  useSearchParams,
-} from "react-router-dom";
+  gql,
+  QueryRef,
+  TypedDocumentNode,
+  useQuery,
+  useReadQuery,
+} from "@apollo/client";
+import { useSearchParams } from "react-router-dom";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -29,9 +31,7 @@ import {
 import { SortByCriteria } from "../__generated__/types";
 import { DatePickerInput } from "../components/DatePickerInput";
 import { PageSpinner } from "../components/PageSpinner";
-import { ErrorBoundary } from "react-error-boundary";
 import { PageError } from "../components/PageError";
-import { preloadQuery } from "../apolloClient";
 import { PageContainer } from "../components/PageContainer";
 
 export const SEARCH_LISTINGS: TypedDocumentNode<
@@ -46,46 +46,43 @@ export const SEARCH_LISTINGS: TypedDocumentNode<
   }
 `;
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
-  const checkInDate = url.searchParams.get("startDate");
-  const checkOutDate = url.searchParams.get("endDate");
-  const sortBy =
-    (url.searchParams.get("sortBy") as SortByCriteria | null) ??
-    SortByCriteria.COST_ASC;
+function getListingSearchParams(searchParams: URLSearchParams) {
+  const checkInDateString = searchParams.get("startDate");
+  const checkOutDateString = searchParams.get("endDate");
 
-  if (!checkInDate || !checkOutDate) {
+  if (!checkInDateString || !checkOutDateString) {
     throw new Error("Could not determine dates to check");
   }
 
-  const params = {
-    checkInDate,
-    checkOutDate,
-    sortBy,
-    limit: 5,
-    numOfBeds: parseInt(url.searchParams.get("numOfBeds") ?? "1", 10),
-    page: parseInt(url.searchParams.get("page") ?? "1", 10),
-  };
-
   return {
-    params,
-    queryRef: await preloadQuery(SEARCH_LISTINGS, {
-      variables: { searchListingsInput: params },
-    }).toPromise(),
+    checkInDate: checkInDateString,
+    checkOutDate: checkOutDateString,
+    sortBy:
+      (searchParams.get("sortBy") as SortByCriteria | null) ??
+      SortByCriteria.COST_ASC,
+    limit: 5,
+    numOfBeds: parseInt(searchParams.get("numOfBeds") ?? "1", 10),
+    page: parseInt(searchParams.get("page") ?? "1", 10),
   };
 }
 
 export default function Search() {
-  const { queryRef, params } = useLoaderData() as Awaited<
-    ReturnType<typeof loader>
-  >;
   const [searchParams, setSearchParams] = useSearchParams();
   const today = new Date();
-  const checkInDate = new Date(params.checkInDate);
-  const checkOutDate = new Date(params.checkOutDate);
+  const listingParams = getListingSearchParams(searchParams);
 
-  function setSearchParam(key: string, value: string) {
-    searchParams.set(key, value);
+  const { data, loading, error } = useQuery(SEARCH_LISTINGS, {
+    variables: { searchListingsInput: listingParams },
+  });
+
+  const checkInDate = new Date(listingParams.checkInDate);
+  const checkOutDate = new Date(listingParams.checkOutDate);
+
+  function setParams(params: Record<string, string>) {
+    Object.entries(params).forEach(([key, value]) => {
+      searchParams.set(key, value);
+    });
+
     setSearchParams(searchParams);
   }
 
@@ -94,11 +91,11 @@ export default function Search() {
   }
 
   function setStartDate(date: Date) {
-    setSearchParam("startDate", formatDateForURL(date));
+    setParams({ startDate: formatDateForURL(date) });
   }
 
   function setEndDate(date: Date) {
-    setSearchParam("endDate", formatDateForURL(date));
+    setSearchParams({ endDate: formatDateForURL(date) });
   }
 
   return (
@@ -151,9 +148,9 @@ export default function Search() {
               <BedroomInput
                 size="lg"
                 w="150px"
-                numOfBeds={params.numOfBeds}
+                numOfBeds={listingParams.numOfBeds}
                 setNumOfBeds={(numOfBeds) =>
-                  setSearchParam("numOfBeds", String(numOfBeds))
+                  setParams({ numOfBeds: String(numOfBeds) })
                 }
               />
               <Button w="150px" size="lg">
@@ -164,96 +161,89 @@ export default function Search() {
         </Stack>
       </Center>
       <Divider borderWidth="1px" />
-      <Suspense fallback={<PageSpinner />}>
-        <ErrorBoundary
-          key={[checkInDate, checkOutDate, params.numOfBeds].join("-")}
-          fallbackRender={({ error }) => <PageError error={error} />}
+      <Stack mb="8" p={12} pt={9}>
+        <Flex
+          alignItems="center"
+          justifyContent="space-between"
+          mb="4"
+          flexWrap="wrap"
         >
+          <Heading as="h2" fontSize="3xl">
+            Stays across space
+          </Heading>
+          <Flex alignItems="center" flexWrap="wrap">
+            <Text fontWeight="bold" fontSize="lg" mr={4}>
+              Sort by
+            </Text>
+            <Select
+              width="200px"
+              size="lg"
+              onChange={(e) => {
+                setParams({ sortBy: e.target.value, page: "1" });
+              }}
+              value={listingParams.sortBy}
+            >
+              <option disabled>Sort by</option>
+              <option value="COST_ASC">Price (low to high)</option>
+              <option value="COST_DESC">Price (high to low)</option>
+            </Select>
+          </Flex>
+        </Flex>
+
+        {loading ? (
+          <PageSpinner />
+        ) : error ? (
+          <PageError error={error} />
+        ) : (
           <SearchResults
-            queryRef={queryRef}
-            page={params.page}
-            checkInDate={checkInDate}
-            checkOutDate={checkOutDate}
-            sortBy={params.sortBy}
-            onChangePage={(page) => setSearchParam("page", String(page))}
-            onChangeSort={(sortBy) => setSearchParam("sortBy", sortBy)}
+            searchListings={data?.searchListings ?? []}
+            page={listingParams.page}
+            checkInDate={listingParams.checkInDate}
+            checkOutDate={listingParams.checkOutDate}
+            onChangePage={(page) => setParams({ page: String(page) })}
           />
-        </ErrorBoundary>
-      </Suspense>
+        )}
+      </Stack>
     </PageContainer>
   );
 }
 
 interface SearchResultsProps {
-  queryRef: QueryRef<SearchListingsQuery, SearchListingsQueryVariables>;
+  searchListings: SearchListingsQuery["searchListings"];
   page: number;
-  sortBy: SortByCriteria;
-  checkInDate: Date;
-  checkOutDate: Date;
+  checkInDate: string;
+  checkOutDate: string;
   onChangePage: (page: number) => void;
-  onChangeSort: (sort: SortByCriteria) => void;
 }
 
 function SearchResults({
-  queryRef,
+  searchListings,
   checkInDate,
   checkOutDate,
   page,
-  sortBy,
   onChangePage,
-  onChangeSort,
 }: SearchResultsProps) {
-  const { data } = useReadQuery(queryRef);
   const [nextPageButtonDisabled, setNextPageButtonDisabled] = useState(false);
 
   useEffect(() => {
-    if (data.searchListings.length === 0) {
+    if (searchListings.length === 0) {
       const newPage = page - 1;
       onChangePage(newPage);
       setNextPageButtonDisabled(true);
     }
-  }, [data.searchListings.length, page, onChangePage]);
+  }, [searchListings.length, page, onChangePage]);
 
   return (
-    <Stack mb="8" p={12} pt={9}>
-      <Flex
-        alignItems="center"
-        justifyContent="space-between"
-        mb="4"
-        flexWrap="wrap"
-      >
-        <Heading as="h2" fontSize="3xl">
-          Stays across space
-        </Heading>
-        <Flex alignItems="center" flexWrap="wrap">
-          <Text fontWeight="bold" fontSize="lg" mr={4}>
-            Sort by
-          </Text>
-          <Select
-            width="200px"
-            size="lg"
-            onChange={(e) => {
-              onChangeSort(e.target.value as SortByCriteria);
-              onChangePage(1);
-            }}
-            value={sortBy}
-          >
-            <option disabled>Sort by</option>
-            <option value="COST_ASC">Price (low to high)</option>
-            <option value="COST_DESC">Price (high to low)</option>
-          </Select>
-        </Flex>
-      </Flex>
-      {data.searchListings.length > 0 ? (
+    <>
+      {searchListings.length > 0 ? (
         <VStack spacing="4">
-          {data.searchListings.filter(Boolean).map((listing) => (
+          {searchListings.filter(Boolean).map((listing) => (
             <ListingCell
               key={listing.id}
               listing={listing}
-              to={`/listing/${listing.id}/?startDate=${format(
-                checkInDate,
-                "MM-dd-yyyy",
-              )}&endDate=${format(checkOutDate, "MM-dd-yyyy")}`}
+              to={`/listing/${listing.id}/?startDate=${
+                checkInDate
+              }&endDate=${checkOutDate}`}
             />
           ))}
         </VStack>
@@ -278,6 +268,6 @@ function SearchResults({
           Next page
         </Button>
       </Flex>
-    </Stack>
+    </>
   );
 }
