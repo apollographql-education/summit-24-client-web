@@ -24,7 +24,14 @@ export const HOST_BOOKINGS: TypedDocumentNode<
       status: $upcomingStatus
     ) {
       id
-      ...Booking_booking
+      checkInDate
+      checkOutDate
+      status
+      guest {
+        id
+        profilePicture
+        name
+      }
     }
 
     currentBooking: bookingsForListing(
@@ -32,7 +39,14 @@ export const HOST_BOOKINGS: TypedDocumentNode<
       status: $currentStatus
     ) {
       id
-      ...Booking_booking
+      checkInDate
+      checkOutDate
+      status
+      guest {
+        id
+        profilePicture
+        name
+      }
     }
   }
 `;
