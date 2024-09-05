@@ -26,7 +26,7 @@ export {
   default as HostPastBookings,
   loader as HostPastBookingsLoader,
 } from "./past-bookings";
-export { default as Root, loader as RootLoader } from "./root";
+export { default as Root } from "./root";
 export {
   default as HostListings,
   loader as HostListingsLoader,

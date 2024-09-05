@@ -27,7 +27,6 @@ import {
   Profile,
   ProfileLoader,
   Root,
-  RootLoader,
   Search,
   SearchLoader,
   Trips,
@@ -40,11 +39,7 @@ import { RootErrorBoundary } from "./components/RootErrorBoundary";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route
-      element={<Root />}
-      loader={RootLoader}
-      errorElement={<RootErrorBoundary />}
-    >
+    <Route element={<Root />} errorElement={<RootErrorBoundary />}>
       <Route path="/" element={<Home />} loader={HomeLoader} />
       <Route path="/login" element={<Login />} />
       <Route path="/search" element={<Search />} loader={SearchLoader} />
