@@ -3,7 +3,7 @@ import Stars from "./Stars";
 import { Flex, Heading, Image, Text, Wrap } from "@chakra-ui/react";
 import { IoBed } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import { fragments } from "../fragments";
+import { fragments } from "../apollo/fragments";
 import { ListingCard_listingFragment } from "./__generated__/ListingCard.types";
 
 interface ListingCardProps {

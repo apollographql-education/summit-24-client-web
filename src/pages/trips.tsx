@@ -1,37 +1,43 @@
-import CurrentTrips from "../components/Trips";
-import { gql, TypedDocumentNode, useReadQuery } from "@apollo/client";
-import {
-  GetGuestTripsQuery,
-  GetGuestTripsQueryVariables,
-} from "./__generated__/trips.types";
-import { preloadQuery } from "../apolloClient";
-import { useLoaderData } from "react-router-dom";
+import { Box, Heading, Link } from "@chakra-ui/react";
+import { Outlet, Link as RouterLink, useMatch } from "react-router-dom";
 import { PageContainer } from "../components/PageContainer";
 
-export const GUEST_TRIPS: TypedDocumentNode<
-  GetGuestTripsQuery,
-  GetGuestTripsQueryVariables
-> = gql`
-  query GetGuestTrips {
-    upcomingGuestBookings {
-      id
-      ...Trip_trip
-    }
-  }
-`;
-
-export function loader() {
-  return preloadQuery(GUEST_TRIPS).toPromise();
-}
-
 export default function Trips() {
-  const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const { data } = useReadQuery(queryRef);
-  const { upcomingGuestBookings } = data;
+  const upcomingTripsMatch = useMatch("/trips");
+  const pastTripsMatch = useMatch("/trips/past");
 
   return (
     <PageContainer>
-      <CurrentTrips trips={upcomingGuestBookings.filter(Boolean)} />
+      <Heading as="h1" mb="4">
+        My trips
+      </Heading>
+      <Box
+        as="nav"
+        w="full"
+        mb="4"
+        fontSize="lg"
+        borderBottomWidth="1px"
+        borderBottomColor="gray.200"
+      >
+        <Link
+          as={RouterLink}
+          to="/trips"
+          mr="8"
+          fontWeight={upcomingTripsMatch ? "bold" : "normal"}
+          color={upcomingTripsMatch ? "indigo.dark" : "gray.dark"}
+        >
+          Upcoming
+        </Link>
+        <Link
+          as={RouterLink}
+          to="past"
+          fontWeight={pastTripsMatch ? "bold" : "normal"}
+          color={pastTripsMatch ? "indigo.dark" : "gray.dark"}
+        >
+          Past trips
+        </Link>
+      </Box>
+      <Outlet />
     </PageContainer>
   );
 }

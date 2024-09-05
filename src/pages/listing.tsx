@@ -17,7 +17,7 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react";
-import { GUEST_TRIPS } from "./trips";
+import { GUEST_TRIPS } from "./upcoming-trips";
 import { IoBedOutline, IoCreate } from "react-icons/io5";
 import { Link, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import {
@@ -31,7 +31,7 @@ import {
   GetListingDetailsQueryVariables,
   ListingsUserFragment,
 } from "./__generated__/listing.types";
-import { preloadQuery } from "../apolloClient";
+import { preloadQuery } from "../apollo/preloadQuery";
 import { PageContainer } from "../components/PageContainer";
 
 const LISTING: TypedDocumentNode<

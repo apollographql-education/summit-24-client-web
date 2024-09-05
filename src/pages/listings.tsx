@@ -16,7 +16,7 @@ import {
   GetHostListingsQuery,
   GetHostListingsQueryVariables,
 } from "./__generated__/listings.types";
-import { preloadQuery } from "../apolloClient";
+import { preloadQuery } from "../apollo/preloadQuery";
 import { PageContainer } from "../components/PageContainer";
 
 const LINK_PROPS = {

@@ -33,7 +33,7 @@ import {
   CurrentUserIdQuery,
 } from "./__generated__/BookStay.types";
 import { DatePickerInput } from "./DatePickerInput";
-import { fragments } from "../fragments";
+import { fragments } from "../apollo/fragments";
 import { Guest } from "../__generated__/types";
 
 export const BOOK_STAY: TypedDocumentNode<

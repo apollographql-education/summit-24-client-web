@@ -34,7 +34,7 @@ import {
   ListingForm_listingFragment,
 } from "./__generated__/ListingForm.types";
 import { LocationType } from "../__generated__/types";
-import { fragments } from "../fragments";
+import { fragments } from "../apollo/fragments";
 
 export const AMENITIES: TypedDocumentNode<
   GetAllAmenitiesQuery,

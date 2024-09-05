@@ -6,6 +6,6 @@ export type GetMyProfileQueryVariables = GraphQLTypes.Exact<{
 
 export type GetMyProfileQuery = {
   me:
-    | { __typename: "Guest"; id: string; profilePicture: string; funds: number }
+    | { __typename: "Guest"; id: string; profilePicture: string }
     | { __typename: "Host"; id: string; profilePicture: string };
 };

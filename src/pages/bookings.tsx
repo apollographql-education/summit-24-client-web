@@ -6,7 +6,7 @@ import {
   GetCurrrentAndUpcomingBookingsForHostListingQueryVariables,
 } from "./__generated__/bookings.types";
 import { BookingStatus } from "../__generated__/types";
-import { preloadQuery } from "../apolloClient";
+import { preloadQuery } from "../apollo/preloadQuery";
 
 export const HOST_BOOKINGS: TypedDocumentNode<
   GetCurrrentAndUpcomingBookingsForHostListingQuery,

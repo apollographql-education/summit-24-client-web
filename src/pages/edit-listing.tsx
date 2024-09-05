@@ -18,7 +18,7 @@ import {
   UpdateListingMutation,
   UpdateListingMutationVariables,
 } from "./__generated__/edit-listing.types";
-import { preloadQuery } from "../apolloClient";
+import { preloadQuery } from "../apollo/preloadQuery";
 import { PageContainer } from "../components/PageContainer";
 
 export const EDIT_LISTING: TypedDocumentNode<

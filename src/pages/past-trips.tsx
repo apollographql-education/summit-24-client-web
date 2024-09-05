@@ -1,12 +1,12 @@
-import Trips from "../components/Trips";
 import { gql, TypedDocumentNode, useReadQuery } from "@apollo/client";
 import {
   GetPastTripsQuery,
   GetPastTripsQueryVariables,
 } from "./__generated__/past-trips.types";
-import { preloadQuery } from "../apolloClient";
+import { preloadQuery } from "../apollo/preloadQuery";
 import { useLoaderData } from "react-router-dom";
-import { PageContainer } from "../components/PageContainer";
+import { StackDivider, VStack } from "@chakra-ui/react";
+import { PastTrip } from "../components/PastTrip";
 
 export const PAST_GUEST_TRIPS: TypedDocumentNode<
   GetPastTripsQuery,
@@ -15,7 +15,7 @@ export const PAST_GUEST_TRIPS: TypedDocumentNode<
   query GetPastTrips {
     pastGuestBookings {
       id
-      ...Trips_trips
+      ...PastTrip_trip
     }
   }
 `;
@@ -30,8 +30,10 @@ export default function PastTrips() {
   const { pastGuestBookings } = data;
 
   return (
-    <PageContainer>
-      <Trips trips={pastGuestBookings.filter(Boolean)} isPast />
-    </PageContainer>
+    <VStack spacing="6" divider={<StackDivider />}>
+      {pastGuestBookings.filter(Boolean).map((trip) => (
+        <PastTrip key={trip.id} trip={trip} />
+      ))}
+    </VStack>
   );
 }

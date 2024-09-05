@@ -1,6 +1,7 @@
 import areIntervalsOverlapping from "date-fns/areIntervalsOverlapping";
 import format from "date-fns/format";
 import { Interval } from "date-fns";
+import { SortByCriteria } from "./__generated__/types";
 
 export const getNextDate = (date: Date) => {
   const nextDate = new Date(date).setDate(date.getDate() + 1);
@@ -73,3 +74,25 @@ export const areDatesValid = (
     ? false
     : true;
 };
+
+export function getListingParamsFromSearchParams(
+  searchParams: URLSearchParams
+) {
+  const checkInDate = searchParams.get("startDate");
+  const checkOutDate = searchParams.get("endDate");
+
+  if (!checkInDate || !checkOutDate) {
+    throw new Error("Could not determine dates to check");
+  }
+
+  return {
+    checkInDate,
+    checkOutDate,
+    sortBy:
+      (searchParams.get("sortBy") as SortByCriteria | null) ??
+      SortByCriteria.COST_ASC,
+    limit: parseInt(searchParams.get("limit") ?? "5", 10),
+    numOfBeds: parseInt(searchParams.get("numOfBeds") ?? "1", 10),
+    page: parseInt(searchParams.get("page") ?? "1", 10),
+  };
+}

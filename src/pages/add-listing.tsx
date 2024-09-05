@@ -16,7 +16,7 @@ import {
   GetListingAmenitiesQueryVariables,
 } from "./__generated__/add-listing.types";
 import { type LocationType } from "../__generated__/types";
-import { preloadQuery } from "../apolloClient";
+import { preloadQuery } from "../apollo/preloadQuery";
 import { PageContainer } from "../components/PageContainer";
 
 export const CREATE_LISTING: TypedDocumentNode<

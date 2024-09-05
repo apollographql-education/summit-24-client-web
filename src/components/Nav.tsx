@@ -7,27 +7,15 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import Logo from "../assets/airlock-logo.svg";
-import { gql, useFragment, TypedDocumentNode } from "@apollo/client";
-import { Nav_currentUserFragment } from "./__generated__/Nav.types";
 
-const CURRENT_USER_FRAGMENT: TypedDocumentNode<Nav_currentUserFragment> = gql`
-  fragment Nav_currentUser on Query {
-    me {
-      id
-      profilePicture
-    }
-  }
-`;
+interface NavProps {
+  user: { __typename: "Host" | "Guest"; profilePicture: string } | undefined;
+}
 
-export function Nav() {
-  const { data, complete } = useFragment({
-    fragment: CURRENT_USER_FRAGMENT,
-    from: "ROOT_QUERY",
-  });
-
-  const user = complete ? data.me : undefined;
+export function Nav({ user }: NavProps) {
+  const location = useLocation();
 
   return (
     <Box px="2" h="80px" bgColor="white">
@@ -74,11 +62,11 @@ export function Nav() {
                 />
               </Box>
             </>
-          ) : (
+          ) : location.pathname !== "/login" ? (
             <Button as={NavLink} to="/login">
               Log in
             </Button>
-          )}
+          ) : null}
         </HStack>
       </Flex>
     </Box>

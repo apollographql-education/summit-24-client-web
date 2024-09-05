@@ -24,7 +24,7 @@ import {
   UpdateUserProfileMutation,
   UpdateUserProfileMutationVariables,
 } from "./__generated__/profile.types";
-import { preloadQuery } from "../apolloClient";
+import { preloadQuery } from "../apollo/preloadQuery";
 import { PageContainer } from "../components/PageContainer";
 
 export const UPDATE_PROFILE: TypedDocumentNode<

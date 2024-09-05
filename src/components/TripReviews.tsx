@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { gql } from "@apollo/client";
-import { fragments } from "../fragments";
+import { fragments } from "../apollo/fragments";
 import {
   GuestReview_guestReviewFragment,
   GuestReview_hostReviewFragment,

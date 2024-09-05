@@ -4,7 +4,7 @@ import { ApolloProvider } from "@apollo/client";
 import { loadDevMessages, loadErrorMessages } from "@apollo/client/dev";
 import theme from "./theme.js";
 import { ChakraProvider } from "@chakra-ui/react";
-import { client } from "./apolloClient";
+import { client } from "./apollo/client";
 
 if (import.meta.env.DEV) {
   loadDevMessages();

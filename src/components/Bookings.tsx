@@ -11,7 +11,7 @@ import { Content, Image, InnerContainer, OuterContainer } from "./Card";
 import { HOST_BOOKINGS, SUBMIT_REVIEW } from "../pages/past-bookings";
 import { GuestReview } from "./TripReviews";
 import { gql, useMutation } from "@apollo/client";
-import { fragments } from "../fragments";
+import { fragments } from "../apollo/fragments";
 import {
   Booking_bookingFragment,
   Bookings_bookingsFragment,

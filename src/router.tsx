@@ -13,6 +13,8 @@ import {
   HomeLoader,
   HostBookings,
   HostBookingsLoader,
+  HostListings,
+  HostListingsLoader,
   HostPastBookings,
   HostPastBookingsLoader,
   Listing,
@@ -24,25 +26,23 @@ import {
   PastTripsLoader,
   Profile,
   ProfileLoader,
+  Root,
+  RootLoader,
   Search,
   SearchLoader,
   Trips,
-  TripsLoader,
+  UpcomingTrips,
+  UpcomingTripsLoader,
   Wallet,
   WalletLoader,
 } from "./pages";
-import { Layout, loader as LayoutLoader } from "./layouts/Layout";
 import { RootErrorBoundary } from "./components/RootErrorBoundary";
-import {
-  BookingsLayout,
-  loader as BookingsLayoutLoader,
-} from "./layouts/Bookings";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
-      element={<Layout />}
-      loader={LayoutLoader}
+      element={<Root />}
+      loader={RootLoader}
       errorElement={<RootErrorBoundary />}
     >
       <Route path="/" element={<Home />} loader={HomeLoader} />
@@ -62,8 +62,8 @@ export const router = createBrowserRouter(
       />
       <Route
         path="/listing/:id/*"
-        element={<BookingsLayout />}
-        loader={BookingsLayoutLoader}
+        element={<HostListings />}
+        loader={HostListingsLoader}
       >
         <Route
           path="bookings"
@@ -76,12 +76,10 @@ export const router = createBrowserRouter(
           loader={HostPastBookingsLoader}
         />
       </Route>
-      <Route path="/trips" element={<Trips />} loader={TripsLoader} />
-      <Route
-        path="/past-trips"
-        element={<PastTrips />}
-        loader={PastTripsLoader}
-      />
+      <Route path="trips" element={<Trips />}>
+        <Route index element={<UpcomingTrips />} loader={UpcomingTripsLoader} />
+        <Route path="past" element={<PastTrips />} loader={PastTripsLoader} />
+      </Route>
       <Route path="/profile" element={<Profile />} loader={ProfileLoader} />
       <Route path="/wallet" element={<Wallet />} loader={WalletLoader} />
     </Route>

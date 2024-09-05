@@ -29,7 +29,7 @@ import {
 } from "./__generated__/wallet.types";
 import { Guest } from "../__generated__/types";
 import { Navigate, useLoaderData } from "react-router-dom";
-import { preloadQuery } from "../apolloClient";
+import { preloadQuery } from "../apollo/preloadQuery";
 import { PageContainer } from "../components/PageContainer";
 
 export const ADD_FUNDS: TypedDocumentNode<

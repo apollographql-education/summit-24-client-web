@@ -3,7 +3,10 @@ export { default as Listings, loader as ListingsLoader } from "./listings";
 export { default as Listing, loader as ListingLoader } from "./listing";
 export { default as PastTrips, loader as PastTripsLoader } from "./past-trips";
 export { default as Search, loader as SearchLoader } from "./search";
-export { default as Trips, loader as TripsLoader } from "./trips";
+export {
+  default as UpcomingTrips,
+  loader as UpcomingTripsLoader,
+} from "./upcoming-trips";
 export { default as Login } from "./login";
 export { default as Profile, loader as ProfileLoader } from "./profile";
 export { default as Wallet, loader as WalletLoader } from "./wallet";
@@ -23,3 +26,10 @@ export {
   default as HostPastBookings,
   loader as HostPastBookingsLoader,
 } from "./past-bookings";
+export { default as Root, loader as RootLoader } from "./root";
+export {
+  default as HostListings,
+  loader as HostListingsLoader,
+} from "./host-listings";
+
+export { default as Trips } from "./trips";

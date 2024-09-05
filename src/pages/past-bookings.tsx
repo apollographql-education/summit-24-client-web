@@ -8,8 +8,7 @@ import {
   SubmitGuestReviewMutationVariables,
 } from "./__generated__/past-bookings.types";
 import { BookingStatus } from "../__generated__/types";
-import { preloadQuery } from "../apolloClient";
-import { PageContainer } from "../components/PageContainer";
+import { preloadQuery } from "../apollo/preloadQuery";
 
 export const SUBMIT_REVIEW: TypedDocumentNode<
   SubmitGuestReviewMutation,
