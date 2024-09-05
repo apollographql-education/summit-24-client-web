@@ -8,7 +8,7 @@ import {
 import { BookingStatus } from "../__generated__/types";
 import { preloadQuery } from "../apollo/preloadQuery";
 import { ListingList } from "../components/ListingList";
-import { Booking } from "../components/Bookings";
+import { Booking } from "../components/Booking";
 
 export const HOST_BOOKINGS: TypedDocumentNode<
   GetCurrrentAndUpcomingBookingsForHostListingQuery,

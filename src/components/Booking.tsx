@@ -3,7 +3,7 @@ import { Content, Image, InnerContainer, OuterContainer } from "./Card";
 
 import { gql } from "@apollo/client";
 import { fragments } from "../apollo/fragments";
-import { Booking_bookingFragment } from "./__generated__/Bookings.types";
+import { Booking_bookingFragment } from "./__generated__/Booking.types";
 
 interface BookingProps {
   booking: Booking_bookingFragment;
