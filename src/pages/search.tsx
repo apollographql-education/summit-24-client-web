@@ -56,7 +56,6 @@ export default function Search() {
       <Divider />
       <SearchResultsContainer>
         <SearchResultsHeader
-          limit={listingParams.limit}
           sortBy={listingParams.sortBy}
           onChange={setSearchParams}
         />
