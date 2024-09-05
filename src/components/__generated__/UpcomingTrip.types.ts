@@ -25,17 +25,3 @@ export type SubmitHostAndLocationReviewsMutation = {
     } | null;
   };
 };
-
-export type UpcomingTrip_tripFragment = {
-  __typename: "Booking";
-  id: string;
-  checkInDate: string;
-  checkOutDate: string;
-  status: GraphQLTypes.BookingStatus;
-  listing: {
-    __typename: "Listing";
-    id: string;
-    photoThumbnail: string;
-    title: string;
-  };
-};

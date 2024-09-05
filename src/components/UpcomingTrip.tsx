@@ -4,10 +4,9 @@ import { gql, TypedDocumentNode } from "@apollo/client";
 import {
   SubmitHostAndLocationReviewsMutation,
   SubmitHostAndLocationReviewsMutationVariables,
-  UpcomingTrip_tripFragment,
 } from "./__generated__/UpcomingTrip.types";
-import { fragments } from "../apollo/fragments";
 import { Card } from "./Card/Card";
+import { BookingStatus } from "../__generated__/types";
 
 export const SUBMIT_REVIEW: TypedDocumentNode<
   SubmitHostAndLocationReviewsMutation,
@@ -40,22 +39,18 @@ export const SUBMIT_REVIEW: TypedDocumentNode<
 `;
 
 interface UpcomingTripProps {
-  trip: UpcomingTrip_tripFragment;
+  trip: {
+    id: string;
+    checkInDate: string;
+    checkOutDate: string;
+    status: BookingStatus;
+    listing: {
+      id: string;
+      photoThumbnail: string;
+      title: string;
+    };
+  };
 }
-
-fragments.register(gql`
-  fragment UpcomingTrip_trip on Booking {
-    id
-    checkInDate
-    checkOutDate
-    status
-    listing {
-      id
-      photoThumbnail
-      title
-    }
-  }
-`);
 
 export function UpcomingTrip({ trip }: UpcomingTripProps) {
   return (
