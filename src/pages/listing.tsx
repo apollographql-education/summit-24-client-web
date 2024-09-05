@@ -19,20 +19,16 @@ import {
 } from "@chakra-ui/react";
 import { GUEST_TRIPS } from "./upcoming-trips";
 import { IoBedOutline, IoCreate } from "react-icons/io5";
-import { Link, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
-import {
-  gql,
-  TypedDocumentNode,
-  useFragment,
-  useReadQuery,
-} from "@apollo/client";
+import { Link, useParams } from "react-router-dom";
+import { gql, TypedDocumentNode, useFragment, useQuery } from "@apollo/client";
 import {
   GetListingDetailsQuery,
   GetListingDetailsQueryVariables,
   ListingsUserFragment,
 } from "./__generated__/listing.types";
-import { preloadQuery } from "../apollo/preloadQuery";
 import { PageContainer } from "../components/PageContainer";
+import { PageSpinner } from "../components/PageSpinner";
+import { PageError } from "../components/PageError";
 
 const LISTING: TypedDocumentNode<
   GetListingDetailsQuery,
@@ -112,21 +108,28 @@ const fragment: TypedDocumentNode<ListingsUserFragment> = gql`
   }
 `;
 
-export function loader({ params }: LoaderFunctionArgs) {
-  if (!params.id) {
+export default function Listing() {
+  const { id: idParam } = useParams();
+
+  if (!idParam) {
     throw new Error("Invalid ID");
   }
 
-  return preloadQuery(LISTING, { variables: { id: params.id } }).toPromise();
-}
-
-export default function Listings() {
-  const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const { data } = useReadQuery(queryRef);
+  const { data, loading, error } = useQuery(LISTING, {
+    variables: { id: idParam },
+  });
   const { data: currentUser } = useFragment({ fragment, from: "ROOT_QUERY" });
   const user = currentUser.me;
 
-  if (!data.listing) {
+  if (loading) {
+    return <PageSpinner />;
+  }
+
+  if (error) {
+    return <PageError error={error} />;
+  }
+
+  if (!data?.listing) {
     return <Center>Listing not found</Center>;
   }
 

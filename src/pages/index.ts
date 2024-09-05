@@ -1,6 +1,6 @@
 export { default as Home } from "./home";
 export { default as Listings } from "./listings";
-export { default as Listing, loader as ListingLoader } from "./listing";
+export { default as Listing } from "./listing";
 export { default as PastTrips, loader as PastTripsLoader } from "./past-trips";
 export { default as Search, loader as SearchLoader } from "./search";
 export {
