@@ -58,11 +58,20 @@ export const LISTING: TypedDocumentNode<
   query GetListing($id: ID!) {
     listingAmenities {
       id
-      ...ListingForm_amentities
+      name
+      category
     }
     listing(id: $id) {
       id
-      ...ListingForm_listing
+      title
+      description
+      numOfBeds
+      locationType
+      photoThumbnail
+      costPerNight
+      amenities {
+        id
+      }
     }
   }
 `;

@@ -38,8 +38,8 @@ export type GetListingQuery = {
   listingAmenities: Array<{
     __typename: "Amenity";
     id: string;
-    category: GraphQLTypes.AmenityCategory;
     name: string;
+    category: GraphQLTypes.AmenityCategory;
   }>;
   listing: {
     __typename: "Listing";

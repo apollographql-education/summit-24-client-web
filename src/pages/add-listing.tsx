@@ -52,7 +52,8 @@ const GET_LISTING_AMENITIES: TypedDocumentNode<
   query GetListingAmenities {
     listingAmenities {
       id
-      ...ListingForm_amentities
+      category
+      name
     }
   }
 `;
