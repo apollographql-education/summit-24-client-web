@@ -95,7 +95,6 @@ export function PastBooking({ booking }: PastBookingProps) {
           title={booking.guest.name}
           checkInDate={booking.checkInDate}
           checkOutDate={booking.checkOutDate}
-          hasReviews={hasHostReview}
         >
           {booking.status === "CURRENT" ? (
             <Box w="max-content">

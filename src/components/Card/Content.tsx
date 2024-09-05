@@ -5,7 +5,6 @@ interface ContentProps {
   title: string;
   checkInDate: string;
   checkOutDate: string;
-  hasReviews?: boolean;
   children?: ReactNode;
   wrapperProps?: FlexProps;
 }

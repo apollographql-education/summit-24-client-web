@@ -106,7 +106,6 @@ export function PastTrip({ trip }: PastTripProps) {
           title={trip.listing.title}
           checkInDate={trip.checkInDate}
           checkOutDate={trip.checkOutDate}
-          hasReviews={hasReviews}
           wrapperProps={{ w: "355px" }}
         />
       </VStack>
