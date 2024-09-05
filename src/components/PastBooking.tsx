@@ -58,7 +58,6 @@ export const SUBMIT_REVIEW: TypedDocumentNode<
 `;
 
 export function PastBooking({ booking }: PastBookingProps) {
-  const hasHostReview = booking.guestReview !== null;
   const toast = useToast();
 
   const [submitReview] = useMutation(SUBMIT_REVIEW, {
