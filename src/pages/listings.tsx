@@ -10,14 +10,15 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { IoAddCircleOutline } from "react-icons/io5";
-import { Link, useLoaderData } from "react-router-dom";
-import { gql, TypedDocumentNode, useReadQuery } from "@apollo/client";
+import { Link } from "react-router-dom";
+import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
 import {
   GetHostListingsQuery,
   GetHostListingsQueryVariables,
 } from "./__generated__/listings.types";
-import { preloadQuery } from "../apollo/preloadQuery";
 import { PageContainer } from "../components/PageContainer";
+import { PageError } from "../components/PageError";
+import { PageSpinner } from "../components/PageSpinner";
 
 const LINK_PROPS = {
   as: Link,
@@ -44,14 +45,18 @@ export const HOST_LISTINGS: TypedDocumentNode<
   }
 `;
 
-export function loader() {
-  return preloadQuery(HOST_LISTINGS);
-}
-
 export default function Listings() {
-  const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const { data } = useReadQuery(queryRef);
-  const { hostListings } = data;
+  const { data, loading, error } = useQuery(HOST_LISTINGS);
+
+  const hostListings = data?.hostListings ?? [];
+
+  if (error) {
+    return <PageError error={error} />;
+  }
+
+  if (loading) {
+    return <PageSpinner />;
+  }
 
   return (
     <PageContainer>

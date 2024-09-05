@@ -19,7 +19,6 @@ import {
   Listing,
   ListingLoader,
   Listings,
-  ListingsLoader,
   Login,
   PastTrips,
   PastTripsLoader,
@@ -42,7 +41,7 @@ export const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/search" element={<Search />} loader={SearchLoader} />
-      <Route path="/listings" element={<Listings />} loader={ListingsLoader} />
+      <Route path="/listings" element={<Listings />} />
       <Route
         path="/listings/create"
         element={<CreateListing />}
