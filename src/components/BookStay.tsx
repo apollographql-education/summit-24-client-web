@@ -27,13 +27,11 @@ import {
 
 import "react-datepicker/dist/react-datepicker.css";
 import {
-  BookStay_bookingsFragment,
   BookStayMutation,
   BookStayMutationVariables,
   CurrentUserIdQuery,
 } from "./__generated__/BookStay.types";
 import { DatePickerInput } from "./DatePickerInput";
-import { fragments } from "../apollo/fragments";
 import { Guest } from "../__generated__/types";
 
 export const BOOK_STAY: TypedDocumentNode<
@@ -55,18 +53,11 @@ export const BOOK_STAY: TypedDocumentNode<
 
 interface BookStayProps {
   costPerNight: number;
-  bookings: BookStay_bookingsFragment[];
+  bookings: Array<{ checkInDate: string; checkOutDate: string }>;
   listingId: string;
   refetchQueries?: MutationHookOptions["refetchQueries"];
   userRole?: string;
 }
-
-fragments.register(gql`
-  fragment BookStay_bookings on Booking {
-    checkInDate
-    checkOutDate
-  }
-`);
 
 export default function BookStay({
   costPerNight,

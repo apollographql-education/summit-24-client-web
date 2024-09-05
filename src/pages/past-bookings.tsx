@@ -17,7 +17,29 @@ export const HOST_BOOKINGS: TypedDocumentNode<
   query GetPastBookingsForHostListing($listingId: ID!, $status: BookingStatus) {
     bookingsForListing(listingId: $listingId, status: $status) {
       id
-      ...PastBooking_booking
+      checkInDate
+      checkOutDate
+      status
+      guest {
+        id
+        name
+        profilePicture
+      }
+      locationReview {
+        id
+        rating
+        text
+      }
+      hostReview {
+        id
+        rating
+        text
+      }
+      guestReview {
+        id
+        rating
+        text
+      }
     }
   }
 `;

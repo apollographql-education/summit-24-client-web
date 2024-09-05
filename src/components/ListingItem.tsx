@@ -1,7 +1,4 @@
 import { Flex } from "@chakra-ui/react";
-import { fragments } from "../apollo/fragments";
-import { gql } from "@apollo/client";
-import { ListingItem_listingFragment } from "./__generated__/ListingItem.types";
 import { ListingItemContainer } from "./ListingItem/Container";
 import { ListingItemImage } from "./ListingItem/Image";
 import { ListingItemDetails } from "./ListingItem/Details";
@@ -11,25 +8,22 @@ import { ListingItemLocationType } from "./ListingItem/LocationType";
 import { ListingItemRating } from "./ListingItem/Rating";
 import { ListingItemNumOfBeds } from "./ListingItem/NumOfBeds";
 import { ListingItemCost } from "./ListingItem/Cost";
+import { LocationType } from "../__generated__/types";
 
 interface ListingItemProps {
-  listing: ListingItem_listingFragment;
+  listing: {
+    id: string;
+    title: string;
+    description: string;
+    photoThumbnail: string;
+    numOfBeds: number;
+    costPerNight: number;
+    overallRating: number | null;
+    locationType: LocationType;
+  };
   checkInDate?: string;
   checkOutDate?: string;
 }
-
-fragments.register(gql`
-  fragment ListingItem_listing on Listing {
-    id
-    title
-    description
-    photoThumbnail
-    numOfBeds
-    costPerNight
-    overallRating
-    locationType
-  }
-`);
 
 export function ListingItem({
   listing,

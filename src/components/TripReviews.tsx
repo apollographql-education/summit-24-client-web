@@ -11,17 +11,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
-import { gql } from "@apollo/client";
-import { fragments } from "../apollo/fragments";
-import {
-  GuestReview_guestReviewFragment,
-  GuestReview_hostReviewFragment,
-  GuestReview_locationReviewFragment,
-  HostAndLocationReviewFragment_guestReviewFragment,
-  HostAndLocationReviewFragment_hostReviewFragment,
-  HostAndLocationReviewFragment_locationReviewFragment,
-  Review_reviewFragment,
-} from "./__generated__/TripReviews.types";
 
 interface ReviewType {
   rating: number;
@@ -29,16 +18,9 @@ interface ReviewType {
 }
 
 interface ReviewProps {
-  review: Review_reviewFragment;
+  review: ReviewType;
   children?: ReactNode;
 }
-
-fragments.register(gql`
-  fragment Review_review on Review {
-    rating
-    text
-  }
-`);
 
 function Review({ review, children }: ReviewProps) {
   return review ? (
@@ -55,28 +37,14 @@ function Review({ review, children }: ReviewProps) {
 }
 
 interface TripReviewsProps {
-  locationReview: HostAndLocationReviewFragment_locationReviewFragment | null;
-  hostReview: HostAndLocationReviewFragment_hostReviewFragment | null;
-  guestReview: HostAndLocationReviewFragment_guestReviewFragment | null;
+  locationReview: ReviewType | null;
+  hostReview: ReviewType | null;
+  guestReview: ReviewType | null;
   onSubmitReview: (reviews: {
     locationReview: ReviewType;
     hostReview: ReviewType;
   }) => void;
 }
-
-fragments.register(gql`
-  fragment HostAndLocationReviewFragment_locationReview on Review {
-    ...Review_review
-  }
-
-  fragment HostAndLocationReviewFragment_hostReview on Review {
-    ...Review_review
-  }
-
-  fragment HostAndLocationReviewFragment_guestReview on Review {
-    ...Review_review
-  }
-`);
 
 export function HostAndLocationReview({
   locationReview: submittedLocationReview,
@@ -159,9 +127,9 @@ export function HostAndLocationReview({
 }
 
 interface GuestReviewProps {
-  locationReview: GuestReview_locationReviewFragment | null;
-  hostReview: GuestReview_hostReviewFragment | null;
-  guestReview: GuestReview_guestReviewFragment | null;
+  locationReview: ReviewType | null;
+  hostReview: ReviewType | null;
+  guestReview: ReviewType | null;
   onSubmitReview: (review: ReviewType) => void;
 }
 
@@ -169,20 +137,6 @@ interface ReviewFormType {
   text: string;
   rating: number | null;
 }
-
-fragments.register(gql`
-  fragment GuestReview_locationReview on Review {
-    ...Review_review
-  }
-
-  fragment GuestReview_hostReview on Review {
-    ...Review_review
-  }
-
-  fragment GuestReview_guestReview on Review {
-    ...Review_review
-  }
-`);
 
 export function GuestReview({
   locationReview,

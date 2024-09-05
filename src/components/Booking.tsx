@@ -1,29 +1,23 @@
 import { Box, Text, Wrap } from "@chakra-ui/react";
 import { Content, Image } from "./Card";
 
-import { gql } from "@apollo/client";
-import { fragments } from "../apollo/fragments";
-import { Booking_bookingFragment } from "./__generated__/Booking.types";
 import { Card } from "./Card/Card";
+import { BookingStatus } from "../__generated__/types";
 
 interface BookingProps {
-  booking: Booking_bookingFragment;
-  isPast?: boolean;
+  booking: {
+    id: string;
+    checkInDate: string;
+    checkOutDate: string;
+    status: BookingStatus;
+    guest: {
+      __typename: "Guest";
+      id: string;
+      profilePicture: string;
+      name: string;
+    };
+  };
 }
-
-fragments.register(gql`
-  fragment Booking_booking on Booking {
-    id
-    checkInDate
-    checkOutDate
-    status
-    guest {
-      id
-      profilePicture
-      name
-    }
-  }
-`);
 
 export function Booking({ booking }: BookingProps) {
   return (

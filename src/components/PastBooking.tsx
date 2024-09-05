@@ -3,42 +3,44 @@ import { Content, Image } from "./Card";
 import { GuestReview } from "./TripReviews";
 import { gql, TypedDocumentNode, useMutation } from "@apollo/client";
 import {
-  PastBooking_bookingFragment,
   SubmitGuestReviewMutation,
   SubmitGuestReviewMutationVariables,
 } from "./__generated__/PastBooking.types";
-import { fragments } from "../apollo/fragments";
 import { Card } from "./Card/Card";
+import { BookingStatus } from "../__generated__/types";
 
 interface PastBookingProps {
-  booking: PastBooking_bookingFragment;
+  booking: {
+    id: string;
+    checkInDate: string;
+    checkOutDate: string;
+    status: BookingStatus;
+    guest: {
+      __typename: "Guest";
+      id: string;
+      name: string;
+      profilePicture: string;
+    };
+    locationReview: {
+      __typename: "Review";
+      id: string;
+      rating: number;
+      text: string;
+    } | null;
+    hostReview: {
+      __typename: "Review";
+      id: string;
+      rating: number;
+      text: string;
+    } | null;
+    guestReview: {
+      __typename: "Review";
+      id: string;
+      rating: number;
+      text: string;
+    } | null;
+  };
 }
-
-fragments.register(gql`
-  fragment PastBooking_booking on Booking {
-    id
-    checkInDate
-    checkOutDate
-    status
-    guest {
-      id
-      name
-      profilePicture
-    }
-    locationReview {
-      id
-      ...GuestReview_locationReview
-    }
-    hostReview {
-      id
-      ...GuestReview_hostReview
-    }
-    guestReview {
-      id
-      ...GuestReview_guestReview
-    }
-  }
-`);
 
 export const SUBMIT_REVIEW: TypedDocumentNode<
   SubmitGuestReviewMutation,
@@ -58,7 +60,6 @@ export const SUBMIT_REVIEW: TypedDocumentNode<
 `;
 
 export function PastBooking({ booking }: PastBookingProps) {
-  const hasHostReview = booking.guestReview !== null;
   const toast = useToast();
 
   const [submitReview] = useMutation(SUBMIT_REVIEW, {

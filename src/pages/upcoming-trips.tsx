@@ -15,7 +15,14 @@ export const GUEST_TRIPS: TypedDocumentNode<
   query GetGuestTrips {
     upcomingGuestBookings {
       id
-      ...UpcomingTrip_trip
+      checkInDate
+      checkOutDate
+      status
+      listing {
+        id
+        photoThumbnail
+        title
+      }
     }
   }
 `;

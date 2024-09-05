@@ -19,26 +19,24 @@ import {
 } from "@chakra-ui/react";
 import { GUEST_TRIPS } from "./upcoming-trips";
 import { IoBedOutline, IoCreate } from "react-icons/io5";
-import { Link, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
-import {
-  gql,
-  TypedDocumentNode,
-  useFragment,
-  useReadQuery,
-} from "@apollo/client";
+import { Link, useParams } from "react-router-dom";
+import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
 import {
   GetListingDetailsQuery,
   GetListingDetailsQueryVariables,
-  ListingsUserFragment,
 } from "./__generated__/listing.types";
-import { preloadQuery } from "../apollo/preloadQuery";
 import { PageContainer } from "../components/PageContainer";
+import { PageSpinner } from "../components/PageSpinner";
+import { PageError } from "../components/PageError";
 
 const LISTING: TypedDocumentNode<
   GetListingDetailsQuery,
   GetListingDetailsQueryVariables
 > = gql`
   query GetListingDetails($id: ID!) {
+    me {
+      id
+    }
     listing(id: $id) {
       id
       title
@@ -70,7 +68,8 @@ const LISTING: TypedDocumentNode<
       }
       bookings {
         id
-        ...BookStay_bookings
+        checkInDate
+        checkOutDate
       }
     }
   }
@@ -104,29 +103,27 @@ function AmenityList({ amenities, category }: AmenityListProps) {
   );
 }
 
-const fragment: TypedDocumentNode<ListingsUserFragment> = gql`
-  fragment ListingsUserFragment on Query {
-    me {
-      id
-    }
-  }
-`;
+export default function Listing() {
+  const { id: idParam } = useParams();
 
-export function loader({ params }: LoaderFunctionArgs) {
-  if (!params.id) {
+  if (!idParam) {
     throw new Error("Invalid ID");
   }
 
-  return preloadQuery(LISTING, { variables: { id: params.id } }).toPromise();
-}
+  const { data, loading, error } = useQuery(LISTING, {
+    variables: { id: idParam },
+  });
+  const user = data?.me;
 
-export default function Listings() {
-  const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const { data } = useReadQuery(queryRef);
-  const { data: currentUser } = useFragment({ fragment, from: "ROOT_QUERY" });
-  const user = currentUser.me;
+  if (loading) {
+    return <PageSpinner />;
+  }
 
-  if (!data.listing) {
+  if (error) {
+    return <PageError error={error} />;
+  }
+
+  if (!data?.listing) {
     return <Center>Listing not found</Center>;
   }
 

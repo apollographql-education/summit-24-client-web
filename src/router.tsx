@@ -10,7 +10,6 @@ import {
   EditListing,
   EditListingLoader,
   Home,
-  HomeLoader,
   HostBookings,
   HostBookingsLoader,
   HostListings,
@@ -18,16 +17,13 @@ import {
   HostPastBookings,
   HostPastBookingsLoader,
   Listing,
-  ListingLoader,
   Listings,
-  ListingsLoader,
   Login,
   PastTrips,
   PastTripsLoader,
   Profile,
   ProfileLoader,
   Root,
-  RootLoader,
   Search,
   SearchLoader,
   Trips,
@@ -40,21 +36,17 @@ import { RootErrorBoundary } from "./components/RootErrorBoundary";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route
-      element={<Root />}
-      loader={RootLoader}
-      errorElement={<RootErrorBoundary />}
-    >
-      <Route path="/" element={<Home />} loader={HomeLoader} />
+    <Route element={<Root />} errorElement={<RootErrorBoundary />}>
+      <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/search" element={<Search />} loader={SearchLoader} />
-      <Route path="/listings" element={<Listings />} loader={ListingsLoader} />
+      <Route path="/listings" element={<Listings />} />
       <Route
         path="/listings/create"
         element={<CreateListing />}
         loader={CreateListingLoader}
       />
-      <Route path="/listing/:id" element={<Listing />} loader={ListingLoader} />
+      <Route path="/listing/:id" element={<Listing />} />
       <Route
         path="/listing/:id/edit"
         element={<EditListing />}

@@ -18,12 +18,6 @@ export type BookStayMutation = {
   };
 };
 
-export type BookStay_bookingsFragment = {
-  __typename: "Booking";
-  checkInDate: string;
-  checkOutDate: string;
-};
-
 export type CurrentUserIdQueryVariables = GraphQLTypes.Exact<{
   [key: string]: never;
 }>;
