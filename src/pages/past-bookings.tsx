@@ -45,9 +45,9 @@ export default function HostBookings() {
 
   return bookings.length ? (
     <ListingList>
-      {bookings.map((booking) => {
-        return <PastBooking key={booking.id} booking={booking} />;
-      })}
+      {bookings.map((booking) => (
+        <PastBooking key={booking.id} booking={booking} />
+      ))}
     </ListingList>
   ) : (
     <Text textAlign="center">You have no previous bookings</Text>

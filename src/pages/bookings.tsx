@@ -62,9 +62,9 @@ export default function HostBookings() {
 
   return bookings.length ? (
     <ListingList>
-      {bookings.filter(Boolean).map((booking) => {
-        return <Booking key={booking.id} booking={booking} />;
-      })}
+      {bookings.filter(Boolean).map((booking) => (
+        <Booking key={booking.id} booking={booking} />
+      ))}
     </ListingList>
   ) : (
     <Text textAlign="center">You have no current or upcoming bookings</Text>
