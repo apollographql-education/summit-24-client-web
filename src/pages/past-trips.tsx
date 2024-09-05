@@ -15,7 +15,28 @@ export const PAST_GUEST_TRIPS: TypedDocumentNode<
   query GetPastTrips {
     pastGuestBookings {
       id
-      ...PastTrip_trip
+      checkInDate
+      checkOutDate
+      listing {
+        id
+        photoThumbnail
+        title
+      }
+      locationReview {
+        id
+        rating
+        text
+      }
+      hostReview {
+        id
+        rating
+        text
+      }
+      guestReview {
+        id
+        rating
+        text
+      }
     }
   }
 `;

@@ -1,17 +1,43 @@
 import { Image, useToast, VStack } from "@chakra-ui/react";
 import { Content } from "./Card";
 import { HostAndLocationReview } from "./TripReviews";
-import { fragments } from "../apollo/fragments";
 import { gql, TypedDocumentNode, useMutation } from "@apollo/client";
 import {
-  PastTrip_tripFragment,
   SubmitHostAndLocationReviewsMutation,
   SubmitHostAndLocationReviewsMutationVariables,
 } from "./__generated__/PastTrip.types";
 import { Card } from "./Card/Card";
 
 interface PastTripProps {
-  trip: PastTrip_tripFragment;
+  trip: {
+    id: string;
+    checkInDate: string;
+    checkOutDate: string;
+    listing: {
+      __typename: "Listing";
+      id: string;
+      photoThumbnail: string;
+      title: string;
+    };
+    locationReview: {
+      __typename: "Review";
+      id: string;
+      rating: number;
+      text: string;
+    } | null;
+    hostReview: {
+      __typename: "Review";
+      id: string;
+      rating: number;
+      text: string;
+    } | null;
+    guestReview: {
+      __typename: "Review";
+      id: string;
+      rating: number;
+      text: string;
+    } | null;
+  };
 }
 
 export const SUBMIT_REVIEW: TypedDocumentNode<
@@ -43,34 +69,6 @@ export const SUBMIT_REVIEW: TypedDocumentNode<
     }
   }
 `;
-
-fragments.register(gql`
-  fragment PastTrip_trip on Booking {
-    id
-    checkInDate
-    checkOutDate
-    listing {
-      id
-      photoThumbnail
-      title
-    }
-    locationReview {
-      id
-      rating
-      text
-    }
-    hostReview {
-      id
-      rating
-      text
-    }
-    guestReview {
-      id
-      rating
-      text
-    }
-  }
-`);
 
 export function PastTrip({ trip }: PastTripProps) {
   const toast = useToast();
