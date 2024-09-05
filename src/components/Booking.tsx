@@ -1,9 +1,10 @@
 import { Box, Text, Wrap } from "@chakra-ui/react";
-import { Content, Image, InnerContainer, OuterContainer } from "./Card";
+import { Content, Image } from "./Card";
 
 import { gql } from "@apollo/client";
 import { fragments } from "../apollo/fragments";
 import { Booking_bookingFragment } from "./__generated__/Booking.types";
+import { Card } from "./Card/Card";
 
 interface BookingProps {
   booking: Booking_bookingFragment;
@@ -26,31 +27,29 @@ fragments.register(gql`
 
 export function Booking({ booking }: BookingProps) {
   return (
-    <OuterContainer p={2}>
-      <InnerContainer>
-        <Wrap align="center" spacing="4">
-          <Image
-            isAvatar
-            src={booking.guest.profilePicture}
-            w="100px"
-            h="auto"
-            alt={booking.guest.name}
-          />
-          <Content
-            title={booking.guest.name}
-            checkInDate={booking.checkInDate}
-            checkOutDate={booking.checkOutDate}
-          >
-            {booking.status === "CURRENT" ? (
-              <Box w="max-content">
-                <Text fontWeight="semibold" fontStyle="italic">
-                  Current guest
-                </Text>
-              </Box>
-            ) : null}
-          </Content>
-        </Wrap>
-      </InnerContainer>
-    </OuterContainer>
+    <Card>
+      <Wrap align="center" spacing="4">
+        <Image
+          isAvatar
+          src={booking.guest.profilePicture}
+          w="100px"
+          h="auto"
+          alt={booking.guest.name}
+        />
+        <Content
+          title={booking.guest.name}
+          checkInDate={booking.checkInDate}
+          checkOutDate={booking.checkOutDate}
+        >
+          {booking.status === "CURRENT" ? (
+            <Box w="max-content">
+              <Text fontWeight="semibold" fontStyle="italic">
+                Current guest
+              </Text>
+            </Box>
+          ) : null}
+        </Content>
+      </Wrap>
+    </Card>
   );
 }
