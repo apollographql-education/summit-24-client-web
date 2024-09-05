@@ -6,8 +6,9 @@ import {
 } from "./__generated__/past-bookings.types";
 import { BookingStatus } from "../__generated__/types";
 import { preloadQuery } from "../apollo/preloadQuery";
-import { StackDivider, Text, VStack } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import { PastBooking } from "../components/PastBooking";
+import { ListingList } from "../components/ListingList";
 
 export const HOST_BOOKINGS: TypedDocumentNode<
   GetPastBookingsForHostListingQuery,
@@ -43,11 +44,11 @@ export default function HostBookings() {
   const bookings = data.bookingsForListing.filter(Boolean);
 
   return bookings.length ? (
-    <VStack spacing="4" divider={<StackDivider />}>
+    <ListingList>
       {bookings.map((booking) => {
         return <PastBooking key={booking.id} booking={booking} />;
       })}
-    </VStack>
+    </ListingList>
   ) : (
     <Text textAlign="center">You have no previous bookings</Text>
   );
