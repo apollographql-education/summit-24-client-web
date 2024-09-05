@@ -56,11 +56,11 @@ function getListingParams(
   const searchParams = new URLSearchParams();
 
   if (checkInDate) {
-    searchParams.set("startDate", checkInDate);
+    searchParams.set("checkInDate", checkInDate);
   }
 
   if (checkOutDate) {
-    searchParams.set("endDate", checkOutDate);
+    searchParams.set("checkOutDate", checkOutDate);
   }
 
   return searchParams;
