@@ -1,5 +1,5 @@
-import Bookings from "../components/Bookings";
 import { gql, TypedDocumentNode, useReadQuery } from "@apollo/client";
+import { Text } from "@chakra-ui/react";
 import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import {
   GetCurrrentAndUpcomingBookingsForHostListingQuery,
@@ -7,6 +7,8 @@ import {
 } from "./__generated__/bookings.types";
 import { BookingStatus } from "../__generated__/types";
 import { preloadQuery } from "../apollo/preloadQuery";
+import { ListingList } from "../components/ListingList";
+import { Booking } from "../components/Booking";
 
 export const HOST_BOOKINGS: TypedDocumentNode<
   GetCurrrentAndUpcomingBookingsForHostListingQuery,
@@ -22,7 +24,7 @@ export const HOST_BOOKINGS: TypedDocumentNode<
       status: $upcomingStatus
     ) {
       id
-      ...Bookings_bookings
+      ...Booking_booking
     }
 
     currentBooking: bookingsForListing(
@@ -30,7 +32,7 @@ export const HOST_BOOKINGS: TypedDocumentNode<
       status: $currentStatus
     ) {
       id
-      ...Bookings_bookings
+      ...Booking_booking
     }
   }
 `;
@@ -58,5 +60,13 @@ export default function HostBookings() {
   const { upcomingBookings, currentBooking } = data;
   const bookings = [...upcomingBookings, ...currentBooking];
 
-  return <Bookings bookings={bookings.filter(Boolean)} />;
+  return bookings.length ? (
+    <ListingList>
+      {bookings.filter(Boolean).map((booking) => (
+        <Booking key={booking.id} booking={booking} />
+      ))}
+    </ListingList>
+  ) : (
+    <Text textAlign="center">You have no current or upcoming bookings</Text>
+  );
 }

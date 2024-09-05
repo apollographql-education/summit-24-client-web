@@ -1,31 +1,14 @@
-import Bookings from "../components/Bookings";
 import { gql, TypedDocumentNode, useReadQuery } from "@apollo/client";
 import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import {
   GetPastBookingsForHostListingQuery,
   GetPastBookingsForHostListingQueryVariables,
-  SubmitGuestReviewMutation,
-  SubmitGuestReviewMutationVariables,
 } from "./__generated__/past-bookings.types";
 import { BookingStatus } from "../__generated__/types";
 import { preloadQuery } from "../apollo/preloadQuery";
-
-export const SUBMIT_REVIEW: TypedDocumentNode<
-  SubmitGuestReviewMutation,
-  SubmitGuestReviewMutationVariables
-> = gql`
-  mutation SubmitGuestReview($bookingId: ID!, $guestReview: ReviewInput!) {
-    submitGuestReview(bookingId: $bookingId, guestReview: $guestReview) {
-      success
-      message
-      guestReview {
-        id
-        text
-        rating
-      }
-    }
-  }
-`;
+import { Text } from "@chakra-ui/react";
+import { PastBooking } from "../components/PastBooking";
+import { ListingList } from "../components/ListingList";
 
 export const HOST_BOOKINGS: TypedDocumentNode<
   GetPastBookingsForHostListingQuery,
@@ -34,7 +17,7 @@ export const HOST_BOOKINGS: TypedDocumentNode<
   query GetPastBookingsForHostListing($listingId: ID!, $status: BookingStatus) {
     bookingsForListing(listingId: $listingId, status: $status) {
       id
-      ...Bookings_bookings
+      ...PastBooking_booking
     }
   }
 `;
@@ -58,5 +41,15 @@ export default function HostBookings() {
   const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
   const { data } = useReadQuery(queryRef);
 
-  return <Bookings bookings={data.bookingsForListing.filter(Boolean)} isPast />;
+  const bookings = data.bookingsForListing.filter(Boolean);
+
+  return bookings.length ? (
+    <ListingList>
+      {bookings.map((booking) => (
+        <PastBooking key={booking.id} booking={booking} />
+      ))}
+    </ListingList>
+  ) : (
+    <Text textAlign="center">You have no previous bookings</Text>
+  );
 }

@@ -1,5 +1,5 @@
 import { Tag, Wrap } from "@chakra-ui/react";
-import { Content, Image, InnerContainer, OuterContainer } from "./Card";
+import { Content, Image } from "./Card";
 import { gql, TypedDocumentNode } from "@apollo/client";
 import {
   SubmitHostAndLocationReviewsMutation,
@@ -7,6 +7,7 @@ import {
   UpcomingTrip_tripFragment,
 } from "./__generated__/UpcomingTrip.types";
 import { fragments } from "../apollo/fragments";
+import { Card } from "./Card/Card";
 
 export const SUBMIT_REVIEW: TypedDocumentNode<
   SubmitHostAndLocationReviewsMutation,
@@ -58,36 +59,34 @@ fragments.register(gql`
 
 export function UpcomingTrip({ trip }: UpcomingTripProps) {
   return (
-    <OuterContainer p={2}>
-      <InnerContainer>
-        <Wrap align="center" spacing="4">
-          <Image
-            src={trip.listing.photoThumbnail}
-            alt={trip.listing.title}
-            w="auto"
-            h="200px"
-          />
-          <Content
-            title={trip.listing.title}
-            checkInDate={trip.checkInDate}
-            checkOutDate={trip.checkOutDate}
-            wrapperProps={{ ml: "4" }}
-          >
-            {trip.status === "CURRENT" ? (
-              <Tag
-                h="18px"
-                w="300px"
-                rounded="xl"
-                bgColor="#425C0A"
-                color="white"
-                justifyContent="center"
-              >
-                You&apos;re staying here right now!
-              </Tag>
-            ) : null}
-          </Content>
-        </Wrap>
-      </InnerContainer>
-    </OuterContainer>
+    <Card>
+      <Wrap align="center" spacing="4">
+        <Image
+          src={trip.listing.photoThumbnail}
+          alt={trip.listing.title}
+          w="auto"
+          h="200px"
+        />
+        <Content
+          title={trip.listing.title}
+          checkInDate={trip.checkInDate}
+          checkOutDate={trip.checkOutDate}
+          wrapperProps={{ ml: "4" }}
+        >
+          {trip.status === "CURRENT" ? (
+            <Tag
+              h="18px"
+              w="300px"
+              rounded="xl"
+              bgColor="#425C0A"
+              color="white"
+              justifyContent="center"
+            >
+              You&apos;re staying here right now!
+            </Tag>
+          ) : null}
+        </Content>
+      </Wrap>
+    </Card>
   );
 }

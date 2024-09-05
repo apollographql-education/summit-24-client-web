@@ -1,5 +1,5 @@
 import { Image, useToast, VStack } from "@chakra-ui/react";
-import { Content, InnerContainer, OuterContainer } from "./Card";
+import { Content } from "./Card";
 import { HostAndLocationReview } from "./TripReviews";
 import { fragments } from "../apollo/fragments";
 import { gql, TypedDocumentNode, useMutation } from "@apollo/client";
@@ -8,6 +8,7 @@ import {
   SubmitHostAndLocationReviewsMutation,
   SubmitHostAndLocationReviewsMutationVariables,
 } from "./__generated__/PastTrip.types";
+import { Card } from "./Card/Card";
 
 interface PastTripProps {
   trip: PastTrip_tripFragment;
@@ -93,40 +94,37 @@ export function PastTrip({ trip }: PastTripProps) {
   });
 
   return (
-    <OuterContainer p={2}>
-      <InnerContainer>
-        <VStack>
-          <Image
-            src={trip.listing.photoThumbnail}
-            alt={trip.listing.title}
-            w="auto"
-            h="200px"
-          />
-          <Content
-            title={trip.listing.title}
-            checkInDate={trip.checkInDate}
-            checkOutDate={trip.checkOutDate}
-            hasReviews={hasReviews}
-            wrapperProps={{ w: "355px" }}
-          />
-        </VStack>
-        <HostAndLocationReview
-          locationReview={trip.locationReview}
-          hostReview={trip.hostReview}
-          guestReview={trip.guestReview}
-          onSubmitReview={(reviews) => {
-            submitReview({
-              variables: {
-                ...reviews,
-                bookingId: trip.id,
-              },
-              // NOTE: for the scope of this project, we've opted for the simpler refetch approach
-              // another, more optimized option is to update the cache directly -- https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
-              // refetchQueries: [{ query: PAST_GUEST_TRIPS }],
-            });
-          }}
+    <Card>
+      <VStack>
+        <Image
+          src={trip.listing.photoThumbnail}
+          alt={trip.listing.title}
+          w="auto"
+          h="200px"
         />
-      </InnerContainer>
-    </OuterContainer>
+        <Content
+          title={trip.listing.title}
+          checkInDate={trip.checkInDate}
+          checkOutDate={trip.checkOutDate}
+          wrapperProps={{ w: "355px" }}
+        />
+      </VStack>
+      <HostAndLocationReview
+        locationReview={trip.locationReview}
+        hostReview={trip.hostReview}
+        guestReview={trip.guestReview}
+        onSubmitReview={(reviews) => {
+          submitReview({
+            variables: {
+              ...reviews,
+              bookingId: trip.id,
+            },
+            // NOTE: for the scope of this project, we've opted for the simpler refetch approach
+            // another, more optimized option is to update the cache directly -- https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
+            // refetchQueries: [{ query: PAST_GUEST_TRIPS }],
+          });
+        }}
+      />
+    </Card>
   );
 }
