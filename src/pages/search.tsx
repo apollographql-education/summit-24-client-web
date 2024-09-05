@@ -61,7 +61,7 @@ export default function Search() {
         checkInDate={listingParams.checkInDate}
         checkOutDate={listingParams.checkOutDate}
         numOfBeds={listingParams.numOfBeds}
-        onChange={setSearchParams}
+        onChange={(values) => setSearchParams(values)}
       />
       <Divider />
       <SearchResultsContainer>

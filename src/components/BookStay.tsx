@@ -68,8 +68,8 @@ export default function BookStay({
 }: BookStayProps) {
   // get initial dates from url
   const searchQuery = new URLSearchParams(useLocation().search);
-  const checkInDateStringFromUrl = searchQuery.get("startDate")!;
-  const checkOutDateStringFromUrl = searchQuery.get("endDate")!;
+  const checkInDateStringFromUrl = searchQuery.get("checkInDate")!;
+  const checkOutDateStringFromUrl = searchQuery.get("checkOutDate")!;
   const checkInDateFromUrl = new Date(checkInDateStringFromUrl);
   const checkOutDateFromUrl = new Date(checkOutDateStringFromUrl);
 

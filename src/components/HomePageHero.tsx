@@ -25,8 +25,10 @@ const INPUT_PROPS = {
 
 export function HomePageHero() {
   const today = new Date();
-  const [startDate, setStartDate] = useState(today);
-  const [endDate, setEndDate] = useState(getNextDate(today));
+  const [checkInDate, setcheckInDate] = useState(today);
+  const [checkOutDate, setCheckOutDate] = useState(() =>
+    getNextDate(checkInDate),
+  );
   const [numOfBeds, setNumOfBeds] = useState(1);
 
   return (
@@ -66,11 +68,11 @@ export function HomePageHero() {
                   <DatePickerInput
                     {...INPUT_PROPS}
                     today={today}
-                    startDate={startDate}
-                    endDate={endDate}
-                    setStartDate={setStartDate}
-                    setEndDate={setEndDate}
-                    selected={startDate}
+                    startDate={checkInDate}
+                    endDate={checkOutDate}
+                    setStartDate={setcheckInDate}
+                    setEndDate={setCheckOutDate}
+                    selected={checkInDate}
                     width="150px"
                   />
                 </InputContainer>
@@ -78,13 +80,13 @@ export function HomePageHero() {
                   <DatePickerInput
                     {...INPUT_PROPS}
                     today={today}
-                    startDate={startDate}
-                    endDate={endDate}
-                    setStartDate={setStartDate}
-                    setEndDate={setEndDate}
-                    minDate={today < startDate ? startDate : today}
-                    selected={endDate}
-                    onChange={(date) => setEndDate(date)}
+                    startDate={checkInDate}
+                    endDate={checkOutDate}
+                    setStartDate={setcheckInDate}
+                    setEndDate={setCheckOutDate}
+                    minDate={today < checkInDate ? checkInDate : today}
+                    selected={checkOutDate}
+                    onChange={(date) => setCheckOutDate(date)}
                     width="150px"
                   />
                 </InputContainer>
@@ -95,11 +97,11 @@ export function HomePageHero() {
                 />
                 <Button
                   as={Link}
-                  to={`/search/?startDate=${format(
-                    startDate,
+                  to={`/search/?checkInDate=${format(
+                    checkInDate,
                     "MM-dd-yyyy",
-                  )}&endDate=${format(
-                    endDate,
+                  )}&checkOutDate=${format(
+                    checkOutDate,
                     "MM-dd-yyyy",
                   )}&numOfBeds=${numOfBeds}`}
                 >

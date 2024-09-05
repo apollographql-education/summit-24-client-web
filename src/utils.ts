@@ -78,8 +78,8 @@ export const areDatesValid = (
 export function getListingParamsFromSearchParams(
   searchParams: URLSearchParams
 ) {
-  const checkInDate = searchParams.get("startDate");
-  const checkOutDate = searchParams.get("endDate");
+  const checkInDate = searchParams.get("checkInDate");
+  const checkOutDate = searchParams.get("checkOutDate");
 
   if (!checkInDate || !checkOutDate) {
     throw new Error("Could not determine dates to check");
@@ -91,7 +91,7 @@ export function getListingParamsFromSearchParams(
     sortBy:
       (searchParams.get("sortBy") as SortByCriteria | null) ??
       SortByCriteria.COST_ASC,
-    limit: parseInt(searchParams.get("limit") ?? "5", 10),
+    limit: 5,
     numOfBeds: parseInt(searchParams.get("numOfBeds") ?? "1", 10),
     page: parseInt(searchParams.get("page") ?? "1", 10),
   };
