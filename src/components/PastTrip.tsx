@@ -56,21 +56,23 @@ fragments.register(gql`
     }
     locationReview {
       id
-      ...HostAndLocationReviewFragment_locationReview
+      rating
+      text
     }
     hostReview {
       id
-      ...HostAndLocationReviewFragment_hostReview
+      rating
+      text
     }
     guestReview {
       id
-      ...HostAndLocationReviewFragment_guestReview
+      rating
+      text
     }
   }
 `);
 
 export function PastTrip({ trip }: PastTripProps) {
-  const hasReviews = trip.locationReview !== null && trip.hostReview !== null;
   const toast = useToast();
 
   const [submitReview] = useMutation(SUBMIT_REVIEW, {

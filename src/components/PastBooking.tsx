@@ -27,15 +27,18 @@ fragments.register(gql`
     }
     locationReview {
       id
-      ...GuestReview_locationReview
+      rating
+      text
     }
     hostReview {
       id
-      ...GuestReview_hostReview
+      rating
+      text
     }
     guestReview {
       id
-      ...GuestReview_guestReview
+      rating
+      text
     }
   }
 `);
