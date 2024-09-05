@@ -20,11 +20,10 @@ import {
 import { GUEST_TRIPS } from "./upcoming-trips";
 import { IoBedOutline, IoCreate } from "react-icons/io5";
 import { Link, useParams } from "react-router-dom";
-import { gql, TypedDocumentNode, useFragment, useQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
 import {
   GetListingDetailsQuery,
   GetListingDetailsQueryVariables,
-  ListingsUserFragment,
 } from "./__generated__/listing.types";
 import { PageContainer } from "../components/PageContainer";
 import { PageSpinner } from "../components/PageSpinner";
@@ -35,6 +34,9 @@ const LISTING: TypedDocumentNode<
   GetListingDetailsQueryVariables
 > = gql`
   query GetListingDetails($id: ID!) {
+    me {
+      id
+    }
     listing(id: $id) {
       id
       title
@@ -100,14 +102,6 @@ function AmenityList({ amenities, category }: AmenityListProps) {
   );
 }
 
-const fragment: TypedDocumentNode<ListingsUserFragment> = gql`
-  fragment ListingsUserFragment on Query {
-    me {
-      id
-    }
-  }
-`;
-
 export default function Listing() {
   const { id: idParam } = useParams();
 
@@ -118,8 +112,7 @@ export default function Listing() {
   const { data, loading, error } = useQuery(LISTING, {
     variables: { id: idParam },
   });
-  const { data: currentUser } = useFragment({ fragment, from: "ROOT_QUERY" });
-  const user = currentUser.me;
+  const user = data?.me;
 
   if (loading) {
     return <PageSpinner />;
