@@ -1,7 +1,6 @@
 import { ListingItem } from "../components/ListingItem";
 import { Divider } from "@chakra-ui/react";
-import { gql, QueryRef, TypedDocumentNode, useReadQuery } from "@apollo/client";
-import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
+import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -10,9 +9,6 @@ import {
 } from "./__generated__/search.types";
 import { PageError } from "../components/PageError";
 import { PageContainer } from "../components/PageContainer";
-import { preloadQuery } from "../apollo/preloadQuery";
-import { Suspense } from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import { SearchForm } from "../components/SearchForm";
 import { SearchResultsHeader } from "../components/SearchResultsHeader";
 import { useSearchParams } from "../hooks/useSearchParams";
@@ -41,19 +37,13 @@ export const SEARCH_LISTINGS: TypedDocumentNode<
   }
 `;
 
-export function loader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
-  const listingParams = getListingParamsFromSearchParams(url.searchParams);
-
-  return preloadQuery(SEARCH_LISTINGS, {
-    variables: { searchListingsInput: listingParams },
-  }).toPromise();
-}
-
 export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
   const listingParams = getListingParamsFromSearchParams(searchParams);
+
+  const { data, loading, error } = useQuery(SEARCH_LISTINGS, {
+    variables: { searchListingsInput: listingParams },
+  });
 
   return (
     <PageContainer>
@@ -71,27 +61,27 @@ export default function Search() {
           onChange={setSearchParams}
         />
 
-        <Suspense fallback={<SearchResultsSpinner />}>
-          <ErrorBoundary
-            fallbackRender={({ error }) => <PageError error={error} />}
-          >
-            <SearchResults
-              queryRef={queryRef}
-              page={listingParams.page}
-              limit={listingParams.limit}
-              checkInDate={listingParams.checkInDate}
-              checkOutDate={listingParams.checkOutDate}
-              onChangePage={(page) => setSearchParams({ page })}
-            />
-          </ErrorBoundary>
-        </Suspense>
+        {loading ? (
+          <SearchResultsSpinner />
+        ) : error ? (
+          <PageError error={error} />
+        ) : (
+          <SearchResults
+            searchListings={data?.searchListings ?? []}
+            page={listingParams.page}
+            limit={listingParams.limit}
+            checkInDate={listingParams.checkInDate}
+            checkOutDate={listingParams.checkOutDate}
+            onChangePage={(page) => setSearchParams({ page })}
+          />
+        )}
       </SearchResultsContainer>
     </PageContainer>
   );
 }
 
 interface SearchResultsProps {
-  queryRef: QueryRef<SearchListingsQuery, SearchListingsQueryVariables>;
+  searchListings: SearchListingsQuery["searchListings"];
   page: number;
   limit: number;
   checkInDate: string;
@@ -100,20 +90,18 @@ interface SearchResultsProps {
 }
 
 function SearchResults({
-  queryRef,
+  searchListings,
   page,
   limit,
   checkInDate,
   checkOutDate,
   onChangePage,
 }: SearchResultsProps) {
-  const { data } = useReadQuery(queryRef);
-
   return (
     <>
-      {data.searchListings.length > 0 ? (
+      {searchListings.length > 0 ? (
         <ListingList>
-          {data.searchListings.filter(Boolean).map((listing) => (
+          {searchListings.filter(Boolean).map((listing) => (
             <ListingItem
               key={listing.id}
               listing={listing}
@@ -129,7 +117,7 @@ function SearchResults({
       <SearchPaginator
         page={page}
         onChange={onChangePage}
-        hasNextPage={data.searchListings.length === limit}
+        hasNextPage={searchListings.length === limit}
       />
     </>
   );
