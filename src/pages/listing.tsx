@@ -68,7 +68,8 @@ const LISTING: TypedDocumentNode<
       }
       bookings {
         id
-        ...BookStay_bookings
+        checkInDate
+        checkOutDate
       }
     }
   }
