@@ -1,14 +1,13 @@
-import { gql, TypedDocumentNode, useReadQuery } from "@apollo/client";
-import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
+import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
 import {
   GetPastBookingsForHostListingQuery,
   GetPastBookingsForHostListingQueryVariables,
 } from "./__generated__/past-bookings.types";
 import { BookingStatus } from "../__generated__/types";
-import { preloadQuery } from "../apollo/preloadQuery";
 import { Text } from "@chakra-ui/react";
 import { PastBooking } from "../components/PastBooking";
 import { ListingList } from "../components/ListingList";
+import { useParams } from "react-router-dom";
 
 export const HOST_BOOKINGS: TypedDocumentNode<
   GetPastBookingsForHostListingQuery,
@@ -44,24 +43,14 @@ export const HOST_BOOKINGS: TypedDocumentNode<
   }
 `;
 
-export function loader({ params }: LoaderFunctionArgs) {
-  const { id } = params;
-
-  if (!id) {
-    throw new Error("Invalid booking ID");
-  }
-
-  return preloadQuery(HOST_BOOKINGS, {
+export default function HostBookings() {
+  const { id } = useParams();
+  const { data } = useSuspenseQuery(HOST_BOOKINGS, {
     variables: {
-      listingId: id,
+      listingId: id!,
       status: BookingStatus.COMPLETED,
     },
-  }).toPromise();
-}
-
-export default function HostBookings() {
-  const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const { data } = useReadQuery(queryRef);
+  });
 
   const bookings = data.bookingsForListing.filter(Boolean);
 

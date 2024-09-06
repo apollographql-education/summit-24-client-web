@@ -124,25 +124,7 @@ export default function BookStay({
     },
     refetchQueries,
     update: (cache) => {
-      const data = cache.readQuery<CurrentUserIdQuery>({
-        query: gql`
-          query CurrentUserIdQuery {
-            me {
-              id
-            }
-          }
-        `,
-      });
-
-      if (data?.me) {
-        cache.modify<Guest>({
-          id: cache.identify({ __typename: "Guest", id: data.me.id }),
-          fields: {
-            // Force our wallet to refetch funds
-            funds: (_, { DELETE }) => DELETE,
-          },
-        });
-      }
+      /* We will update the cache here */
     },
   });
 

@@ -11,11 +11,8 @@ import {
   EditListingLoader,
   Home,
   HostBookings,
-  HostBookingsLoader,
   HostListings,
-  HostListingsLoader,
   HostPastBookings,
-  HostPastBookingsLoader,
   Listing,
   Listings,
   Login,
@@ -51,21 +48,9 @@ export const router = createBrowserRouter(
         element={<EditListing />}
         loader={EditListingLoader}
       />
-      <Route
-        path="/listing/:id/*"
-        element={<HostListings />}
-        loader={HostListingsLoader}
-      >
-        <Route
-          path="bookings"
-          element={<HostBookings />}
-          loader={HostBookingsLoader}
-        />
-        <Route
-          path="past-bookings"
-          element={<HostPastBookings />}
-          loader={HostPastBookingsLoader}
-        />
+      <Route path="/listing/:id/*" element={<HostListings />}>
+        <Route path="bookings" element={<HostBookings />} />
+        <Route path="past-bookings" element={<HostPastBookings />} />
       </Route>
       <Route path="trips" element={<Trips />}>
         <Route index element={<UpcomingTrips />} loader={UpcomingTripsLoader} />

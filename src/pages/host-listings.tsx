@@ -1,6 +1,5 @@
-import { gql, TypedDocumentNode, useReadQuery } from "@apollo/client";
-import { preloadQuery } from "../apollo/preloadQuery";
-import { LoaderFunctionArgs, Outlet, useLoaderData } from "react-router-dom";
+import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
+import { Outlet, useParams } from "react-router-dom";
 import { Center } from "@chakra-ui/react";
 import {
   GetBookingQuery,
@@ -21,29 +20,20 @@ const GET_BOOKING: TypedDocumentNode<
   }
 `;
 
-export function loader({ params }: LoaderFunctionArgs) {
-  const { id } = params;
-
-  if (!id) {
-    throw new Error("Invalid ID");
-  }
-
-  return preloadQuery(GET_BOOKING, { variables: { listingId: id } });
-}
-
 export default function HostListings() {
-  const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const { data } = useReadQuery(queryRef);
+  const { id } = useParams();
 
-  const { listing } = data;
+  const { data } = useSuspenseQuery(GET_BOOKING, {
+    variables: { listingId: id! },
+  });
 
-  if (!listing) {
+  if (!data.listing) {
     return <Center>Listing could not be found</Center>;
   }
 
   return (
     <PageContainer>
-      <HostBookingsNav title={listing.title} />
+      <HostBookingsNav title={data.listing.title} />
       <Outlet />
     </PageContainer>
   );

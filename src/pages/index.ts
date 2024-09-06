@@ -18,18 +18,9 @@ export {
   default as CreateListing,
   loader as CreateListingLoader,
 } from "./add-listing";
-export {
-  default as HostBookings,
-  loader as HostBookingsLoader,
-} from "./bookings";
-export {
-  default as HostPastBookings,
-  loader as HostPastBookingsLoader,
-} from "./past-bookings";
+export { default as HostBookings } from "./bookings";
+export { default as HostPastBookings } from "./past-bookings";
 export { default as Root } from "./root";
-export {
-  default as HostListings,
-  loader as HostListingsLoader,
-} from "./host-listings";
+export { default as HostListings } from "./host-listings";
 
 export { default as Trips } from "./trips";
