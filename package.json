@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@apollo/client": "^3.11.6",
+    "@apollo/client": "^3.11.8",
     "@apollo/space-kit": "^9.11.0",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.4.1",
