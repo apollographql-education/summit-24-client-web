@@ -7,20 +7,12 @@ import { ListingItemDescription } from "./ListingItem/Description";
 import { ListingItemLocationType } from "./ListingItem/LocationType";
 import { ListingItemRating } from "./ListingItem/Rating";
 import { ListingItemNumOfBeds } from "./ListingItem/NumOfBeds";
-import { ListingItemCost } from "./ListingItem/Cost";
-import { LocationType } from "../__generated__/types";
+// import { ListingItemCost } from "./ListingItem/Cost";
+import { gql } from "@apollo/client";
+import { ListingItem_listingFragment } from "./__generated__/ListingItem.types";
 
 interface ListingItemProps {
-  listing: {
-    id: string;
-    title: string;
-    description: string;
-    photoThumbnail: string;
-    numOfBeds: number;
-    costPerNight: number;
-    overallRating: number | null;
-    locationType: LocationType;
-  };
+  listing: ListingItem_listingFragment;
   checkInDate?: string;
   checkOutDate?: string;
 }
@@ -42,12 +34,26 @@ export function ListingItem({
         <Flex direction="row" align="center">
           <ListingItemRating rating={listing.overallRating} />
           <ListingItemNumOfBeds numOfBeds={listing.numOfBeds} />
-          <ListingItemCost costPerNight={listing.costPerNight} />
+          {/* <ListingItemCost costPerNight={listing.costPerNight} /> */}
         </Flex>
       </ListingItemDetails>
     </ListingItemContainer>
   );
 }
+
+ListingItem.fragments = {
+  listing: gql`
+    fragment ListingItem_listing on Listing {
+      id
+      title
+      description
+      photoThumbnail
+      numOfBeds
+      overallRating
+      locationType
+    }
+  `,
+};
 
 function getListingParams(
   checkInDate: string | undefined,

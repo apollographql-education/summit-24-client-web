@@ -26,15 +26,11 @@ export const SEARCH_LISTINGS: TypedDocumentNode<
   query SearchListings($searchListingsInput: SearchListingsInput!) {
     searchListings(criteria: $searchListingsInput) {
       id
-      title
-      description
-      photoThumbnail
-      numOfBeds
-      costPerNight
-      overallRating
-      locationType
+      ...ListingItem_listing
     }
   }
+
+  ${ListingItem.fragments.listing}
 `;
 
 export default function Search() {
