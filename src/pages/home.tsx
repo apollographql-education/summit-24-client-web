@@ -12,6 +12,7 @@ import { ListingList } from "../components/ListingList";
 import { ListingItem } from "../components/ListingItem";
 import { FeaturedListingTitle } from "../components/FeaturedListingTitle";
 import { FeaturedListingContainer } from "../components/FeaturedListingContainer";
+import { InflationButton } from "../components/InflationButton";
 
 export const FEATURED_LISTINGS: TypedDocumentNode<
   GetFeaturedListingsQuery,
@@ -49,6 +50,7 @@ export default function Home() {
           </ListingList>
         </FeaturedListingContainer>
       )}
+      <InflationButton />
     </>
   );
 }
