@@ -3,7 +3,8 @@ import { setContext } from "@apollo/client/link/context";
 import { cache } from "./cache";
 
 const httpLink = createHttpLink({
-  uri: "https://rt-airlock-router.herokuapp.com/",
+  uri: (operation) =>
+    `https://rt-airlock-router.herokuapp.com?operationName=${operation.operationName}`,
 });
 
 const authLink = setContext((_, { headers }) => {
