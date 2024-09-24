@@ -8,6 +8,7 @@ import { Text } from "@chakra-ui/react";
 import { PastBooking } from "../components/PastBooking";
 import { ListingList } from "../components/ListingList";
 import { useParams } from "react-router-dom";
+import { PageSpinner } from "../components/PageSpinner";
 
 export const HOST_BOOKINGS: TypedDocumentNode<
   GetPastBookingsForHostListingQuery,
@@ -45,7 +46,7 @@ export const HOST_BOOKINGS: TypedDocumentNode<
 
 export default function HostBookings() {
   const { id } = useParams();
-  const { data } = useQuery(HOST_BOOKINGS, {
+  const { data, loading } = useQuery(HOST_BOOKINGS, {
     variables: {
       listingId: id!,
       status: BookingStatus.COMPLETED,
@@ -53,6 +54,10 @@ export default function HostBookings() {
   });
 
   const bookings = data?.bookingsForListing.filter(Boolean) ?? [];
+
+  if (loading) {
+    return <PageSpinner />;
+  }
 
   return bookings.length ? (
     <ListingList>

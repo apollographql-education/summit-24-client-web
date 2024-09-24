@@ -116,17 +116,6 @@ export function PastBooking({ booking }: PastBookingProps) {
               guestReview: review,
               bookingId: booking.id,
             },
-            // NOTE: for the scope of this project, we've opted for the simpler refetch approach
-            // another, more optimized option is to update the cache directly -- https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
-            // refetchQueries: [
-            //   {
-            //     query: HOST_BOOKINGS,
-            //     variables: {
-            //       listingId: booking.listing.id,
-            //       status: "COMPLETED",
-            //     },
-            //   },
-            // ],
           });
         }}
       />

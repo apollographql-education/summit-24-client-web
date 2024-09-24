@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { PageContainer } from "./PageContainer";
-import { IoExit, IoWallet } from "react-icons/io5";
+import { IoWallet } from "react-icons/io5";
 import { LogoutButton } from "./LogoutButton";
 
 interface GuestProfileProps {

@@ -34,7 +34,7 @@ export const router = createBrowserRouter(
       <Route path="/listings/create" element={<CreateListing />} />
       <Route path="/listing/:id" element={<Listing />} />
       <Route path="/listing/:id/edit" element={<EditListing />} />
-      <Route path="/listing/:id/*" element={<HostListings />}>
+      <Route path="/listing/:id" element={<HostListings />}>
         <Route path="bookings" element={<HostBookings />} />
         <Route path="past-bookings" element={<HostPastBookings />} />
       </Route>
