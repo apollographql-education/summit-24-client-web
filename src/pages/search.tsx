@@ -12,7 +12,7 @@ import { PageContainer } from "../components/PageContainer";
 import { SearchForm } from "../components/SearchForm";
 import { SearchResultsHeader } from "../components/SearchResultsHeader";
 import { useSearchParams } from "../hooks/useSearchParams";
-import { getListingParamsFromSearchParams } from "../utils";
+import { getListingParamsFromSearchParams } from "../utils/search";
 import { SearchResultsContainer } from "../components/SearchResultsContainer";
 import { SearchResultsSpinner } from "../components/SearchResultsSpinner";
 import { SearchPaginator } from "../components/SearchPaginator";

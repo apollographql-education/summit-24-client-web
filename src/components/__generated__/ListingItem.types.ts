@@ -7,7 +7,6 @@ export type ListingItem_listingFragment = {
   description: string;
   photoThumbnail: string;
   numOfBeds: number;
-  costPerNight: number;
   overallRating: number | null;
   locationType: GraphQLTypes.LocationType;
 };

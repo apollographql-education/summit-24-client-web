@@ -1,12 +1,12 @@
-import { gql, TypedDocumentNode, useReadQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
 import {
   GetPastTripsQuery,
   GetPastTripsQueryVariables,
 } from "./__generated__/past-trips.types";
-import { preloadQuery } from "../apollo/preloadQuery";
-import { useLoaderData } from "react-router-dom";
 import { StackDivider, VStack } from "@chakra-ui/react";
 import { PastTrip } from "../components/PastTrip";
+import { PageSpinner } from "../components/PageSpinner";
+import { PageError } from "../components/PageError";
 
 export const PAST_GUEST_TRIPS: TypedDocumentNode<
   GetPastTripsQuery,
@@ -41,14 +41,17 @@ export const PAST_GUEST_TRIPS: TypedDocumentNode<
   }
 `;
 
-export function loader() {
-  return preloadQuery(PAST_GUEST_TRIPS).toPromise();
-}
-
 export default function PastTrips() {
-  const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const { data } = useReadQuery(queryRef);
-  const { pastGuestBookings } = data;
+  const { data, loading, error } = useQuery(PAST_GUEST_TRIPS);
+  const pastGuestBookings = data?.pastGuestBookings ?? [];
+
+  if (loading) {
+    return <PageSpinner />;
+  }
+
+  if (error) {
+    return <PageError error={error} />;
+  }
 
   return (
     <VStack spacing="6" divider={<StackDivider />}>

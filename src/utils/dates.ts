@@ -1,7 +1,5 @@
+import { format } from "date-fns";
 import areIntervalsOverlapping from "date-fns/areIntervalsOverlapping";
-import format from "date-fns/format";
-import { Interval } from "date-fns";
-import { SortByCriteria } from "./__generated__/types";
 
 export const getNextDate = (date: Date) => {
   const nextDate = new Date(date).setDate(date.getDate() + 1);
@@ -45,7 +43,7 @@ export const isDateValid = (invalidDates: string[], dateToCheck: Date) => {
 
 export const getFirstValidDate = (
   invalidDates: string[],
-  checkInDate?: Date
+  checkInDate?: Date,
 ) => {
   const today = checkInDate || new Date();
   const currDate = normalizeDate(today);
@@ -60,7 +58,7 @@ export const getFirstValidDate = (
 // check if rangeToCheck (check in and check out dates) overlaps with an existing booking
 export const areDatesValid = (
   bookings: Array<{ checkInDate: string; checkOutDate: string }>,
-  rangeToCheck: Interval
+  rangeToCheck: Interval,
 ) => {
   return bookings.find((booking) =>
     areIntervalsOverlapping(
@@ -68,31 +66,9 @@ export const areDatesValid = (
         start: new Date(booking.checkInDate),
         end: new Date(booking.checkOutDate),
       },
-      rangeToCheck
-    )
+      rangeToCheck,
+    ),
   )
     ? false
     : true;
 };
-
-export function getListingParamsFromSearchParams(
-  searchParams: URLSearchParams
-) {
-  const checkInDate = searchParams.get("checkInDate");
-  const checkOutDate = searchParams.get("checkOutDate");
-
-  if (!checkInDate || !checkOutDate) {
-    throw new Error("Could not determine dates to check");
-  }
-
-  return {
-    checkInDate,
-    checkOutDate,
-    sortBy:
-      (searchParams.get("sortBy") as SortByCriteria | null) ??
-      SortByCriteria.COST_ASC,
-    limit: 5,
-    numOfBeds: parseInt(searchParams.get("numOfBeds") ?? "1", 10),
-    page: parseInt(searchParams.get("page") ?? "1", 10),
-  };
-}

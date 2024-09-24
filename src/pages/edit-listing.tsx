@@ -1,25 +1,17 @@
 import ListingForm from "../components/ListingForm";
 import { Button, Center } from "@chakra-ui/react";
 import { IoArrowBackOutline } from "react-icons/io5";
-import {
-  gql,
-  TypedDocumentNode,
-  useMutation,
-  useReadQuery,
-} from "@apollo/client";
-import {
-  LoaderFunctionArgs,
-  useLoaderData,
-  useNavigate,
-} from "react-router-dom";
+import { gql, TypedDocumentNode, useMutation, useQuery } from "@apollo/client";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   GetListingQuery,
   GetListingQueryVariables,
   UpdateListingMutation,
   UpdateListingMutationVariables,
 } from "./__generated__/edit-listing.types";
-import { preloadQuery } from "../apollo/preloadQuery";
 import { PageContainer } from "../components/PageContainer";
+import { PageSpinner } from "../components/PageSpinner";
+import { PageError } from "../components/PageError";
 
 export const EDIT_LISTING: TypedDocumentNode<
   UpdateListingMutation,
@@ -76,20 +68,14 @@ export const LISTING: TypedDocumentNode<
   }
 `;
 
-export function loader({ params }: LoaderFunctionArgs) {
-  const { id } = params;
-
-  if (!id) {
-    throw new Error("Invalid listing ID");
-  }
-
-  return preloadQuery(LISTING, { variables: { id } }).toPromise();
-}
-
 export default function EditListing() {
-  const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const { data } = useReadQuery(queryRef);
-  const listing = data.listing;
+  const { id } = useParams();
+
+  const { data, loading, error } = useQuery(LISTING, {
+    variables: { id: id! },
+  });
+
+  const listing = data?.listing;
 
   const navigate = useNavigate();
   const [updateListing, { loading: submitting }] = useMutation(EDIT_LISTING, {
@@ -97,6 +83,14 @@ export default function EditListing() {
       navigate(`/listing/${listing!.id}`);
     },
   });
+
+  if (loading) {
+    return <PageSpinner />;
+  }
+
+  if (error) {
+    return <PageError error={error} />;
+  }
 
   if (!listing) {
     return <Center>Listing not found</Center>;

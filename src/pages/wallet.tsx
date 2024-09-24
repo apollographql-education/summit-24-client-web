@@ -1,26 +1,6 @@
 import { useState } from "react";
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Heading,
-  InputGroup,
-  InputLeftAddon,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
-import {
-  gql,
-  useMutation,
-  TypedDocumentNode,
-  useReadQuery,
-} from "@apollo/client";
+import { Button, Center, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import { gql, useMutation, TypedDocumentNode, useQuery } from "@apollo/client";
 import {
   AddFundsMutation,
   AddFundsMutationVariables,
@@ -28,9 +8,12 @@ import {
   GetFundsQueryVariables,
 } from "./__generated__/wallet.types";
 import { Guest } from "../__generated__/types";
-import { Navigate, useLoaderData } from "react-router-dom";
-import { preloadQuery } from "../apollo/preloadQuery";
+import { Navigate } from "react-router-dom";
 import { PageContainer } from "../components/PageContainer";
+import { PageSpinner } from "../components/PageSpinner";
+import { PageError } from "../components/PageError";
+import { FundsInput } from "../components/FundsInput";
+import { FundsBalance } from "../components/FundsBalance";
 
 export const ADD_FUNDS: TypedDocumentNode<
   AddFundsMutation,
@@ -54,14 +37,10 @@ const GET_FUNDS: TypedDocumentNode<GetFundsQuery, GetFundsQueryVariables> = gql`
   }
 `;
 
-export function loader() {
-  return preloadQuery(GET_FUNDS).toPromise();
-}
-
 export default function Wallet() {
-  const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const { data } = useReadQuery(queryRef);
+  const { data, loading, error } = useQuery(GET_FUNDS);
   const [funds, setFunds] = useState(100);
+
   const [addFundsToWallet] = useMutation(ADD_FUNDS, {
     update(cache, { data }) {
       cache.modify<Guest>({
@@ -73,9 +52,17 @@ export default function Wallet() {
     },
   });
 
-  const { me: user } = data;
+  const user = data?.me;
 
-  if (user.__typename !== "Guest") {
+  if (loading) {
+    return <PageSpinner />;
+  }
+
+  if (error) {
+    return <PageError error={error} />;
+  }
+
+  if (user?.__typename !== "Guest") {
     return <Navigate to="/" />;
   }
 
@@ -88,45 +75,12 @@ export default function Wallet() {
             Welcome to your wallet! Use this space to add and manage funds for
             your trips.
           </Text>
-          <Box
-            p={4}
-            border="1px"
-            borderColor="gray.100"
-            borderRadius={4}
-            textAlign="center"
-          >
-            <Heading size="2xl">¤{user.funds}</Heading>
-            <Text>credit balance</Text>
-          </Box>
+          <FundsBalance funds={user.funds} />
           <Text fontWeight="semibold" textAlign="left">
             Add funds to your account
           </Text>
           <Flex w="100%">
-            <Box>
-              <InputGroup alignSelf="center">
-                <InputLeftAddon bg="transparent" paddingRight="0">
-                  @
-                </InputLeftAddon>
-                <NumberInput
-                  name="numOfBeds"
-                  min={1}
-                  value={funds}
-                  onChange={(_, val) => {
-                    setFunds(val);
-                  }}
-                >
-                  <NumberInputField
-                    borderLeftWidth="0"
-                    borderTopLeftRadius="0"
-                    borderBottomLeftRadius="0"
-                  />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-              </InputGroup>
-            </Box>
+            <FundsInput value={funds} onChange={setFunds} />
             <Button
               alignSelf="center"
               maxW="150px"

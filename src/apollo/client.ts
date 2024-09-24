@@ -24,5 +24,5 @@ export const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache,
   name: "web-client",
-  version: "0.9",
+  version: "1.0",
 });

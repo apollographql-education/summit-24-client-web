@@ -3,7 +3,7 @@ import DatePicker, {
   DatePickerProps as ReactDatePickerProps,
 } from "react-datepicker";
 import { Input, InputProps } from "@chakra-ui/react";
-import { getNextDate } from "../utils";
+import { getNextDate } from "../utils/dates";
 
 type DatePickerProps = Omit<InputProps, keyof ReactDatePickerProps> &
   Omit<

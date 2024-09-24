@@ -2,13 +2,8 @@ import ListingForm from "../components/ListingForm";
 import { Button } from "@chakra-ui/react";
 import { HOST_LISTINGS } from "./listings";
 import { IoArrowBackOutline } from "react-icons/io5";
-import { Link, useLoaderData, useNavigate } from "react-router-dom";
-import {
-  gql,
-  TypedDocumentNode,
-  useMutation,
-  useReadQuery,
-} from "@apollo/client";
+import { Link, useNavigate } from "react-router-dom";
+import { gql, TypedDocumentNode, useMutation, useQuery } from "@apollo/client";
 import {
   CreateListingMutation,
   CreateListingMutationVariables,
@@ -16,8 +11,9 @@ import {
   GetListingAmenitiesQueryVariables,
 } from "./__generated__/add-listing.types";
 import { type LocationType } from "../__generated__/types";
-import { preloadQuery } from "../apollo/preloadQuery";
 import { PageContainer } from "../components/PageContainer";
+import { PageSpinner } from "../components/PageSpinner";
+import { PageError } from "../components/PageError";
 
 export const CREATE_LISTING: TypedDocumentNode<
   CreateListingMutation,
@@ -58,16 +54,11 @@ const GET_LISTING_AMENITIES: TypedDocumentNode<
   }
 `;
 
-export function loader() {
-  return preloadQuery(GET_LISTING_AMENITIES).toPromise();
-}
-
 export default function CreateListing() {
-  const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const { data } = useReadQuery(queryRef);
+  const { data, loading, error } = useQuery(GET_LISTING_AMENITIES);
 
   const navigate = useNavigate();
-  const [createListing, { loading }] = useMutation(CREATE_LISTING, {
+  const [createListing, { loading: submitting }] = useMutation(CREATE_LISTING, {
     onCompleted: () => {
       navigate("/listings");
     },
@@ -87,14 +78,22 @@ export default function CreateListing() {
     },
   });
 
+  if (loading) {
+    return <PageSpinner />;
+  }
+
+  if (error) {
+    return <PageError error={error} />;
+  }
+
   return (
     <PageContainer>
       <Button as={Link} to="/listings" leftIcon={<IoArrowBackOutline />} mb="4">
         Back to listings
       </Button>
       <ListingForm
-        submitting={loading}
-        amenities={data.listingAmenities}
+        submitting={submitting}
+        amenities={data?.listingAmenities ?? []}
         listing={{
           title: "",
           description: "",

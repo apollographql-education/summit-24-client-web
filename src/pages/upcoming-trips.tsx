@@ -1,12 +1,12 @@
 import { UpcomingTrip } from "../components/UpcomingTrip";
-import { gql, TypedDocumentNode, useReadQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { StackDivider, VStack } from "@chakra-ui/react";
+import { PageSpinner } from "../components/PageSpinner";
+import { PageError } from "../components/PageError";
 import {
   GetGuestTripsQuery,
   GetGuestTripsQueryVariables,
-} from "./__generated__/trips.types";
-import { preloadQuery } from "../apollo/preloadQuery";
-import { useLoaderData } from "react-router-dom";
-import { StackDivider, VStack } from "@chakra-ui/react";
+} from "./__generated__/upcoming-trips.types";
 
 export const GUEST_TRIPS: TypedDocumentNode<
   GetGuestTripsQuery,
@@ -27,14 +27,17 @@ export const GUEST_TRIPS: TypedDocumentNode<
   }
 `;
 
-export function loader() {
-  return preloadQuery(GUEST_TRIPS).toPromise();
-}
-
 export default function UpcomingTrips() {
-  const queryRef = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-  const { data } = useReadQuery(queryRef);
-  const { upcomingGuestBookings } = data;
+  const { data, loading, error } = useQuery(GUEST_TRIPS);
+  const upcomingGuestBookings = data?.upcomingGuestBookings ?? [];
+
+  if (loading) {
+    return <PageSpinner />;
+  }
+
+  if (error) {
+    return <PageError error={error} />;
+  }
 
   return (
     <VStack spacing="6" divider={<StackDivider />}>

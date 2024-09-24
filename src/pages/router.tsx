@@ -6,9 +6,7 @@ import {
 
 import {
   CreateListing,
-  CreateListingLoader,
   EditListing,
-  EditListingLoader,
   Home,
   HostBookings,
   HostListings,
@@ -17,18 +15,14 @@ import {
   Listings,
   Login,
   PastTrips,
-  PastTripsLoader,
   Profile,
-  ProfileLoader,
   Root,
   Search,
   Trips,
   UpcomingTrips,
-  UpcomingTripsLoader,
   Wallet,
-  WalletLoader,
-} from "./pages";
-import { RootErrorBoundary } from "./components/RootErrorBoundary";
+} from "./index";
+import { RootErrorBoundary } from "../components/RootErrorBoundary";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -37,27 +31,19 @@ export const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/search" element={<Search />} />
       <Route path="/listings" element={<Listings />} />
-      <Route
-        path="/listings/create"
-        element={<CreateListing />}
-        loader={CreateListingLoader}
-      />
+      <Route path="/listings/create" element={<CreateListing />} />
       <Route path="/listing/:id" element={<Listing />} />
-      <Route
-        path="/listing/:id/edit"
-        element={<EditListing />}
-        loader={EditListingLoader}
-      />
+      <Route path="/listing/:id/edit" element={<EditListing />} />
       <Route path="/listing/:id/*" element={<HostListings />}>
         <Route path="bookings" element={<HostBookings />} />
         <Route path="past-bookings" element={<HostPastBookings />} />
       </Route>
       <Route path="trips" element={<Trips />}>
-        <Route index element={<UpcomingTrips />} loader={UpcomingTripsLoader} />
-        <Route path="past" element={<PastTrips />} loader={PastTripsLoader} />
+        <Route index element={<UpcomingTrips />} />
+        <Route path="past" element={<PastTrips />} />
       </Route>
-      <Route path="/profile" element={<Profile />} loader={ProfileLoader} />
-      <Route path="/wallet" element={<Wallet />} loader={WalletLoader} />
-    </Route>
-  )
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/wallet" element={<Wallet />} />
+    </Route>,
+  ),
 );

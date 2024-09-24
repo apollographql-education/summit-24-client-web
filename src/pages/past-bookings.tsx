@@ -1,4 +1,4 @@
-import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
 import {
   GetPastBookingsForHostListingQuery,
   GetPastBookingsForHostListingQueryVariables,
@@ -45,14 +45,14 @@ export const HOST_BOOKINGS: TypedDocumentNode<
 
 export default function HostBookings() {
   const { id } = useParams();
-  const { data } = useSuspenseQuery(HOST_BOOKINGS, {
+  const { data } = useQuery(HOST_BOOKINGS, {
     variables: {
       listingId: id!,
       status: BookingStatus.COMPLETED,
     },
   });
 
-  const bookings = data.bookingsForListing.filter(Boolean);
+  const bookings = data?.bookingsForListing.filter(Boolean) ?? [];
 
   return bookings.length ? (
     <ListingList>

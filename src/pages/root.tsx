@@ -5,7 +5,7 @@ import {
 } from "./__generated__/root.types";
 import { Outlet } from "react-router-dom";
 import { Nav } from "../components/Nav";
-// import { PageSpinner } from "../components/PageSpinner";
+import { PageSpinner } from "../components/PageSpinner";
 
 export const GET_USER: TypedDocumentNode<
   GetMyProfileQuery,
@@ -20,13 +20,16 @@ export const GET_USER: TypedDocumentNode<
 `;
 
 export default function Root() {
-  const { data } = useQuery(GET_USER, { errorPolicy: "ignore" });
-
+  const { data, loading } = useQuery(GET_USER, { errorPolicy: "ignore" });
   const user = data?.me;
+
+  if (loading) {
+    return <PageSpinner />;
+  }
 
   return (
     <>
-      <Nav user={user} />
+      <Nav user={user} loading={loading} />
       <Outlet />
     </>
   );

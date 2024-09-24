@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { ReactNode, useState } from "react";
 import { DatePickerInput } from "./DatePickerInput";
-import { getNextDate } from "../utils";
+import { getNextDate } from "../utils/dates";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import Background from "../assets/homepage-bg.png";

@@ -1,7 +1,7 @@
 import * as GraphQLTypes from "../../__generated__/types";
 
-export type SetCurrentUserIdQueryVariables = GraphQLTypes.Exact<{
-  [key: string]: never;
-}>;
+export type LoginQueryVariables = GraphQLTypes.Exact<{ [key: string]: never }>;
 
-export type SetCurrentUserIdQuery = { currentUserId: string | null };
+export type LoginQuery = {
+  me: { __typename: "Guest"; id: string } | { __typename: "Host"; id: string };
+};

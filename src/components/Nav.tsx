@@ -5,6 +5,7 @@ import {
   Flex,
   HStack,
   Image,
+  Spinner,
   Text,
 } from "@chakra-ui/react";
 import { Link, NavLink, useLocation } from "react-router-dom";
@@ -12,9 +13,10 @@ import Logo from "../assets/airlock-logo.svg";
 
 interface NavProps {
   user: { __typename: "Host" | "Guest"; profilePicture: string } | undefined;
+  loading?: boolean;
 }
 
-export function Nav({ user }: NavProps) {
+export function Nav({ user, loading }: NavProps) {
   const location = useLocation();
 
   return (
@@ -62,6 +64,8 @@ export function Nav({ user }: NavProps) {
                 />
               </Box>
             </>
+          ) : loading ? (
+            <Spinner />
           ) : location.pathname !== "/login" ? (
             <Button as={NavLink} to="/login">
               Log in
