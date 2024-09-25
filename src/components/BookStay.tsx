@@ -9,6 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import {
   BookStayMutation,
   BookStayMutationVariables,
+  GetUserIdQuery,
 } from "./__generated__/BookStay.types";
 import { BookStayIncomplete } from "./BookStayIncomplete";
 import { BookStayAsHost } from "./BookStayAsHost";
@@ -19,7 +20,7 @@ import { BookStayForm } from "./BookStayForm";
 
 // To provide TypeScript help for fields, use this type with cache.modify:
 // e.g. cache.modify<Guest>(...)
-// import { Guest } from "../__generated__/types";
+import { Guest } from "../__generated__/types";
 
 export const BOOK_STAY: TypedDocumentNode<
   BookStayMutation,
@@ -66,9 +67,26 @@ export default function BookStay({
      * https://www.apollographql.com/docs/react/caching/cache-interaction#modifier-function-utilities
      */
     update: (cache) => {
-      // * How can we modify the cache so that our funds are refetched?
-      // * What information do we need to determine the cache ID to modify?
-      // * How might we get the ID of the record we need to modify?
+      const data = cache.readQuery<GetUserIdQuery>({
+        query: gql`
+          query GetUserId {
+            me {
+              id
+            }
+          }
+        `,
+      });
+
+      if (data?.me) {
+        cache.modify<Guest>({
+          id: cache.identify(data.me),
+          fields: {
+            funds(_, { DELETE }) {
+              return DELETE;
+            },
+          },
+        });
+      }
     },
   });
 
