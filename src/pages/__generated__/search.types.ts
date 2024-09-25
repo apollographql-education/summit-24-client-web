@@ -14,5 +14,6 @@ export type SearchListingsQuery = {
     numOfBeds: number;
     overallRating: number | null;
     locationType: GraphQLTypes.LocationType;
+    costPerNight: number;
   } | null>;
 };

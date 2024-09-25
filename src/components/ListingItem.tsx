@@ -8,7 +8,7 @@ import { ListingItemDescription } from "./ListingItem/Description";
 import { ListingItemLocationType } from "./ListingItem/LocationType";
 import { ListingItemRating } from "./ListingItem/Rating";
 import { ListingItemNumOfBeds } from "./ListingItem/NumOfBeds";
-// import { ListingItemCost } from "./ListingItem/Cost";
+import { ListingItemCost } from "./ListingItem/Cost";
 import { ListingItem_listingFragment } from "./__generated__/ListingItem.types";
 
 interface ListingItemProps {
@@ -34,7 +34,7 @@ export function ListingItem({
         <Flex direction="row" align="center">
           <ListingItemRating rating={listing.overallRating} />
           <ListingItemNumOfBeds numOfBeds={listing.numOfBeds} />
-          {/* <ListingItemCost costPerNight={listing.costPerNight} /> */}
+          <ListingItemCost costPerNight={listing.costPerNight} />
         </Flex>
       </ListingItemDetails>
     </ListingItemContainer>
@@ -51,6 +51,7 @@ ListingItem.fragments = {
       numOfBeds
       overallRating
       locationType
+      costPerNight
     }
   ` as TypedDocumentNode<ListingItem_listingFragment>,
 };

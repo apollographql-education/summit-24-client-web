@@ -9,4 +9,5 @@ export type ListingItem_listingFragment = {
   numOfBeds: number;
   overallRating: number | null;
   locationType: GraphQLTypes.LocationType;
+  costPerNight: number;
 };
