@@ -1,6 +1,5 @@
 import { gql, TypedDocumentNode } from "@apollo/client";
 import { Flex } from "@chakra-ui/react";
-import { LocationType } from "../__generated__/types";
 import { ListingItemContainer } from "./ListingItem/Container";
 import { ListingItemImage } from "./ListingItem/Image";
 import { ListingItemDetails } from "./ListingItem/Details";
@@ -9,6 +8,7 @@ import { ListingItemDescription } from "./ListingItem/Description";
 import { ListingItemLocationType } from "./ListingItem/LocationType";
 import { ListingItemRating } from "./ListingItem/Rating";
 import { ListingItemNumOfBeds } from "./ListingItem/NumOfBeds";
+import { ListingItem_listingFragment } from "./__generated__/ListingItem.types";
 
 /* Exercise 3
  *
@@ -17,15 +17,7 @@ import { ListingItemNumOfBeds } from "./ListingItem/NumOfBeds";
  */
 
 interface ListingItemProps {
-  listing: {
-    id: string;
-    title: string;
-    description: string;
-    photoThumbnail: string;
-    numOfBeds: number;
-    overallRating: number | null;
-    locationType: LocationType;
-  };
+  listing: ListingItem_listingFragment;
   checkInDate?: string;
   checkOutDate?: string;
 }
@@ -63,8 +55,17 @@ export function ListingItem({
    locationType
 */
 ListingItem.fragments = {
-  // TODO: Add a fragment here to declare data needs for the component
-  listing: gql`` as TypedDocumentNode<unknown>,
+  listing: gql`
+    fragment ListingItem_listing on Listing {
+      id
+      title
+      description
+      photoThumbnail
+      numOfBeds
+      overallRating
+      locationType
+    }
+  ` as TypedDocumentNode<ListingItem_listingFragment>,
 };
 
 function getListingParams(
