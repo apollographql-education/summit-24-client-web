@@ -11,6 +11,11 @@ import {
   GetMyProfileQueryVariables,
 } from "./__generated__/Nav.types";
 
+/* Exercise 2: Bonus
+ *
+ * Uncomment the GraphQL fields below to see how the change to our cache affects
+ * this query.
+ */
 const GET_PROFILE: TypedDocumentNode<
   GetMyProfileQuery,
   GetMyProfileQueryVariables
