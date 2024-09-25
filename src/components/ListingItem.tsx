@@ -17,6 +17,16 @@ interface ListingItemProps {
   checkOutDate?: string;
 }
 
+/* Exercise 5
+ *
+ * Docs for useFragment:
+ * https://www.apollographql.com/docs/react/data/fragments#useFragment
+ *
+ * Docs on @nonreactive:
+ * https://www.apollographql.com/docs/react/data/directives#nonreactive
+ */
+
+// TODO: Update this component to use get listing data from useFragment
 export function ListingItem({
   listing,
   checkInDate,
