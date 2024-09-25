@@ -39,12 +39,6 @@ export const SEARCH_LISTINGS: TypedDocumentNode<
   ${ListingItem.fragments.listing}
 `;
 
-/* Exercise 7
- *
- * Docs on useBackgroundQuery and useReadQuery:
- * https://www.apollographql.com/docs/react/data/suspense#avoiding-request-waterfalls
- */
-
 export function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
   const listingParams = getListingParamsFromSearchParams(searchParams);
