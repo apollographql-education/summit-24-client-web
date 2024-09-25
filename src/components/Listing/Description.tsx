@@ -1,4 +1,6 @@
+import { gql, TypedDocumentNode } from "@apollo/client";
 import { Heading, Stack, Text } from "@chakra-ui/react";
+import { ListingDescription_listingFragment } from "./__generated__/Description.types";
 
 interface ListingDescriptionProps {
   listing: {
@@ -18,3 +20,11 @@ export function ListingDescription({ listing }: ListingDescriptionProps) {
     </Stack>
   );
 }
+
+ListingDescription.fragments = {
+  listing: gql`
+    fragment ListingDescription_listing on Listing {
+      description
+    }
+  ` as TypedDocumentNode<ListingDescription_listingFragment>,
+};

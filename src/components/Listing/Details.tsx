@@ -1,13 +1,11 @@
+import { gql, TypedDocumentNode } from "@apollo/client";
 import { Heading, HStack, Stack, Text } from "@chakra-ui/react";
 import { IoBedOutline } from "react-icons/io5";
-import * as GraphQLTypes from "../../__generated__/types";
 import LocationType from "../LocationType";
+import { ListingDetails_listingFragment } from "./__generated__/Details.types";
 
 interface ListingDetailsProps {
-  listing: {
-    numOfBeds: number;
-    locationType: GraphQLTypes.LocationType;
-  };
+  listing: ListingDetails_listingFragment;
 }
 
 export function ListingDetails({ listing }: ListingDetailsProps) {
@@ -37,3 +35,12 @@ export function ListingDetails({ listing }: ListingDetailsProps) {
     </Stack>
   );
 }
+
+ListingDetails.fragments = {
+  listing: gql`
+    fragment ListingDetails_listing on Listing {
+      numOfBeds
+      locationType
+    }
+  ` as TypedDocumentNode<ListingDetails_listingFragment>,
+};

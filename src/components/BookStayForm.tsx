@@ -1,3 +1,4 @@
+import { gql, TypedDocumentNode } from "@apollo/client";
 import { Button, Flex, Stack, Text } from "@chakra-ui/react";
 import { BookStayContainer } from "./BookStayContainer";
 import { DatePickerInput } from "./DatePickerInput";
@@ -11,14 +12,12 @@ import {
   isDateValid,
 } from "../utils/dates";
 import differenceInDays from "date-fns/differenceInDays";
+import { BookStayForm_listingFragment } from "./__generated__/BookStayForm.types";
 
 interface BookStayFormProps {
   onSubmit: (values: FormValues) => void;
   submitting: boolean;
-  listing: {
-    bookings: Array<{ checkInDate: string; checkOutDate: string } | null>;
-    costPerNight: number;
-  };
+  listing: BookStayForm_listingFragment;
 }
 
 interface FormValues {
@@ -141,3 +140,16 @@ export function BookStayForm({
     </BookStayContainer>
   );
 }
+
+BookStayForm.fragments = {
+  listing: gql`
+    fragment BookStayForm_listing on Listing {
+      costPerNight
+      bookings {
+        id
+        checkInDate
+        checkOutDate
+      }
+    }
+  ` as TypedDocumentNode<BookStayForm_listingFragment>,
+};

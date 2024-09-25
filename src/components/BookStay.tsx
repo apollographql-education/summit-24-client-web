@@ -18,6 +18,7 @@ import { BookStayInsufficientFunds } from "./BookStayInsufficientFunds";
 import { BookStaySuccessful } from "./BookStaySuccessful";
 import { BookStayForm } from "./BookStayForm";
 import { Guest } from "../__generated__/types";
+import { BookStay_listingFragment } from "./__generated__/BookStay.types";
 
 export const BOOK_STAY: TypedDocumentNode<
   BookStayMutation,
@@ -37,11 +38,7 @@ export const BOOK_STAY: TypedDocumentNode<
 `;
 
 interface BookStayProps {
-  listing: {
-    id: string;
-    costPerNight: number;
-    bookings: Array<{ checkInDate: string; checkOutDate: string } | null>;
-  };
+  listing: BookStay_listingFragment;
   refetchQueries?: MutationHookOptions["refetchQueries"];
   userRole?: string;
 }
@@ -122,3 +119,14 @@ export default function BookStay({
     />
   );
 }
+
+BookStay.fragments = {
+  listing: gql`
+    fragment BookStay_listing on Listing {
+      id
+      ...BookStayForm_listing
+    }
+
+    ${BookStayForm.fragments.listing}
+  ` as TypedDocumentNode<BookStay_listingFragment>,
+};
