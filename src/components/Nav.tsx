@@ -1,29 +1,45 @@
-import { HStack, Spinner } from "@chakra-ui/react";
+import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { HStack } from "@chakra-ui/react";
 import { Logo } from "./Logo";
 import { NavAvatar } from "./NavAvatar";
 import { GuestNav } from "./GuestNav";
 import { HostNav } from "./HostNav";
 import { LoginButton } from "./LoginButton";
 import { NavContainer } from "./NavContainer";
+import {
+  GetMyProfileQuery,
+  GetMyProfileQueryVariables,
+} from "./__generated__/Nav.types";
 
-interface NavProps {
-  user: { __typename: "Host" | "Guest"; profilePicture: string } | undefined;
-  loading?: boolean;
-}
+const GET_PROFILE: TypedDocumentNode<
+  GetMyProfileQuery,
+  GetMyProfileQueryVariables
+> = gql`
+  query GetMyProfile {
+    me {
+      id
+      profilePicture
+      # ... on Guest {
+      #   funds
+      # }
+    }
+  }
+`;
 
-export function Nav({ user, loading }: NavProps) {
+export function Nav() {
+  const { data } = useQuery(GET_PROFILE, { errorPolicy: "ignore" });
+  const user = data?.me;
+
   return (
     <NavContainer>
       <Logo />
       <HStack spacing="2">
         {user ? (
           <>
-            {user.__typename === "Guest" && <GuestNav />}
+            {user.__typename === "Guest" && <GuestNav user={user} />}
             {user.__typename === "Host" && <HostNav />}
             <NavAvatar src={user.profilePicture} />
           </>
-        ) : loading ? (
-          <Spinner />
         ) : (
           <LoginButton />
         )}

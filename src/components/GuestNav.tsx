@@ -1,10 +1,19 @@
-import { Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-export function GuestNav() {
+interface GuestNavProps {
+  user: { __typename: "Guest"; funds?: number };
+}
+
+export function GuestNav({ user }: GuestNavProps) {
   return (
-    <Button as={Link} to="/trips" variant="ghost">
-      My trips
-    </Button>
+    <>
+      {"funds" in user && typeof user.funds !== "undefined" && (
+        <Box fontWeight="bold">Funds: ¤{user.funds}</Box>
+      )}
+      <Button as={Link} to="/trips" variant="ghost">
+        My trips
+      </Button>
+    </>
   );
 }

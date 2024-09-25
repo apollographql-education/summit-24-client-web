@@ -1,35 +1,10 @@
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
-import {
-  GetMyProfileQuery,
-  GetMyProfileQueryVariables,
-} from "./__generated__/root.types";
 import { Outlet } from "react-router-dom";
 import { Nav } from "../components/Nav";
-import { PageSpinner } from "../components/PageSpinner";
-
-export const GET_USER: TypedDocumentNode<
-  GetMyProfileQuery,
-  GetMyProfileQueryVariables
-> = gql`
-  query GetMyProfile {
-    me {
-      id
-      profilePicture
-    }
-  }
-`;
 
 export default function Root() {
-  const { data, loading } = useQuery(GET_USER, { errorPolicy: "ignore" });
-  const user = data?.me;
-
-  if (loading) {
-    return <PageSpinner />;
-  }
-
   return (
     <>
-      <Nav user={user} loading={loading} />
+      <Nav />
       <Outlet />
     </>
   );
