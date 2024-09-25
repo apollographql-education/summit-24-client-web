@@ -17,3 +17,11 @@ export type BookStayMutation = {
     } | null;
   };
 };
+
+export type GetUserIdQueryVariables = GraphQLTypes.Exact<{
+  [key: string]: never;
+}>;
+
+export type GetUserIdQuery = {
+  me: { __typename: "Guest"; id: string } | { __typename: "Host"; id: string };
+};
