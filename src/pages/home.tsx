@@ -31,7 +31,7 @@ export const FEATURED_LISTINGS: TypedDocumentNode<
   }
 `;
 
-export default function Home() {
+export function Home() {
   const { data, loading, error } = useQuery(FEATURED_LISTINGS);
 
   return (

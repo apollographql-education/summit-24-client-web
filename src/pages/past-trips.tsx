@@ -41,7 +41,7 @@ export const PAST_GUEST_TRIPS: TypedDocumentNode<
   }
 `;
 
-export default function PastTrips() {
+export function PastTrips() {
   const { data, loading, error } = useQuery(PAST_GUEST_TRIPS);
   const pastGuestBookings = data?.pastGuestBookings ?? [];
 

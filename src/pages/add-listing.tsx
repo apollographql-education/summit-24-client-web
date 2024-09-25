@@ -54,7 +54,7 @@ const GET_LISTING_AMENITIES: TypedDocumentNode<
   }
 `;
 
-export default function CreateListing() {
+export function CreateListing() {
   const { data, loading, error } = useQuery(GET_LISTING_AMENITIES);
 
   const navigate = useNavigate();

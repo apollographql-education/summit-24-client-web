@@ -44,7 +44,7 @@ const GET_USER: TypedDocumentNode<GetUserQuery, GetUserQueryVariables> = gql`
   }
 `;
 
-export default function Profile() {
+export function Profile() {
   const { data, loading } = useQuery(GET_USER, { errorPolicy: "ignore" });
   const user = data?.me;
 

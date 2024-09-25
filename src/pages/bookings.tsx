@@ -52,7 +52,7 @@ export const HOST_BOOKINGS: TypedDocumentNode<
   }
 `;
 
-export default function HostBookings() {
+export function HostBookings() {
   const { id } = useParams();
   const { data, loading, error } = useQuery(HOST_BOOKINGS, {
     variables: {

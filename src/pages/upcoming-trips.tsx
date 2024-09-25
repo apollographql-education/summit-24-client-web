@@ -27,7 +27,7 @@ export const GUEST_TRIPS: TypedDocumentNode<
   }
 `;
 
-export default function UpcomingTrips() {
+export function UpcomingTrips() {
   const { data, loading, error } = useQuery(GUEST_TRIPS);
   const upcomingGuestBookings = data?.upcomingGuestBookings ?? [];
 

@@ -6,7 +6,7 @@ import { HostLoginCard } from "../components/HostLoginCard";
 import { GuestLoginCard } from "../components/GuestLoginCard";
 import { OtherLoginOptions } from "../components/OtherLoginOptions";
 
-export default function Login() {
+export function Login() {
   const client = useApolloClient();
 
   const HOST_USER = "user-1";

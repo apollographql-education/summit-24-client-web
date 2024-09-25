@@ -22,7 +22,7 @@ const GET_BOOKING: TypedDocumentNode<
   }
 `;
 
-export default function HostListings() {
+export function HostListings() {
   const { id } = useParams();
 
   const { data, loading, error } = useQuery(GET_BOOKING, {

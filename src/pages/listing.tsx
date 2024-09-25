@@ -65,7 +65,7 @@ const LISTING: TypedDocumentNode<
   }
 `;
 
-export default function Listing() {
+export function Listing() {
   const { id: idParam } = useParams();
 
   const { data, loading, error } = useQuery(LISTING, {

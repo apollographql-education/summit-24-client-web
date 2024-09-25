@@ -37,7 +37,7 @@ const GET_FUNDS: TypedDocumentNode<GetFundsQuery, GetFundsQueryVariables> = gql`
   }
 `;
 
-export default function Wallet() {
+export function Wallet() {
   const { data, loading, error } = useQuery(GET_FUNDS);
   const [funds, setFunds] = useState(100);
 

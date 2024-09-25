@@ -2,7 +2,7 @@ import { Box, Heading, Link } from "@chakra-ui/react";
 import { Outlet, Link as RouterLink, useMatch } from "react-router-dom";
 import { PageContainer } from "../components/PageContainer";
 
-export default function Trips() {
+export function Trips() {
   const upcomingTripsMatch = useMatch("/trips");
   const pastTripsMatch = useMatch("/trips/past");
 

@@ -4,24 +4,23 @@ import {
   Route,
 } from "react-router-dom";
 
-import {
-  CreateListing,
-  EditListing,
-  Home,
-  HostBookings,
-  HostListings,
-  HostPastBookings,
-  Listing,
-  Listings,
-  Login,
-  PastTrips,
-  Profile,
-  Root,
-  Search,
-  Trips,
-  UpcomingTrips,
-  Wallet,
-} from "./index";
+import { CreateListing } from "./add-listing";
+import { EditListing } from "./edit-listing";
+import { Home } from "./home";
+import { HostBookings } from "./bookings";
+import { HostListings } from "./host-listings";
+import { HostPastBookings } from "./past-bookings";
+import { Listing } from "./listing";
+import { Listings } from "./listings";
+import { Login } from "./login";
+import { PastTrips } from "./past-trips";
+import { Profile } from "./profile";
+import { Root } from "./root";
+import { Search } from "./search";
+import { Trips } from "./trips";
+import { UpcomingTrips } from "./upcoming-trips";
+import { Wallet } from "./wallet";
+
 import { RootErrorBoundary } from "../components/RootErrorBoundary";
 
 export const router = createBrowserRouter(

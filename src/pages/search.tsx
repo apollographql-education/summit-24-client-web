@@ -36,7 +36,7 @@ export const SEARCH_LISTINGS: TypedDocumentNode<
   }
 `;
 
-export default function Search() {
+export function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
   const listingParams = getListingParamsFromSearchParams(searchParams);
 

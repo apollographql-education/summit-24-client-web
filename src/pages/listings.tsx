@@ -26,7 +26,7 @@ export const HOST_LISTINGS: TypedDocumentNode<
   }
 `;
 
-export default function Listings() {
+export function Listings() {
   const { data, loading, error } = useQuery(HOST_LISTINGS);
   const hostListings = data?.hostListings ?? [];
 
