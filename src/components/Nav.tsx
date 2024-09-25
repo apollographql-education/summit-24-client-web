@@ -1,5 +1,5 @@
 import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
-import { HStack } from "@chakra-ui/react";
+import { Box, HStack } from "@chakra-ui/react";
 import { Logo } from "./Logo";
 import { NavAvatar } from "./NavAvatar";
 import { GuestNav } from "./GuestNav";
@@ -11,6 +11,11 @@ import {
   GetMyProfileQueryVariables,
 } from "./__generated__/Nav.types";
 
+/* Exercise 2: Bonus
+ *
+ * Uncomment the GraphQL fields below and rerun the cache update in BookStay.tsx
+ * to see how the change affects when the network request is executed.
+ */
 const GET_PROFILE: TypedDocumentNode<
   GetMyProfileQuery,
   GetMyProfileQueryVariables
@@ -36,7 +41,10 @@ export function Nav() {
       <HStack spacing="2">
         {user ? (
           <>
-            {user.__typename === "Guest" && <GuestNav user={user} />}
+            {"funds" in user && typeof user.funds === "number" && (
+              <Box fontWeight="bold">Funds: ¤{user.funds}</Box>
+            )}
+            {user.__typename === "Guest" && <GuestNav />}
             {user.__typename === "Host" && <HostNav />}
             <NavAvatar src={user.profilePicture} />
           </>

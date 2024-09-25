@@ -17,6 +17,10 @@ import { BookStayInsufficientFunds } from "./BookStayInsufficientFunds";
 import { BookStaySuccessful } from "./BookStaySuccessful";
 import { BookStayForm } from "./BookStayForm";
 
+// To provide TypeScript help for fields, use this type with cache.modify:
+// e.g. cache.modify<Guest>(...)
+// import { Guest } from "../__generated__/types";
+
 export const BOOK_STAY: TypedDocumentNode<
   BookStayMutation,
   BookStayMutationVariables
@@ -51,9 +55,17 @@ export default function BookStay({
 }: BookStayProps) {
   const [createBooking, { loading, error, data }] = useMutation(BOOK_STAY, {
     refetchQueries,
-    update: (cache) => {
-      /* We will update the cache here */
-    },
+    /* Exercise 2
+     * Docs on cache.readQuery
+     * https://www.apollographql.com/docs/react/caching/cache-interaction#readquery
+     *
+     * Docs on cache.modify:
+     * https://www.apollographql.com/docs/react/caching/cache-interaction#using-cachemodify
+     *
+     * cache.modify function utilities:
+     * https://www.apollographql.com/docs/react/caching/cache-interaction#modifier-function-utilities
+     */
+    update: (cache) => {},
   });
 
   if (error) {
