@@ -6,7 +6,7 @@ import {
 
 import { CreateListing } from "./add-listing";
 import { EditListing } from "./edit-listing";
-import { Home } from "./home";
+import { Home, loader as HomeLoader } from "./home";
 import { HostBookings } from "./bookings";
 import { HostListings } from "./host-listings";
 import { HostPastBookings } from "./past-bookings";
@@ -26,7 +26,7 @@ import { RootErrorBoundary } from "../components/RootErrorBoundary";
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Root />} errorElement={<RootErrorBoundary />}>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Home />} loader={HomeLoader} />
       <Route path="/login" element={<Login />} />
       <Route path="/search" element={<Search />} />
       <Route path="/listings" element={<Listings />} />

@@ -1,10 +1,4 @@
-import {
-  gql,
-  TypedDocumentNode,
-  useBackgroundQuery,
-  useReadQuery,
-  QueryRef,
-} from "@apollo/client";
+import { gql, TypedDocumentNode, useReadQuery, QueryRef } from "@apollo/client";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -19,6 +13,8 @@ import { FeaturedListingContainer } from "../components/FeaturedListingContainer
 import { InflationButton } from "../components/InflationButton";
 import { Suspense } from "react";
 import { PageSpinner } from "../components/PageSpinner";
+import { preloadQuery } from "../apollo/preloadQuery";
+import { useLoaderData } from "react-router-dom";
 
 export const FEATURED_LISTINGS: TypedDocumentNode<
   GetFeaturedListingsQuery,
@@ -50,8 +46,12 @@ export const FEATURED_LISTINGS: TypedDocumentNode<
  *
  */
 
+export function loader() {
+  return preloadQuery(FEATURED_LISTINGS);
+}
+
 export function Home() {
-  const [queryRef] = useBackgroundQuery(FEATURED_LISTINGS);
+  const queryRef = useLoaderData() as ReturnType<typeof loader>;
 
   return (
     <>
