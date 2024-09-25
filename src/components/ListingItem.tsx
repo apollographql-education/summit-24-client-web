@@ -10,12 +10,6 @@ import { ListingItemRating } from "./ListingItem/Rating";
 import { ListingItemNumOfBeds } from "./ListingItem/NumOfBeds";
 import { ListingItem_listingFragment } from "./__generated__/ListingItem.types";
 
-/* Exercise 3
- *
- * Docs on fragment colocation:
- * https://www.apollographql.com/docs/react/data/fragments#colocating-fragments
- */
-
 interface ListingItemProps {
   listing: ListingItem_listingFragment;
   checkInDate?: string;
