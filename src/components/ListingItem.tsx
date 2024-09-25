@@ -1,4 +1,4 @@
-import { gql, TypedDocumentNode } from "@apollo/client";
+import { gql, useFragment, TypedDocumentNode } from "@apollo/client";
 import { Flex } from "@chakra-ui/react";
 import { ListingItemContainer } from "./ListingItem/Container";
 import { ListingItemImage } from "./ListingItem/Image";
@@ -26,25 +26,33 @@ interface ListingItemProps {
  * https://www.apollographql.com/docs/react/data/directives#nonreactive
  */
 
-// TODO: Update this component to use get listing data from useFragment
 export function ListingItem({
   listing,
   checkInDate,
   checkOutDate,
 }: ListingItemProps) {
+  const { data, complete } = useFragment({
+    fragment: ListingItem.fragments.listing,
+    from: listing,
+  });
+
+  if (!complete) {
+    return null;
+  }
+
   return (
     <ListingItemContainer
-      to={`/listing/${listing.id}/?${getListingParams(checkInDate, checkOutDate)}`}
+      to={`/listing/${data.id}/?${getListingParams(checkInDate, checkOutDate)}`}
     >
-      <ListingItemImage src={listing.photoThumbnail} alt={listing.title} />
+      <ListingItemImage src={data.photoThumbnail} alt={data.title} />
       <ListingItemDetails>
-        <ListingItemLocationType locationType={listing.locationType} />
-        <ListingItemTitle title={listing.title} />
-        <ListingItemDescription description={listing.description} />
+        <ListingItemLocationType locationType={data.locationType} />
+        <ListingItemTitle title={data.title} />
+        <ListingItemDescription description={data.description} />
         <Flex direction="row" align="center">
-          <ListingItemRating rating={listing.overallRating} />
-          <ListingItemNumOfBeds numOfBeds={listing.numOfBeds} />
-          <ListingItemCost costPerNight={listing.costPerNight} />
+          <ListingItemRating rating={data.overallRating} />
+          <ListingItemNumOfBeds numOfBeds={data.numOfBeds} />
+          <ListingItemCost costPerNight={data.costPerNight} />
         </Flex>
       </ListingItemDetails>
     </ListingItemContainer>

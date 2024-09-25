@@ -14,7 +14,6 @@ import { FeaturedListingTitle } from "../components/FeaturedListingTitle";
 import { FeaturedListingContainer } from "../components/FeaturedListingContainer";
 import { InflationButton } from "../components/InflationButton";
 
-// TODO: Update this query using @nonreactive
 export const FEATURED_LISTINGS: TypedDocumentNode<
   GetFeaturedListingsQuery,
   GetFeaturedListingsQueryVariables
@@ -22,7 +21,7 @@ export const FEATURED_LISTINGS: TypedDocumentNode<
   query GetFeaturedListings {
     featuredListings {
       id
-      ...ListingItem_listing
+      ...ListingItem_listing @nonreactive
     }
   }
 
