@@ -101,7 +101,7 @@ export default function Listing() {
             <Divider />
             <ListingDescription listing={listing} />
             <Divider />
-            <ListingAmenities listing={listing} />
+            <ListingAmenities amenities={listing.amenities.filter(Boolean)} />
             <Divider />
             <ListingHostDetails host={listing.host} />
             <Divider />
