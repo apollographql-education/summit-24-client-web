@@ -29,40 +29,31 @@ const LISTING: TypedDocumentNode<
     }
     listing(id: $id) {
       id
-      title
-      description
       photoThumbnail
-      numOfBeds
-      costPerNight
-      locationType
       amenities {
-        name
-        category
+        ...ListingAmenities_amenities
       }
-      overallRating
       reviews {
-        text
-        author {
-          id
-          name
-          profilePicture
-        }
-        rating
+        ...ListingReviews_reviews
       }
       host {
         id
-        name
-        profilePicture
-        profileDescription
-        overallRating
+        ...ListingHostDetails_host
       }
-      bookings {
-        id
-        checkInDate
-        checkOutDate
-      }
+      ...BookStay_listing
+      ...ListingDescription_listing
+      ...ListingDetails_listing
+      ...ListingHeader_listing
     }
   }
+
+  ${BookStay.fragments.listing}
+  ${ListingAmenities.fragments.amenities}
+  ${ListingDescription.fragments.listing}
+  ${ListingDetails.fragments.listing}
+  ${ListingHeader.fragments.listing}
+  ${ListingHostDetails.fragments.host}
+  ${ListingReviews.fragments.reviews}
 `;
 
 export function Listing() {

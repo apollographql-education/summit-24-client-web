@@ -1,13 +1,10 @@
+import { gql, TypedDocumentNode } from "@apollo/client";
 import { Avatar, Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import Stars from "../Stars";
+import { ListingHostDetails_hostFragment } from "./__generated__/HostDetails.types";
 
 interface ListingHostDetailsProps {
-  host: {
-    name: string;
-    overallRating: number | null;
-    profileDescription: string;
-    profilePicture: string;
-  };
+  host: ListingHostDetails_hostFragment;
 }
 
 export function ListingHostDetails({ host }: ListingHostDetailsProps) {
@@ -39,3 +36,14 @@ export function ListingHostDetails({ host }: ListingHostDetailsProps) {
     </Box>
   );
 }
+
+ListingHostDetails.fragments = {
+  host: gql`
+    fragment ListingHostDetails_host on Host {
+      name
+      overallRating
+      profileDescription
+      profilePicture
+    }
+  ` as TypedDocumentNode<ListingHostDetails_hostFragment>,
+};

@@ -25,3 +25,15 @@ export type GetUserIdQueryVariables = GraphQLTypes.Exact<{
 export type GetUserIdQuery = {
   me: { __typename: "Guest"; id: string } | { __typename: "Host"; id: string };
 };
+
+export type BookStay_listingFragment = {
+  __typename: "Listing";
+  id: string;
+  costPerNight: number;
+  bookings: Array<{
+    __typename: "Booking";
+    id: string;
+    checkInDate: string;
+    checkOutDate: string;
+  } | null>;
+};

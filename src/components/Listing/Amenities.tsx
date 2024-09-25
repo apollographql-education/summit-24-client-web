@@ -1,8 +1,10 @@
+import { gql, TypedDocumentNode } from "@apollo/client";
 import { Box, Heading, Stack, Text, Wrap } from "@chakra-ui/react";
 import startCase from "lodash/startCase";
+import { ListingAmenities_amenitiesFragment } from "./__generated__/Amenities.types";
 
 interface ListingAmentitiesProps {
-  amenities: Array<{ category: string; name: string }>;
+  amenities: ListingAmenities_amenitiesFragment[];
 }
 
 export function ListingAmenities({ amenities }: ListingAmentitiesProps) {
@@ -40,7 +42,16 @@ export function ListingAmenities({ amenities }: ListingAmentitiesProps) {
   );
 }
 
-function groupByCategory(amenities: Array<{ category: string; name: string }>) {
+ListingAmenities.fragments = {
+  amenities: gql`
+    fragment ListingAmenities_amenities on Amenity {
+      category
+      name
+    }
+  ` as TypedDocumentNode<ListingAmenities_amenitiesFragment>,
+};
+
+function groupByCategory(amenities: ListingAmenities_amenitiesFragment[]) {
   return amenities
     .filter(Boolean)
     .reduce<Record<string, string[]>>((acc, amenity) => {

@@ -1,15 +1,13 @@
+import { gql, TypedDocumentNode } from "@apollo/client";
 import { Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import Stars from "../Stars";
 import { Link } from "react-router-dom";
 import { IoCreate } from "react-icons/io5";
+import { ListingHeader_listingFragment } from "./__generated__/Header.types";
 
 interface ListingHeaderProps {
   canEditListing: boolean;
-  listing: {
-    id: string;
-    title: string;
-    overallRating: number | null;
-  };
+  listing: ListingHeader_listingFragment;
 }
 
 export function ListingHeader({ canEditListing, listing }: ListingHeaderProps) {
@@ -38,3 +36,13 @@ export function ListingHeader({ canEditListing, listing }: ListingHeaderProps) {
     </Flex>
   );
 }
+
+ListingHeader.fragments = {
+  listing: gql`
+    fragment ListingHeader_listing on Listing {
+      id
+      title
+      overallRating
+    }
+  ` as TypedDocumentNode<ListingHeader_listingFragment>,
+};

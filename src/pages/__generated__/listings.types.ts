@@ -8,9 +8,9 @@ export type GetHostListingsQuery = {
   hostListings: Array<{
     __typename: "Listing";
     id: string;
-    numberOfUpcomingBookings: number;
     title: string;
     photoThumbnail: string;
+    numberOfUpcomingBookings: number;
     overallRating: number | null;
   } | null>;
 };

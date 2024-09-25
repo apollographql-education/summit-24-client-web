@@ -1,3 +1,4 @@
+import { gql, TypedDocumentNode } from "@apollo/client";
 import {
   Avatar,
   Box,
@@ -8,13 +9,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Stars from "../Stars";
+import { ListingReviews_reviewsFragment } from "./__generated__/Reviews.types";
 
 interface ListingReviewsProps {
-  reviews: Array<{
-    rating: number;
-    text: string;
-    author: { id: string; name: string; profilePicture: string };
-  }>;
+  reviews: ListingReviews_reviewsFragment[];
 }
 
 export function ListingReviews({ reviews }: ListingReviewsProps) {
@@ -53,3 +51,17 @@ export function ListingReviews({ reviews }: ListingReviewsProps) {
     </Box>
   );
 }
+
+ListingReviews.fragments = {
+  reviews: gql`
+    fragment ListingReviews_reviews on Review {
+      rating
+      text
+      author {
+        id
+        name
+        profilePicture
+      }
+    }
+  ` as TypedDocumentNode<ListingReviews_reviewsFragment>,
+};

@@ -9,22 +9,22 @@ export type GetListingDetailsQuery = {
   listing: {
     __typename: "Listing";
     id: string;
-    title: string;
-    description: string;
     photoThumbnail: string;
+    description: string;
     numOfBeds: number;
-    costPerNight: number;
     locationType: GraphQLTypes.LocationType;
+    title: string;
     overallRating: number | null;
+    costPerNight: number;
     amenities: Array<{
       __typename: "Amenity";
-      name: string;
       category: GraphQLTypes.AmenityCategory;
+      name: string;
     } | null>;
     reviews: Array<{
       __typename: "Review";
-      text: string;
       rating: number;
+      text: string;
       author:
         | {
             __typename: "Guest";
@@ -43,9 +43,9 @@ export type GetListingDetailsQuery = {
       __typename: "Host";
       id: string;
       name: string;
-      profilePicture: string;
-      profileDescription: string;
       overallRating: number | null;
+      profileDescription: string;
+      profilePicture: string;
     };
     bookings: Array<{
       __typename: "Booking";

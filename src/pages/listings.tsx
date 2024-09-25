@@ -18,12 +18,11 @@ export const HOST_LISTINGS: TypedDocumentNode<
   query GetHostListings {
     hostListings {
       id
-      numberOfUpcomingBookings
-      title
-      photoThumbnail
-      overallRating
+      ...HostListingItem_listing
     }
   }
+
+  ${HostListingItem.fragments.listing}
 `;
 
 export function Listings() {
