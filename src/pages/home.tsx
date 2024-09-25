@@ -1,4 +1,10 @@
-import { gql, useSuspenseQuery, TypedDocumentNode } from "@apollo/client";
+import {
+  gql,
+  TypedDocumentNode,
+  useBackgroundQuery,
+  useReadQuery,
+  QueryRef,
+} from "@apollo/client";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -11,6 +17,8 @@ import { ListingItem } from "../components/ListingItem";
 import { FeaturedListingTitle } from "../components/FeaturedListingTitle";
 import { FeaturedListingContainer } from "../components/FeaturedListingContainer";
 import { InflationButton } from "../components/InflationButton";
+import { Suspense } from "react";
+import { PageSpinner } from "../components/PageSpinner";
 
 export const FEATURED_LISTINGS: TypedDocumentNode<
   GetFeaturedListingsQuery,
@@ -27,7 +35,7 @@ export const FEATURED_LISTINGS: TypedDocumentNode<
 `;
 
 export function Home() {
-  const { data } = useSuspenseQuery(FEATURED_LISTINGS);
+  const [queryRef] = useBackgroundQuery(FEATURED_LISTINGS);
 
   return (
     <>
@@ -36,13 +44,27 @@ export function Home() {
         <FeaturedListingTitle>
           Ideas for your next stellar trip
         </FeaturedListingTitle>
-        <ListingList>
-          {data.featuredListings.map((listing) => (
-            <ListingItem key={listing.id} listing={listing} />
-          ))}
-        </ListingList>
+        <Suspense fallback={<PageSpinner />}>
+          <FeaturedListings queryRef={queryRef} />
+        </Suspense>
       </FeaturedListingContainer>
       <InflationButton />
     </>
+  );
+}
+
+interface FeaturedListingsProps {
+  queryRef: QueryRef<GetFeaturedListingsQuery>;
+}
+
+function FeaturedListings({ queryRef }: FeaturedListingsProps) {
+  const { data } = useReadQuery(queryRef);
+
+  return (
+    <ListingList>
+      {data.featuredListings.map((listing) => (
+        <ListingItem key={listing.id} listing={listing} />
+      ))}
+    </ListingList>
   );
 }
