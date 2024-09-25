@@ -1,12 +1,10 @@
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { gql, useSuspenseQuery, TypedDocumentNode } from "@apollo/client";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {
   GetFeaturedListingsQuery,
   GetFeaturedListingsQueryVariables,
 } from "./__generated__/home.types";
-import { PageSpinner } from "../components/PageSpinner";
-import { PageError } from "../components/PageError";
 import { HomePageHero } from "../components/HomePageHero";
 import { ListingList } from "../components/ListingList";
 import { ListingItem } from "../components/ListingItem";
@@ -34,27 +32,21 @@ export const FEATURED_LISTINGS: TypedDocumentNode<
  * https://www.apollographql.com/docs/react/data/suspense
  */
 export function Home() {
-  const { data, loading, error } = useQuery(FEATURED_LISTINGS);
+  const { data } = useSuspenseQuery(FEATURED_LISTINGS);
 
   return (
     <>
       <HomePageHero />
-      {loading ? (
-        <PageSpinner />
-      ) : error ? (
-        <PageError error={error} />
-      ) : (
-        <FeaturedListingContainer>
-          <FeaturedListingTitle>
-            Ideas for your next stellar trip
-          </FeaturedListingTitle>
-          <ListingList>
-            {data?.featuredListings.map((listing) => (
-              <ListingItem key={listing.id} listing={listing} />
-            ))}
-          </ListingList>
-        </FeaturedListingContainer>
-      )}
+      <FeaturedListingContainer>
+        <FeaturedListingTitle>
+          Ideas for your next stellar trip
+        </FeaturedListingTitle>
+        <ListingList>
+          {data.featuredListings.map((listing) => (
+            <ListingItem key={listing.id} listing={listing} />
+          ))}
+        </ListingList>
+      </FeaturedListingContainer>
       <InflationButton />
     </>
   );
