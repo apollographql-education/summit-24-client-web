@@ -1,4 +1,4 @@
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
 import { Outlet, useParams } from "react-router-dom";
 import { Center } from "@chakra-ui/react";
 import {
@@ -7,8 +7,6 @@ import {
 } from "./__generated__/host-listings.types";
 import { PageContainer } from "../components/PageContainer";
 import { HostBookingsNav } from "../components/HostBookingsNav";
-import { PageSpinner } from "../components/PageSpinner";
-import { PageError } from "../components/PageError";
 
 const GET_BOOKING: TypedDocumentNode<
   GetBookingQuery,
@@ -25,19 +23,11 @@ const GET_BOOKING: TypedDocumentNode<
 export function HostListings() {
   const { id } = useParams();
 
-  const { data, loading, error } = useQuery(GET_BOOKING, {
+  const { data } = useSuspenseQuery(GET_BOOKING, {
     variables: { listingId: id! },
   });
 
-  if (loading) {
-    return <PageSpinner />;
-  }
-
-  if (error) {
-    return <PageError error={error} />;
-  }
-
-  if (!data?.listing) {
+  if (!data.listing) {
     return <Center>Listing could not be found</Center>;
   }
 

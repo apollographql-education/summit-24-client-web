@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Button, Center, Flex, Heading, Stack, Text } from "@chakra-ui/react";
-import { gql, useMutation, TypedDocumentNode, useQuery } from "@apollo/client";
+import {
+  gql,
+  useMutation,
+  TypedDocumentNode,
+  useSuspenseQuery,
+} from "@apollo/client";
 import {
   AddFundsMutation,
   AddFundsMutationVariables,
@@ -10,8 +15,6 @@ import {
 import { Guest } from "../__generated__/types";
 import { Navigate } from "react-router-dom";
 import { PageContainer } from "../components/PageContainer";
-import { PageSpinner } from "../components/PageSpinner";
-import { PageError } from "../components/PageError";
 import { FundsInput } from "../components/FundsInput";
 import { FundsBalance } from "../components/FundsBalance";
 
@@ -38,7 +41,7 @@ const GET_FUNDS: TypedDocumentNode<GetFundsQuery, GetFundsQueryVariables> = gql`
 `;
 
 export function Wallet() {
-  const { data, loading, error } = useQuery(GET_FUNDS);
+  const { data } = useSuspenseQuery(GET_FUNDS);
   const [funds, setFunds] = useState(100);
 
   const [addFundsToWallet] = useMutation(ADD_FUNDS, {
@@ -52,17 +55,9 @@ export function Wallet() {
     },
   });
 
-  const user = data?.me;
+  const user = data.me;
 
-  if (loading) {
-    return <PageSpinner />;
-  }
-
-  if (error) {
-    return <PageError error={error} />;
-  }
-
-  if (user?.__typename !== "Guest") {
+  if (user.__typename !== "Guest") {
     return <Navigate to="/" />;
   }
 

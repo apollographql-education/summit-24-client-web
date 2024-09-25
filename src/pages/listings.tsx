@@ -1,14 +1,12 @@
 import { Button, Flex, Heading, StackDivider, VStack } from "@chakra-ui/react";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
 import {
   GetHostListingsQuery,
   GetHostListingsQueryVariables,
 } from "./__generated__/listings.types";
 import { PageContainer } from "../components/PageContainer";
-import { PageError } from "../components/PageError";
-import { PageSpinner } from "../components/PageSpinner";
 import { HostListingItem } from "../components/HostListingItem";
 
 export const HOST_LISTINGS: TypedDocumentNode<
@@ -26,16 +24,7 @@ export const HOST_LISTINGS: TypedDocumentNode<
 `;
 
 export function Listings() {
-  const { data, loading, error } = useQuery(HOST_LISTINGS);
-  const hostListings = data?.hostListings ?? [];
-
-  if (loading) {
-    return <PageSpinner />;
-  }
-
-  if (error) {
-    return <PageError error={error} />;
-  }
+  const { data } = useSuspenseQuery(HOST_LISTINGS);
 
   return (
     <PageContainer>
@@ -52,7 +41,7 @@ export function Listings() {
         </Button>
       </Flex>
       <VStack spacing="4" divider={<StackDivider borderColor="gray.200" />}>
-        {hostListings.filter(Boolean).map((listing) => {
+        {data.hostListings.filter(Boolean).map((listing) => {
           return <HostListingItem key={listing.id} listing={listing} />;
         })}
       </VStack>

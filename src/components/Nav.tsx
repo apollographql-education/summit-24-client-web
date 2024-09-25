@@ -1,4 +1,4 @@
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
 import { HStack } from "@chakra-ui/react";
 import { Logo } from "./Logo";
 import { NavAvatar } from "./NavAvatar";
@@ -27,7 +27,7 @@ const GET_PROFILE: TypedDocumentNode<
 `;
 
 export function Nav() {
-  const { data } = useQuery(GET_PROFILE, { errorPolicy: "ignore" });
+  const { data } = useSuspenseQuery(GET_PROFILE, { errorPolicy: "ignore" });
   const user = data?.me;
 
   return (

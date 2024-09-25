@@ -1,4 +1,4 @@
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
 import {
   GetPastBookingsForHostListingQuery,
   GetPastBookingsForHostListingQueryVariables,
@@ -8,7 +8,6 @@ import { Text } from "@chakra-ui/react";
 import { PastBooking } from "../components/PastBooking";
 import { ListingList } from "../components/ListingList";
 import { useParams } from "react-router-dom";
-import { PageSpinner } from "../components/PageSpinner";
 
 export const HOST_BOOKINGS: TypedDocumentNode<
   GetPastBookingsForHostListingQuery,
@@ -46,18 +45,14 @@ export const HOST_BOOKINGS: TypedDocumentNode<
 
 export function HostPastBookings() {
   const { id } = useParams();
-  const { data, loading } = useQuery(HOST_BOOKINGS, {
+  const { data } = useSuspenseQuery(HOST_BOOKINGS, {
     variables: {
       listingId: id!,
       status: BookingStatus.COMPLETED,
     },
   });
 
-  const bookings = data?.bookingsForListing.filter(Boolean) ?? [];
-
-  if (loading) {
-    return <PageSpinner />;
-  }
+  const bookings = data.bookingsForListing.filter(Boolean);
 
   return bookings.length ? (
     <ListingList>

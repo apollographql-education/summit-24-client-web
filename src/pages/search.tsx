@@ -1,20 +1,19 @@
 import { ListingItem } from "../components/ListingItem";
 import { Divider } from "@chakra-ui/react";
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {
   SearchListingsQuery,
   SearchListingsQueryVariables,
 } from "./__generated__/search.types";
-import { PageError } from "../components/PageError";
 import { PageContainer } from "../components/PageContainer";
 import { SearchForm } from "../components/SearchForm";
 import { SearchResultsHeader } from "../components/SearchResultsHeader";
 import { useSearchParams } from "../hooks/useSearchParams";
 import { getListingParamsFromSearchParams } from "../utils/search";
 import { SearchResultsContainer } from "../components/SearchResultsContainer";
-import { SearchResultsSpinner } from "../components/SearchResultsSpinner";
+// import { SearchResultsSpinner } from "../components/SearchResultsSpinner";
 import { SearchPaginator } from "../components/SearchPaginator";
 import { SearchResultsEmpty } from "../components/SearchResultsEmpty";
 import { ListingList } from "../components/ListingList";
@@ -37,7 +36,7 @@ export function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
   const listingParams = getListingParamsFromSearchParams(searchParams);
 
-  const { data, loading, error } = useQuery(SEARCH_LISTINGS, {
+  const { data } = useSuspenseQuery(SEARCH_LISTINGS, {
     variables: { searchListingsInput: listingParams },
   });
 
@@ -56,20 +55,14 @@ export function Search() {
           onChange={setSearchParams}
         />
 
-        {loading ? (
-          <SearchResultsSpinner />
-        ) : error ? (
-          <PageError error={error} />
-        ) : (
-          <SearchResults
-            searchListings={data?.searchListings ?? []}
-            page={listingParams.page}
-            limit={listingParams.limit}
-            checkInDate={listingParams.checkInDate}
-            checkOutDate={listingParams.checkOutDate}
-            onChangePage={(page) => setSearchParams({ page })}
-          />
-        )}
+        <SearchResults
+          searchListings={data.searchListings}
+          page={listingParams.page}
+          limit={listingParams.limit}
+          checkInDate={listingParams.checkInDate}
+          checkOutDate={listingParams.checkOutDate}
+          onChangePage={(page) => setSearchParams({ page })}
+        />
       </SearchResultsContainer>
     </PageContainer>
   );

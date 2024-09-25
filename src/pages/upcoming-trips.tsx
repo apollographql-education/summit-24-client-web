@@ -1,8 +1,6 @@
 import { UpcomingTrip } from "../components/UpcomingTrip";
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
 import { StackDivider, VStack } from "@chakra-ui/react";
-import { PageSpinner } from "../components/PageSpinner";
-import { PageError } from "../components/PageError";
 import {
   GetGuestTripsQuery,
   GetGuestTripsQueryVariables,
@@ -28,20 +26,11 @@ export const GUEST_TRIPS: TypedDocumentNode<
 `;
 
 export function UpcomingTrips() {
-  const { data, loading, error } = useQuery(GUEST_TRIPS);
-  const upcomingGuestBookings = data?.upcomingGuestBookings ?? [];
-
-  if (loading) {
-    return <PageSpinner />;
-  }
-
-  if (error) {
-    return <PageError error={error} />;
-  }
+  const { data } = useSuspenseQuery(GUEST_TRIPS);
 
   return (
     <VStack spacing="6" divider={<StackDivider />}>
-      {upcomingGuestBookings.filter(Boolean).map((trip) => (
+      {data.upcomingGuestBookings.filter(Boolean).map((trip) => (
         <UpcomingTrip key={trip.id} trip={trip} />
       ))}
     </VStack>

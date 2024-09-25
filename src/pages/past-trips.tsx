@@ -1,12 +1,10 @@
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
 import {
   GetPastTripsQuery,
   GetPastTripsQueryVariables,
 } from "./__generated__/past-trips.types";
 import { StackDivider, VStack } from "@chakra-ui/react";
 import { PastTrip } from "../components/PastTrip";
-import { PageSpinner } from "../components/PageSpinner";
-import { PageError } from "../components/PageError";
 
 export const PAST_GUEST_TRIPS: TypedDocumentNode<
   GetPastTripsQuery,
@@ -42,20 +40,11 @@ export const PAST_GUEST_TRIPS: TypedDocumentNode<
 `;
 
 export function PastTrips() {
-  const { data, loading, error } = useQuery(PAST_GUEST_TRIPS);
-  const pastGuestBookings = data?.pastGuestBookings ?? [];
-
-  if (loading) {
-    return <PageSpinner />;
-  }
-
-  if (error) {
-    return <PageError error={error} />;
-  }
+  const { data } = useSuspenseQuery(PAST_GUEST_TRIPS);
 
   return (
     <VStack spacing="6" divider={<StackDivider />}>
-      {pastGuestBookings.filter(Boolean).map((trip) => (
+      {data.pastGuestBookings.filter(Boolean).map((trip) => (
         <PastTrip key={trip.id} trip={trip} />
       ))}
     </VStack>

@@ -1,12 +1,11 @@
 import { Navigate } from "react-router-dom";
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
 import {
   GetUserQuery,
   GetUserQueryVariables,
   UpdateUserProfileMutation,
   UpdateUserProfileMutationVariables,
 } from "./__generated__/profile.types";
-import { PageSpinner } from "../components/PageSpinner";
 import { GuestProfile } from "../components/GuestProfile";
 import { HostProfile } from "../components/HostProfile";
 
@@ -45,12 +44,8 @@ const GET_USER: TypedDocumentNode<GetUserQuery, GetUserQueryVariables> = gql`
 `;
 
 export function Profile() {
-  const { data, loading } = useQuery(GET_USER, { errorPolicy: "ignore" });
+  const { data } = useSuspenseQuery(GET_USER, { errorPolicy: "ignore" });
   const user = data?.me;
-
-  if (loading) {
-    return <PageSpinner />;
-  }
 
   if (user?.__typename === "Guest") {
     return <GuestProfile user={user} />;

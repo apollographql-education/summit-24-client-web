@@ -1,7 +1,13 @@
 import ListingForm from "../components/ListingForm";
 import { Button, Center } from "@chakra-ui/react";
 import { IoArrowBackOutline } from "react-icons/io5";
-import { gql, TypedDocumentNode, useMutation, useQuery } from "@apollo/client";
+import {
+  gql,
+  TypedDocumentNode,
+  useMutation,
+  useQuery,
+  useSuspenseQuery,
+} from "@apollo/client";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   GetListingQuery,
@@ -71,11 +77,11 @@ export const LISTING: TypedDocumentNode<
 export function EditListing() {
   const { id } = useParams();
 
-  const { data, loading, error } = useQuery(LISTING, {
+  const { data } = useSuspenseQuery(LISTING, {
     variables: { id: id! },
   });
 
-  const listing = data?.listing;
+  const { listing } = data;
 
   const navigate = useNavigate();
   const [updateListing, { loading: submitting }] = useMutation(EDIT_LISTING, {
@@ -83,14 +89,6 @@ export function EditListing() {
       navigate(`/listing/${listing!.id}`);
     },
   });
-
-  if (loading) {
-    return <PageSpinner />;
-  }
-
-  if (error) {
-    return <PageError error={error} />;
-  }
 
   if (!listing) {
     return <Center>Listing not found</Center>;

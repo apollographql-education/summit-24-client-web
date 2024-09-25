@@ -3,14 +3,12 @@ import BookStay from "../components/BookStay";
 import { Center, Divider, Flex, Stack } from "@chakra-ui/react";
 import { GUEST_TRIPS } from "./upcoming-trips";
 import { useParams } from "react-router-dom";
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
 import {
   GetListingDetailsQuery,
   GetListingDetailsQueryVariables,
 } from "./__generated__/listing.types";
 import { PageContainer } from "../components/PageContainer";
-import { PageSpinner } from "../components/PageSpinner";
-import { PageError } from "../components/PageError";
 import { ListingDetails } from "../components/Listing/Details";
 import { ListingDescription } from "../components/Listing/Description";
 import { ListingAmenities } from "../components/Listing/Amenities";
@@ -59,24 +57,14 @@ const LISTING: TypedDocumentNode<
 export function Listing() {
   const { id: idParam } = useParams();
 
-  const { data, loading, error } = useQuery(LISTING, {
+  const { data } = useSuspenseQuery(LISTING, {
     variables: { id: idParam! },
   });
-  const user = data?.me;
+  const { listing, me: user } = data;
 
-  if (loading) {
-    return <PageSpinner />;
-  }
-
-  if (error) {
-    return <PageError error={error} />;
-  }
-
-  if (!data?.listing) {
+  if (!listing) {
     return <Center>Listing not found</Center>;
   }
-
-  const { listing } = data;
 
   return (
     <PageContainer>

@@ -1,4 +1,4 @@
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
 import { Text } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import {
@@ -8,8 +8,6 @@ import {
 import { BookingStatus } from "../__generated__/types";
 import { ListingList } from "../components/ListingList";
 import { Booking } from "../components/Booking";
-import { PageSpinner } from "../components/PageSpinner";
-import { PageError } from "../components/PageError";
 
 export const HOST_BOOKINGS: TypedDocumentNode<
   GetCurrrentAndUpcomingBookingsForHostListingQuery,
@@ -54,7 +52,7 @@ export const HOST_BOOKINGS: TypedDocumentNode<
 
 export function HostBookings() {
   const { id } = useParams();
-  const { data, loading, error } = useQuery(HOST_BOOKINGS, {
+  const { data } = useSuspenseQuery(HOST_BOOKINGS, {
     variables: {
       listingId: id!,
       upcomingStatus: BookingStatus.UPCOMING,
@@ -62,16 +60,8 @@ export function HostBookings() {
     },
   });
 
-  if (loading) {
-    return <PageSpinner />;
-  }
-
-  if (error) {
-    return <PageError error={error} />;
-  }
-
-  const upcomingBookings = data?.upcomingBookings ?? [];
-  const currentBooking = data?.currentBooking ?? [];
+  const upcomingBookings = data.upcomingBookings ?? [];
+  const currentBooking = data.currentBooking ?? [];
   const bookings = [...upcomingBookings, ...currentBooking].filter(Boolean);
 
   return bookings.length ? (

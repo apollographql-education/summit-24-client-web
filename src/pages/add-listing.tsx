@@ -3,7 +3,12 @@ import { Button } from "@chakra-ui/react";
 import { HOST_LISTINGS } from "./listings";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
-import { gql, TypedDocumentNode, useMutation, useQuery } from "@apollo/client";
+import {
+  gql,
+  TypedDocumentNode,
+  useMutation,
+  useSuspenseQuery,
+} from "@apollo/client";
 import {
   CreateListingMutation,
   CreateListingMutationVariables,
@@ -12,8 +17,6 @@ import {
 } from "./__generated__/add-listing.types";
 import { type LocationType } from "../__generated__/types";
 import { PageContainer } from "../components/PageContainer";
-import { PageSpinner } from "../components/PageSpinner";
-import { PageError } from "../components/PageError";
 
 export const CREATE_LISTING: TypedDocumentNode<
   CreateListingMutation,
@@ -55,7 +58,7 @@ const GET_LISTING_AMENITIES: TypedDocumentNode<
 `;
 
 export function CreateListing() {
-  const { data, loading, error } = useQuery(GET_LISTING_AMENITIES);
+  const { data } = useSuspenseQuery(GET_LISTING_AMENITIES);
 
   const navigate = useNavigate();
   const [createListing, { loading: submitting }] = useMutation(CREATE_LISTING, {
@@ -78,14 +81,6 @@ export function CreateListing() {
     },
   });
 
-  if (loading) {
-    return <PageSpinner />;
-  }
-
-  if (error) {
-    return <PageError error={error} />;
-  }
-
   return (
     <PageContainer>
       <Button as={Link} to="/listings" leftIcon={<IoArrowBackOutline />} mb="4">
@@ -93,7 +88,7 @@ export function CreateListing() {
       </Button>
       <ListingForm
         submitting={submitting}
-        amenities={data?.listingAmenities ?? []}
+        amenities={data.listingAmenities}
         listing={{
           title: "",
           description: "",
