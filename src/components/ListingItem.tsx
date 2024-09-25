@@ -1,4 +1,5 @@
 import { Flex } from "@chakra-ui/react";
+import { LocationType } from "../__generated__/types";
 import { ListingItemContainer } from "./ListingItem/Container";
 import { ListingItemImage } from "./ListingItem/Image";
 import { ListingItemDetails } from "./ListingItem/Details";
@@ -8,11 +9,17 @@ import { ListingItemLocationType } from "./ListingItem/LocationType";
 import { ListingItemRating } from "./ListingItem/Rating";
 import { ListingItemNumOfBeds } from "./ListingItem/NumOfBeds";
 // import { ListingItemCost } from "./ListingItem/Cost";
-import { gql } from "@apollo/client";
-import { ListingItem_listingFragment } from "./__generated__/ListingItem.types";
 
 interface ListingItemProps {
-  listing: ListingItem_listingFragment;
+  listing: {
+    id: string;
+    title: string;
+    description: string;
+    photoThumbnail: string;
+    numOfBeds: number;
+    overallRating: number | null;
+    locationType: LocationType;
+  };
   checkInDate?: string;
   checkOutDate?: string;
 }
@@ -40,20 +47,6 @@ export function ListingItem({
     </ListingItemContainer>
   );
 }
-
-ListingItem.fragments = {
-  listing: gql`
-    fragment ListingItem_listing on Listing {
-      id
-      title
-      description
-      photoThumbnail
-      numOfBeds
-      overallRating
-      locationType
-    }
-  `,
-};
 
 function getListingParams(
   checkInDate: string | undefined,
