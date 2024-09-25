@@ -32,6 +32,12 @@ export const SEARCH_LISTINGS: TypedDocumentNode<
   ${ListingItem.fragments.listing}
 `;
 
+/* Exercise 7
+ *
+ * Docs on useBackgroundQuery and useReadQuery:
+ * https://www.apollographql.com/docs/react/data/suspense#avoiding-request-waterfalls
+ */
+
 export function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
   const listingParams = getListingParamsFromSearchParams(searchParams);
@@ -39,6 +45,9 @@ export function Search() {
   const { data } = useSuspenseQuery(SEARCH_LISTINGS, {
     variables: { searchListingsInput: listingParams },
   });
+  // const [queryRef] = useBackgroundQuery(SEARCH_LISTINGS, {
+  //   variables: { searchListingsInput: listingParams },
+  // });
 
   return (
     <PageContainer>
@@ -69,6 +78,7 @@ export function Search() {
 }
 
 interface SearchResultsProps {
+  // queryRef: QueryRef<SearchListingsQuery>
   searchListings: SearchListingsQuery["searchListings"];
   page: number;
   limit: number;
@@ -78,6 +88,7 @@ interface SearchResultsProps {
 }
 
 function SearchResults({
+  // queryRef,
   searchListings,
   page,
   limit,
@@ -85,6 +96,9 @@ function SearchResults({
   checkOutDate,
   onChangePage,
 }: SearchResultsProps) {
+  // const { data } = useReadQuery(queryRef);
+  // const { searchListings } = data;
+
   return (
     <>
       {searchListings.length > 0 ? (
