@@ -14,6 +14,7 @@ import { FeaturedListingTitle } from "../components/FeaturedListingTitle";
 import { FeaturedListingContainer } from "../components/FeaturedListingContainer";
 import { InflationButton } from "../components/InflationButton";
 
+// TODO: Update the query to use the fragment defined for ListingItem
 export const FEATURED_LISTINGS: TypedDocumentNode<
   GetFeaturedListingsQuery,
   GetFeaturedListingsQueryVariables
