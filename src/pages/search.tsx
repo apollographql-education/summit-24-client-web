@@ -1,6 +1,12 @@
 import { ListingItem } from "../components/ListingItem";
 import { Divider } from "@chakra-ui/react";
-import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
+import {
+  gql,
+  QueryRef,
+  TypedDocumentNode,
+  useBackgroundQuery,
+  useReadQuery,
+} from "@apollo/client";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -13,10 +19,11 @@ import { SearchResultsHeader } from "../components/SearchResultsHeader";
 import { useSearchParams } from "../hooks/useSearchParams";
 import { getListingParamsFromSearchParams } from "../utils/search";
 import { SearchResultsContainer } from "../components/SearchResultsContainer";
-// import { SearchResultsSpinner } from "../components/SearchResultsSpinner";
+import { SearchResultsSpinner } from "../components/SearchResultsSpinner";
 import { SearchPaginator } from "../components/SearchPaginator";
 import { SearchResultsEmpty } from "../components/SearchResultsEmpty";
 import { ListingList } from "../components/ListingList";
+import { Suspense } from "react";
 
 export const SEARCH_LISTINGS: TypedDocumentNode<
   SearchListingsQuery,
@@ -42,12 +49,9 @@ export function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
   const listingParams = getListingParamsFromSearchParams(searchParams);
 
-  const { data } = useSuspenseQuery(SEARCH_LISTINGS, {
+  const [queryRef] = useBackgroundQuery(SEARCH_LISTINGS, {
     variables: { searchListingsInput: listingParams },
   });
-  // const [queryRef] = useBackgroundQuery(SEARCH_LISTINGS, {
-  //   variables: { searchListingsInput: listingParams },
-  // });
 
   return (
     <PageContainer>
@@ -64,22 +68,23 @@ export function Search() {
           onChange={setSearchParams}
         />
 
-        <SearchResults
-          searchListings={data.searchListings}
-          page={listingParams.page}
-          limit={listingParams.limit}
-          checkInDate={listingParams.checkInDate}
-          checkOutDate={listingParams.checkOutDate}
-          onChangePage={(page) => setSearchParams({ page })}
-        />
+        <Suspense fallback={<SearchResultsSpinner />}>
+          <SearchResults
+            queryRef={queryRef}
+            page={listingParams.page}
+            limit={listingParams.limit}
+            checkInDate={listingParams.checkInDate}
+            checkOutDate={listingParams.checkOutDate}
+            onChangePage={(page) => setSearchParams({ page })}
+          />
+        </Suspense>
       </SearchResultsContainer>
     </PageContainer>
   );
 }
 
 interface SearchResultsProps {
-  // queryRef: QueryRef<SearchListingsQuery>
-  searchListings: SearchListingsQuery["searchListings"];
+  queryRef: QueryRef<SearchListingsQuery>;
   page: number;
   limit: number;
   checkInDate: string;
@@ -88,16 +93,15 @@ interface SearchResultsProps {
 }
 
 function SearchResults({
-  // queryRef,
-  searchListings,
+  queryRef,
   page,
   limit,
   checkInDate,
   checkOutDate,
   onChangePage,
 }: SearchResultsProps) {
-  // const { data } = useReadQuery(queryRef);
-  // const { searchListings } = data;
+  const { data } = useReadQuery(queryRef);
+  const { searchListings } = data;
 
   return (
     <>
