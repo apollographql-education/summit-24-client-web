@@ -1,4 +1,10 @@
-import { gql, useSuspenseQuery, TypedDocumentNode } from "@apollo/client";
+import {
+  gql,
+  TypedDocumentNode,
+  useBackgroundQuery,
+  useReadQuery,
+  QueryRef,
+} from "@apollo/client";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -11,8 +17,8 @@ import { ListingItem } from "../components/ListingItem";
 import { FeaturedListingTitle } from "../components/FeaturedListingTitle";
 import { FeaturedListingContainer } from "../components/FeaturedListingContainer";
 import { InflationButton } from "../components/InflationButton";
-// We can use the <PageSpinner /> as the fallback
-// import { PageSpinner } from "../components/PageSpinner";
+import { Suspense } from "react";
+import { PageSpinner } from "../components/PageSpinner";
 
 export const FEATURED_LISTINGS: TypedDocumentNode<
   GetFeaturedListingsQuery,
@@ -29,7 +35,7 @@ export const FEATURED_LISTINGS: TypedDocumentNode<
 `;
 
 export function Home() {
-  const { data } = useSuspenseQuery(FEATURED_LISTINGS);
+  const [queryRef] = useBackgroundQuery(FEATURED_LISTINGS);
 
   return (
     <>
@@ -38,29 +44,27 @@ export function Home() {
         <FeaturedListingTitle>
           Ideas for your next stellar trip
         </FeaturedListingTitle>
-        {/* Let's show the loading fallback here instead */}
-        <ListingList>
-          {data.featuredListings.map((listing) => (
-            <ListingItem key={listing.id} listing={listing} />
-          ))}
-        </ListingList>
-        {/* <FeaturedListings /> */}
+        <Suspense fallback={<PageSpinner />}>
+          <FeaturedListings queryRef={queryRef} />
+        </Suspense>
       </FeaturedListingContainer>
       <InflationButton />
     </>
   );
 }
 
-/* Exercise 7:
- * Let's make our UX a bit better by showing the loading fallback only where the
- * listing items are displayed. Use the template below to extract a component
- * that suspends instead of the <Home /> component.
- */
+interface FeaturedListingsProps {
+  queryRef: QueryRef<GetFeaturedListingsQuery>;
+}
 
-// interface FeaturedListingsProps {
-//
-// }
+function FeaturedListings({ queryRef }: FeaturedListingsProps) {
+  const { data } = useReadQuery(queryRef);
 
-// function FeaturedListings({ }: FeaturedListingsProps) {
-//
-// }
+  return (
+    <ListingList>
+      {data.featuredListings.map((listing) => (
+        <ListingItem key={listing.id} listing={listing} />
+      ))}
+    </ListingList>
+  );
+}
