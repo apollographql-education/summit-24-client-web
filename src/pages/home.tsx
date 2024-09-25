@@ -14,7 +14,6 @@ import { FeaturedListingTitle } from "../components/FeaturedListingTitle";
 import { FeaturedListingContainer } from "../components/FeaturedListingContainer";
 import { InflationButton } from "../components/InflationButton";
 
-// TODO: Update the query to use the fragment defined for ListingItem
 export const FEATURED_LISTINGS: TypedDocumentNode<
   GetFeaturedListingsQuery,
   GetFeaturedListingsQueryVariables
@@ -22,14 +21,11 @@ export const FEATURED_LISTINGS: TypedDocumentNode<
   query GetFeaturedListings {
     featuredListings {
       id
-      title
-      description
-      photoThumbnail
-      numOfBeds
-      overallRating
-      locationType
+      ...ListingItem_listing
     }
   }
+
+  ${ListingItem.fragments.listing}
 `;
 
 export function Home() {
