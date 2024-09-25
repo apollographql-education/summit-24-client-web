@@ -28,6 +28,11 @@ export const FEATURED_LISTINGS: TypedDocumentNode<
   ${ListingItem.fragments.listing}
 `;
 
+/* Exercise 6
+ *
+ * Docs on Apollo Client Suspense integration:
+ * https://www.apollographql.com/docs/react/data/suspense
+ */
 export function Home() {
   const { data, loading, error } = useQuery(FEATURED_LISTINGS);
 
