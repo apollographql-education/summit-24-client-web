@@ -13,7 +13,7 @@ import { PageSpinner } from "../components/PageSpinner";
 import { PageError } from "../components/PageError";
 import { ListingDetails } from "../components/Listing/Details";
 import { ListingDescription } from "../components/Listing/Description";
-import { ListingAmentities } from "../components/Listing/Amenities";
+import { ListingAmenities } from "../components/Listing/Amenities";
 import { ListingHostDetails } from "../components/Listing/HostDetails";
 import { ListingReviews } from "../components/Listing/Reviews";
 import { ListingImage } from "../components/Listing/Image";
@@ -101,7 +101,7 @@ export default function Listing() {
             <Divider />
             <ListingDescription listing={listing} />
             <Divider />
-            <ListingAmentities listing={listing} />
+            <ListingAmenities listing={listing} />
             <Divider />
             <ListingHostDetails host={listing.host} />
             <Divider />

@@ -7,7 +7,7 @@ interface ListingAmentitiesProps {
   };
 }
 
-export function ListingAmentities({ listing }: ListingAmentitiesProps) {
+export function ListingAmenities({ listing }: ListingAmentitiesProps) {
   const amenitiesByCategory = listing.amenities
     .filter(Boolean)
     .reduce<Record<string, string[]>>((acc, amenity) => {
