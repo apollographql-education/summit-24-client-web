@@ -26,6 +26,15 @@ const GET_PROFILE: TypedDocumentNode<
   }
 `;
 
+/* Exercise 8
+ *
+ * Go to src/apollo/preloadQuery.ts to create a preloadQuery function.
+
+ * Docs on creating a query preloader function:
+ * https://www.apollographql.com/docs/react/data/suspense#initiating-queries-outside-react
+ *
+ */
+
 export function Nav() {
   const { data } = useSuspenseQuery(GET_PROFILE, { errorPolicy: "ignore" });
   const user = data?.me;

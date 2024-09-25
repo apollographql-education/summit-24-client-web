@@ -34,6 +34,22 @@ export const FEATURED_LISTINGS: TypedDocumentNode<
   ${ListingItem.fragments.listing}
 `;
 
+/* Exercise 8 Bonus
+ *
+ * Use preloadQuery to start the query in React Router's loader function. The
+ * loader function can be added to the route in src/pages/router.tsx
+ *
+ * Docs for integration with React Router loader functions:
+ * https://www.apollographql.com/docs/react/data/suspense#usage-with-data-loading-routers
+ *
+ * Docs on React Router loader function:
+ * https://reactrouter.com/en/main/route/loader
+ *
+ * Docs on React Router useLoaderData:
+ * https://reactrouter.com/en/main/hooks/use-loader-data
+ *
+ */
+
 export function Home() {
   const [queryRef] = useBackgroundQuery(FEATURED_LISTINGS);
 
