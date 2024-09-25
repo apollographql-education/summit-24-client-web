@@ -1,4 +1,4 @@
-import { gql, TypedDocumentNode, useSuspenseQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useReadQuery } from "@apollo/client";
 import { HStack } from "@chakra-ui/react";
 import { Logo } from "./Logo";
 import { NavAvatar } from "./NavAvatar";
@@ -10,7 +10,7 @@ import {
   GetMyProfileQuery,
   GetMyProfileQueryVariables,
 } from "./__generated__/Nav.types";
-// import { preloadQuery } from "../apollo/preloadQuery";
+import { preloadQuery } from "../apollo/preloadQuery";
 
 const GET_PROFILE: TypedDocumentNode<
   GetMyProfileQuery,
@@ -36,8 +36,10 @@ const GET_PROFILE: TypedDocumentNode<
  *
  */
 
+const queryRef = preloadQuery(GET_PROFILE, { errorPolicy: "ignore" });
+
 export function Nav() {
-  const { data } = useSuspenseQuery(GET_PROFILE, { errorPolicy: "ignore" });
+  const { data } = useReadQuery(queryRef);
   const user = data?.me;
 
   return (
