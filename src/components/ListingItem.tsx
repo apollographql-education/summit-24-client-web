@@ -34,6 +34,7 @@ export function ListingItem({
   const { data, complete } = useFragment({
     fragment: ListingItem.fragments.listing,
     from: listing,
+    fragmentName: "ListingItem_listing",
   });
 
   if (!complete) {
@@ -52,7 +53,7 @@ export function ListingItem({
         <Flex direction="row" align="center">
           <ListingItemRating rating={data.overallRating} />
           <ListingItemNumOfBeds numOfBeds={data.numOfBeds} />
-          <ListingItemCost costPerNight={data.costPerNight} />
+          <ListingItemCost listing={listing} />
         </Flex>
       </ListingItemDetails>
     </ListingItemContainer>
@@ -69,8 +70,10 @@ ListingItem.fragments = {
       numOfBeds
       overallRating
       locationType
-      costPerNight
+      ...ListingItemCost_listing @nonreactive
     }
+
+    ${ListingItemCost.fragments.listing}
   ` as TypedDocumentNode<ListingItem_listingFragment>,
 };
 
