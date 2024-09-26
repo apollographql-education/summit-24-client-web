@@ -11,6 +11,8 @@ import { ListingItem } from "../components/ListingItem";
 import { FeaturedListingTitle } from "../components/FeaturedListingTitle";
 import { FeaturedListingContainer } from "../components/FeaturedListingContainer";
 import { InflationButton } from "../components/InflationButton";
+// We can use the <PageSpinner /> as the fallback
+// import { PageSpinner } from "../components/PageSpinner";
 
 export const FEATURED_LISTINGS: TypedDocumentNode<
   GetFeaturedListingsQuery,
@@ -36,13 +38,29 @@ export function Home() {
         <FeaturedListingTitle>
           Ideas for your next stellar trip
         </FeaturedListingTitle>
+        {/* Let's show the loading fallback here instead */}
         <ListingList>
           {data.featuredListings.map((listing) => (
             <ListingItem key={listing.id} listing={listing} />
           ))}
         </ListingList>
+        {/* <FeaturedListings /> */}
       </FeaturedListingContainer>
       <InflationButton />
     </>
   );
 }
+
+/* Exercise 7:
+ * Let's make our UX a bit better by showing the loading fallback only where the
+ * listing items are displayed. Use the template below to extract a component
+ * that suspends instead of the <Home /> component.
+ */
+
+// interface FeaturedListingsProps {
+//
+// }
+
+// function FeaturedListings({ }: FeaturedListingsProps) {
+//
+// }
