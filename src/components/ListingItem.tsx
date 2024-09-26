@@ -53,6 +53,15 @@ export function ListingItem({
   );
 }
 
+/* Use the following fields in our fragment:
+   id
+   title
+   description
+   photoThumbnail
+   numOfBeds
+   overallRating
+   locationType
+*/
 ListingItem.fragments = {
   // TODO: Add a fragment here to declare data needs for the component
   listing: gql`` as TypedDocumentNode<unknown>,
