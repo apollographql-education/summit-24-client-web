@@ -10,6 +10,7 @@ import {
   GetMyProfileQuery,
   GetMyProfileQueryVariables,
 } from "./__generated__/Nav.types";
+// import { preloadQuery } from "../apollo/preloadQuery";
 
 const GET_PROFILE: TypedDocumentNode<
   GetMyProfileQuery,
