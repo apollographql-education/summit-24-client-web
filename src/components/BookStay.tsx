@@ -65,7 +65,11 @@ export default function BookStay({
      * cache.modify function utilities:
      * https://www.apollographql.com/docs/react/caching/cache-interaction#modifier-function-utilities
      */
-    update: (cache) => {},
+    update: (cache) => {
+      // * How can we modify the cache so that our funds are refetched?
+      // * What information do we need to determine the cache ID to modify?
+      // * How might we get the ID of the record we need to modify?
+    },
   });
 
   if (error) {
