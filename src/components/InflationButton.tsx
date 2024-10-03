@@ -1,8 +1,7 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { Button } from "@chakra-ui/react";
 import { GetFeaturedListingsFromCacheQuery } from "./__generated__/InflationButton.types";
-// Use this type to provide type safety for cache.modify
-// import type { Listing } from "../__generated__/types";
+import type { Listing } from "../__generated__/types";
 
 /* Exercise 2
  *
@@ -36,25 +35,16 @@ export function InflationButton() {
           `,
         });
 
-        // Follow-along: object identification
-        // if (data) {
-        //   const listing = data.featuredListings[0];
-        //   const id = cache.identify();
-        //   console.log("cacheId", id);
-        // }
-
-        // Follow-along: cache modification
-        // cache.modify({})
-
-        // Exercise:
-        // Modify each featuredListings's costPerNight when this
-        // button is cliecked. Use the code below as a starter.
-        //
-        // if (data) {
-        //   data.featuredListings.forEach((listing) => {
-        //     // TODO: Implement cache modification here for exercise 2
-        //   });
-        // }
+        if (data) {
+          data.featuredListings.forEach((listing) => {
+            cache.modify<Listing>({
+              id: cache.identify(listing),
+              fields: {
+                costPerNight: (cost) => Math.floor(cost * 1.25),
+              },
+            });
+          });
+        }
       }}
     >
       $$$ Inflate costs $$$
