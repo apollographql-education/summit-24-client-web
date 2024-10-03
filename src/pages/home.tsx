@@ -21,14 +21,11 @@ export const FEATURED_LISTINGS: TypedDocumentNode<
   query GetFeaturedListings {
     featuredListings {
       id
-      title
-      description
-      photoThumbnail
-      numOfBeds
-      overallRating
-      locationType
+      ...ListingItem_listing
     }
   }
+
+  ${ListingItem.fragments.listing}
 `;
 
 export function Home() {

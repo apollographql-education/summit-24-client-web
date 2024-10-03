@@ -1,9 +1,5 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { useApolloClient } from "@apollo/client";
 import { Button } from "@chakra-ui/react";
-import {
-  GetFeaturedListingsForInflationQuery,
-  GetFeaturedListingsForInflationQueryVariables,
-} from "./__generated__/InflationButton.types";
 
 export function InflationButton() {
   const { cache } = useApolloClient();
@@ -15,29 +11,9 @@ export function InflationButton() {
       right="2rem"
       size="lg"
       onClick={() => {
-        const data = cache.readQuery<
-          GetFeaturedListingsForInflationQuery,
-          GetFeaturedListingsForInflationQueryVariables
-        >({
-          query: gql`
-            query GetFeaturedListingsForInflation {
-              featuredListings {
-                id
-              }
-            }
-          `,
-        });
-
-        if (data) {
-          data.featuredListings.filter(Boolean).forEach((listing) => {
-            cache.modify({
-              id: cache.identify(listing),
-              fields: {
-                costPerNight: (cost) => Math.floor(cost * 1.25),
-              },
-            });
-          });
-        }
+        console.log(
+          "Welcome to the workshop! Get started by checking out the `exercise-1-readQuery` branch.",
+        );
       }}
     >
       $$$ Inflate costs $$$
