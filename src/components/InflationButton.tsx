@@ -1,5 +1,6 @@
-import { useApolloClient } from "@apollo/client";
+import { gql, useApolloClient } from "@apollo/client";
 import { Button } from "@chakra-ui/react";
+import { GetFeaturedListingsFromCacheQuery } from "./__generated__/InflationButton.types";
 
 /* Exercise 1
  *
@@ -17,8 +18,17 @@ export function InflationButton() {
       right="2rem"
       size="lg"
       onClick={() => {
-        // const data = cache.readQuery({})
-        // console.log(data)
+        const data = cache.readQuery<GetFeaturedListingsFromCacheQuery>({
+          query: gql`
+            query GetFeaturedListingsFromCache {
+              featuredListings {
+                id
+              }
+            }
+          `,
+        });
+
+        console.log(data);
       }}
     >
       $$$ Inflate costs $$$

@@ -1,9 +1,9 @@
 import * as GraphQLTypes from "../../__generated__/types";
 
-export type GetFeaturedListingsForInflationQueryVariables = GraphQLTypes.Exact<{
+export type GetFeaturedListingsFromCacheQueryVariables = GraphQLTypes.Exact<{
   [key: string]: never;
 }>;
 
-export type GetFeaturedListingsForInflationQuery = {
+export type GetFeaturedListingsFromCacheQuery = {
   featuredListings: Array<{ __typename: "Listing"; id: string }>;
 };
