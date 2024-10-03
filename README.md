@@ -1,7 +1,3 @@
-# Odyssey Airlock frontend
+# GraphQL for web: Going hands-on with Apollo Client
 
-Hosted on Netlify: https://odyssey-airlock.netlify.app/
-
-[Back-end GraphQL server](https://github.com/apollographql-education/airlock-managed-gateway)
-
-You need to have the backend app running on your local machine for this app to work
+To get started, follow the instructions on the GraphQL Summit prerequisites course: https://www.apollographql.com/tutorials/workshop-summit24-prereqs/09-w12-web
