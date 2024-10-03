@@ -3,18 +3,6 @@ import { Button } from "@chakra-ui/react";
 import { GetFeaturedListingsFromCacheQuery } from "./__generated__/InflationButton.types";
 import type { Listing } from "../__generated__/types";
 
-/* Exercise 2
- *
- * Docs on cache.readQuery:
- * https://www.apollographql.com/docs/react/caching/cache-interaction#readquery
- *
- * Docs on cache.identify:
- * https://www.apollographql.com/docs/react/caching/cache-interaction#obtaining-an-objects-cache-id
- *
- * Docs on cache.modify:
- * https://www.apollographql.com/docs/react/caching/cache-interaction#using-cachemodify
- */
-
 export function InflationButton() {
   const { cache } = useApolloClient();
 

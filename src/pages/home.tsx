@@ -14,6 +14,14 @@ import { FeaturedListingTitle } from "../components/FeaturedListingTitle";
 import { FeaturedListingContainer } from "../components/FeaturedListingContainer";
 import { InflationButton } from "../components/InflationButton";
 
+/* Exercise 3
+ *
+ * Docs for useFragment:
+ * https://www.apollographql.com/docs/react/data/fragments#useFragment
+ *
+ * Docs on @nonreactive:
+ * https://www.apollographql.com/docs/react/data/directives#nonreactive
+ */
 export const FEATURED_LISTINGS: TypedDocumentNode<
   GetFeaturedListingsQuery,
   GetFeaturedListingsQueryVariables

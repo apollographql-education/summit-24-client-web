@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql, TypedDocumentNode } from "@apollo/client";
 import { Flex } from "@chakra-ui/react";
 import { ListingItemContainer } from "./ListingItem/Container";
 import { ListingItemImage } from "./ListingItem/Image";
@@ -17,11 +17,22 @@ interface ListingItemProps {
   checkOutDate?: string;
 }
 
+/* Exercise 3
+ *
+ * Docs for useFragment:
+ * https://www.apollographql.com/docs/react/data/fragments#useFragment
+ *
+ * Docs on @nonreactive:
+ * https://www.apollographql.com/docs/react/data/directives#nonreactive
+ */
+
 export function ListingItem({
   listing,
   checkInDate,
   checkOutDate,
 }: ListingItemProps) {
+  // const { data, complete } = useFragment({})
+
   return (
     <ListingItemContainer
       to={`/listing/${listing.id}/?${getListingParams(checkInDate, checkOutDate)}`}
@@ -58,7 +69,7 @@ ListingItem.fragments = {
     }
 
     ${ListingItemCost.fragments.listing}
-  `,
+  ` as TypedDocumentNode<ListingItem_listingFragment>,
 };
 
 function getListingParams(
