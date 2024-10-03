@@ -1,8 +1,9 @@
+import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Outlet } from "react-router-dom";
 import { Nav } from "../components/Nav";
 import { PageError } from "../components/PageError";
-// import { PageSpinner } from "../components/PageSpinner";
+import { PageSpinner } from "../components/PageSpinner";
 
 /* Exercise 4
  *
@@ -15,9 +16,13 @@ import { PageError } from "../components/PageError";
 
 export function Root() {
   return (
-    <ErrorBoundary fallbackRender={({ error }) => <PageError error={error} />}>
-      <Nav />
-      <Outlet />
-    </ErrorBoundary>
+    <Suspense fallback={<PageSpinner />}>
+      <ErrorBoundary
+        fallbackRender={({ error }) => <PageError error={error} />}
+      >
+        <Nav />
+        <Outlet />
+      </ErrorBoundary>
+    </Suspense>
   );
 }
