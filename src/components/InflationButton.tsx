@@ -1,6 +1,12 @@
 import { useApolloClient } from "@apollo/client";
 import { Button } from "@chakra-ui/react";
 
+/* Exercise 1
+ *
+ * Docs on cache.readQuery:
+ * https://www.apollographql.com/docs/react/caching/cache-interaction#readquery
+ */
+
 export function InflationButton() {
   const { cache } = useApolloClient();
 
@@ -11,9 +17,8 @@ export function InflationButton() {
       right="2rem"
       size="lg"
       onClick={() => {
-        console.log(
-          "Welcome to the workshop! Get started by checking out the `exercise-1-readQuery` branch.",
-        );
+        // const data = cache.readQuery({})
+        // console.log(data)
       }}
     >
       $$$ Inflate costs $$$
