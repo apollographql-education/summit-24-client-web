@@ -14,14 +14,6 @@ import { FeaturedListingTitle } from "../components/FeaturedListingTitle";
 import { FeaturedListingContainer } from "../components/FeaturedListingContainer";
 import { InflationButton } from "../components/InflationButton";
 
-/* Exercise 3
- *
- * Docs for useFragment:
- * https://www.apollographql.com/docs/react/data/fragments#useFragment
- *
- * Docs on @nonreactive:
- * https://www.apollographql.com/docs/react/data/directives#nonreactive
- */
 export const FEATURED_LISTINGS: TypedDocumentNode<
   GetFeaturedListingsQuery,
   GetFeaturedListingsQueryVariables
@@ -35,6 +27,15 @@ export const FEATURED_LISTINGS: TypedDocumentNode<
 
   ${ListingItem.fragments.listing}
 `;
+
+/* Exercise 4
+ *
+ * Docs on React Suspense:
+ * https://react.dev/reference/react/Suspense
+ *
+ * Docs on useSuspenseQuery:
+ * https://www.apollographql.com/docs/react/data/suspense#fetching-with-suspense
+ */
 
 export function Home() {
   const { data, loading, error } = useQuery(FEATURED_LISTINGS);

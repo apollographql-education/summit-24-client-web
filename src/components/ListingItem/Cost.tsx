@@ -6,14 +6,6 @@ interface ListingItemCostProps {
   listing: ListingItemCost_listingFragment;
 }
 
-/* Exercise 3
- *
- * Docs for useFragment:
- * https://www.apollographql.com/docs/react/data/fragments#useFragment
- *
- * Docs on @nonreactive:
- * https://www.apollographql.com/docs/react/data/directives#nonreactive
- */
 export function ListingItemCost({ listing }: ListingItemCostProps) {
   const { data, complete } = useFragment({
     fragment: ListingItemCost.fragments.listing,

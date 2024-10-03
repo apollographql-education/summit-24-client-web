@@ -17,15 +17,6 @@ interface ListingItemProps {
   checkOutDate?: string;
 }
 
-/* Exercise 3
- *
- * Docs for useFragment:
- * https://www.apollographql.com/docs/react/data/fragments#useFragment
- *
- * Docs on @nonreactive:
- * https://www.apollographql.com/docs/react/data/directives#nonreactive
- */
-
 export function ListingItem({
   listing,
   checkInDate,
