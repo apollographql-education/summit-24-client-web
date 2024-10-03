@@ -29,7 +29,7 @@ export const FEATURED_LISTINGS: TypedDocumentNode<
   query GetFeaturedListings {
     featuredListings {
       id
-      ...ListingItem_listing
+      ...ListingItem_listing @nonreactive
     }
   }
 
