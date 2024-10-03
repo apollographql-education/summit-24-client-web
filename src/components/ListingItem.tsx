@@ -1,4 +1,4 @@
-import { gql, TypedDocumentNode } from "@apollo/client";
+import { gql, useFragment, TypedDocumentNode } from "@apollo/client";
 import { Flex } from "@chakra-ui/react";
 import { ListingItemContainer } from "./ListingItem/Container";
 import { ListingItemImage } from "./ListingItem/Image";
@@ -31,21 +31,29 @@ export function ListingItem({
   checkInDate,
   checkOutDate,
 }: ListingItemProps) {
-  // const { data, complete } = useFragment({})
+  const { data, complete } = useFragment({
+    fragment: ListingItem.fragments.listing,
+    fragmentName: "ListingItem_listing",
+    from: listing,
+  });
+
+  if (!complete) {
+    return null;
+  }
 
   return (
     <ListingItemContainer
-      to={`/listing/${listing.id}/?${getListingParams(checkInDate, checkOutDate)}`}
+      to={`/listing/${data.id}/?${getListingParams(checkInDate, checkOutDate)}`}
     >
-      <ListingItemImage src={listing.photoThumbnail} alt={listing.title} />
+      <ListingItemImage src={data.photoThumbnail} alt={data.title} />
       <ListingItemDetails>
-        <ListingItemLocationType locationType={listing.locationType} />
-        <ListingItemTitle title={listing.title} />
-        <ListingItemDescription description={listing.description} />
+        <ListingItemLocationType locationType={data.locationType} />
+        <ListingItemTitle title={data.title} />
+        <ListingItemDescription description={data.description} />
         <Flex direction="row" align="center">
-          <ListingItemRating rating={listing.overallRating} />
-          <ListingItemNumOfBeds numOfBeds={listing.numOfBeds} />
-          <ListingItemCost listing={listing} />
+          <ListingItemRating rating={data.overallRating} />
+          <ListingItemNumOfBeds numOfBeds={data.numOfBeds} />
+          <ListingItemCost listing={data} />
         </Flex>
       </ListingItemDetails>
     </ListingItemContainer>
@@ -65,7 +73,7 @@ ListingItem.fragments = {
       numOfBeds
       overallRating
       locationType
-      ...ListingItemCost_listing
+      ...ListingItemCost_listing @nonreactive
     }
 
     ${ListingItemCost.fragments.listing}
