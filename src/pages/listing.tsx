@@ -3,10 +3,11 @@ import BookStay from "../components/BookStay";
 import { Center, Divider, Flex, Stack } from "@chakra-ui/react";
 import { GUEST_TRIPS } from "./upcoming-trips";
 import { useParams } from "react-router-dom";
-import { gql, TypedDocumentNode, useQuery } from "@apollo/client";
+import { gql, TypedDocumentNode, useFragment, useQuery } from "@apollo/client";
 import {
   GetListingDetailsQuery,
   GetListingDetailsQueryVariables,
+  MeFragment,
 } from "./__generated__/listing.types";
 import { PageContainer } from "../components/PageContainer";
 import { PageSpinner } from "../components/PageSpinner";
@@ -24,9 +25,6 @@ const LISTING: TypedDocumentNode<
   GetListingDetailsQueryVariables
 > = gql`
   query GetListingDetails($id: ID!) {
-    me {
-      id
-    }
     listing(id: $id) {
       id
       title
@@ -65,13 +63,22 @@ const LISTING: TypedDocumentNode<
   }
 `;
 
+const meFragment = gql`
+  fragment Me on Query {
+    me {
+      id
+    }
+  }
+`;
+
 export function Listing() {
   const { id: idParam } = useParams();
 
   const { data, loading, error } = useQuery(LISTING, {
     variables: { id: idParam! },
   });
-  const user = data?.me;
+  const fragment = useFragment<MeFragment>({ fragment: meFragment, from: {} });
+  const user = fragment.complete ? fragment.data.me : null;
 
   if (loading) {
     return <PageSpinner />;
